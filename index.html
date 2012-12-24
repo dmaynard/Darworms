@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=600"; user-scalable=no" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>DARWORMS </title>
+      <link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.0rc1.css" type="text/css" charset="utf-8" />
+	  <link rel="stylesheet" href="pgandjqm-style-override.css" type="text/css" charset="utf-8" />
+	  <script type="text/javascript" src="jquery.mobile/jquery-1.6.4.min.js"></script>
+	  <script type="text/javascript" charset="utf-8" src="phonegap-1.1.0.js"></script>
+	  <script type="text/javascript" src="jquery.mobile/jquery.mobile-1.0rc1.js"></script>
+	  <script type="text/javascript" charset="utf-8" src="main.js"></script>
+  </head>
+  <body onload="init();">
+    <div data-role="page" data-theme="b">
+  	<div data-role="header">
+    	<h1>DARWORMS</h1>
+	</div>
+    <div data-role="content">
+    <div id="canvascontainer">
+         <canvas id="wcanvas" width="300" height="300"></canvas>
+    </div>
+    <!-- div data-role="controlgroup" data-type="horizontal" -->
+    <div class="ui-grid-d">
+       <div class="ui-block-a" id="p1button" data-role="button" onclick="player1();">P1</div>
+       <div class="ui-block-b" id="p2button" data-role="button" onclick="player2();">P2</div>
+       <div class="ui-block-c" id="p3button" data-role="button" onclick="player3();">P3</div>
+       <div class="ui-block-d" id="p4button" data-role="button" onclick="player4();">P4</div>
+       
+     </div>
+     <div class="ui-grid-d">
+       <div class="ui-block-a" id="p1score"  ;">0</div>
+       <div class="ui-block-b" id="p2score" data-role="text" ;">0</div>
+       <div class="ui-block-c" id="p3score" data-role="text" ;">0</div>
+       <div class="ui-block-d" id="p4score" data-role="text" ;">0</div>
+       
+     </div>
+     <div data-role="button"  id="startpause" onclick="startgame();">Start Game</div>
+    <!-- img id="myImage" src="images/IMG_0713.jpg"/-->
+    <div id="zoomanvascontainer">
+        <canvas id="zoomcanvas" width="300" height="300"></canvas>
+    </div>
+      <div data-role="collapsible" data-collapsed="true" data-content-theme="b">
+    	<h1>Scores</h1>
+        <div>P1: <b><span id="worm0score"> &nbsp;</span></b> P2:  <b><span id="worm1score">&nbsp;</span></b><br/>
+        P3 <b><span id="worm2score"> &nbsp;</span></b> P4: <b><span id="worm3score">&nbsp;</span></b><br/>
+        Width: <b><span id="width"> &nbsp;</span></b>, Ht: <b><span id="height">&nbsp;</span></b>, Color Depth: <b><span id="colorDepth"></span></b>
+        </div>
+     </div>
+     
+    <div data-role="collapsible" data-collapsed="true" data-content-theme="b">
+        <h1>Performance</h1>
+        <div>Frames <b><span id="wormframes"> &nbsp;</span></b>
+        <br/>Min Time:  <b><span id="wormmintime">&nbsp;</span></b>
+        <br/>Max Time:  <b><span id="wormmaxtime">&nbsp;</span></b>
+        <br/>Average Time:  <b><span id="wormavetime">&nbsp;</span></b>
+        <br/>FPS:  <b><span id="wormfps">&nbsp;</span></b><br/>
+        <br/>Min Interval:  <b><span id="wormframemintime">&nbsp;</span></b>
+        <br/>Max Interval:  <b><span id="wormframemaxtime">&nbsp;</span></b>
+        <br/>Average Interval:  <b><span id="wormframeavetime">&nbsp;</span></b>
+        <br/>Percent of Time in Draw:  <b><span id="wormframepercenttime">&nbsp;</span></b>
+        </div>
+     </div>
+       
+    </div><!-- end jqm content -->
+    <div data-role="fieldcontain">
+        <label for="fps">Frames/Sec:</label>
+        <input type="range" name="fps" id="fps" value="30" min="1" max="60" data-theme="a" data-track-theme="b" />
+    </div>
+    <div data-role="fieldcontain">
+        <label for="gridsize">Grid Size:</label>
+        <input type="range" name="gridsize" id="gridsize" value="18" min="2" max="64" data-theme="a" data-track-theme="b" />
+    </div>
+    <div data-role="footer">
+    	<h1>This file is located at assets/www/index.html</h1>
+    </div>
+	</div><!-- end jqm page -->
+  </body>
+</html>

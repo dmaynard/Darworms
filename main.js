@@ -1,6 +1,8 @@
-/*  SumoWorms
+/*  DarWorms
     Copyright BitBLT Studios inc
     Author: David S. Maynard
+    Deployment:
+    scp -r -P 12960 ~/projects/SumoWorms/www/*.* dmaynard@bitbltstudios.com:/var/www/darworms/
 */
 
 var deviceInfo = function() {
@@ -28,8 +30,10 @@ var theGame;
  var zoomcanvas;
  var zctx;
  var timer;
- var xPts = [ 1.0, 0.5, -0.5, -1.0, -0.5, 0.5];
- var yPts = [ 0.0,  1.0,  1.0,  0.0,  -1.0, -1.0];
+ // var xPts = [ 1.0, 0.5, -0.5, -1.0, -0.5, 0.5];
+ // var yPts = [ 0.0,  1.0,  1.0,  0.0,  -1.0, -1.0];
+ var xPts = [ 0.5, 0.25, -0.25, -0.5, -0.25, 0.25];
+ var yPts = [ 0.0,  0.5,  0.5,  0.0,  -0.5, -0.5];
  // var targetPts = [ new Point( 0.375,0), new Point( 0.25, 0.375), new Point( -0.25, 0.375),
  //    new Point(-0.375,0), new Point(-0.25,-0.375), new Point(  0.25,-0.375)];
 
@@ -110,10 +114,12 @@ Point.prototype.dist = function( other) {
 }
 
 Point.prototype.wrap = function(wg, hg) {
-    if (this.x > wg) this.x  = this.x - wg;
-    if (this.x < 0) this.x  = this.x + w;
-    if (this.y > hg) this.y  = this.y - hg;
-    if (this.y < 0) this.y  = this.y + hg;
+    if (this.x >= wg) this.x  = this.x - wg;
+    if (this.x < 0) this.x  = this.x + wg;
+    if (this.y >= hg) this.y  = this.y - hg;
+    if (this.y < 0)  {
+        this.y  = this.y + hg;
+    }
 }
 
 Point.prototype.format = function( ) {
@@ -128,8 +134,8 @@ oddRowVec = [ new Point( 1, 0), new Point( 1,  1), new Point( 0,  1),
 
 /*    Grid   */
 function Grid(width, height) {
-  this.width = width;
-  this.height = height;
+  this.width = Math.floor(width);
+  this.height = Math.floor(height);
  
   
   //  Cell Format   8 bits each:  in-spoke eaten, out-spoke eaten, spoke eaten
@@ -411,9 +417,10 @@ function WPane ( grid, size, center, canvas) {
     this.cWidth = size.x;
     this.cHeight =  size.y;
     this.pMargin  = 10;
-    this.scale = new Point((this.pWidth - (2*this.pMargin))/this.cWidth, (this.pHeight- (2*this.pMargin))/this.cHeight);
-    this.origin = new Point(center.x - (this.cWidth >> 1), center.y - (this.cHeight >>1));
-    this.origin.wrap(this.grid.width, this,grid.height);
+    this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth+0.5),
+                           (this.pHeight- (2*this.pMargin))/(this.cHeight+0.5));
+    this.offset = new Point(center.x - (this.cWidth >> 1), center.y - (this.cHeight >>1));
+    this.offset.wrap(this.grid.width, this,grid.height);
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(this.scale.x, this.scale.y);
     this.colorTable = ["000000", "881C0A", "#1C880A", "#1C0A88",
@@ -422,21 +429,35 @@ function WPane ( grid, size, center, canvas) {
         "#884433", "#448833", "#443388", "#338844"];
 }
 
+WPane.prototype.clear = function() {
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.ctx.fillStyle =  "rgb(222,222,222)";
+    this.ctx.beginPath();
+    this.ctx.rect(0, 0, this.pWidth, this.pHeight);
+    this.ctx.closePath();
+    this.ctx.fill();
+}
+
 WPane.prototype.setCenter = function ( center ) {
-        this.origin = new Point(center.x - (this.cWidth >> 1), center.y - (this.cHeight >>1));
-        this.origin.wrap(this.grid.width, this.grid.height);
+    console.log( " WPane.prototype.setCenter  center: "   + center.format()  );
+
+    this.offset = new Point(center.x - Math.floor(this.cWidth /2), center.y - Math.floor(this.cHeight /2));
+    console.log( "     WPane.prototype.setCenter  offset: "   + this.offset.format()  );
+    this.offset.wrap(this.grid.width, this.grid.height);
+    console.log( "         WPane.prototype.setCenter  offset after wroa : "   + this.offset.format()  );
 
     }
 WPane.prototype.drawCells = function () {
-    var pPos = new Point(0,0);
-    var gPos = this.origin;
-    for (var col = 0; col < this.grid.width ; col = col + 1) {
-        for (var row = 0; row < this.grid.height ; row = row + 1) {
+    this.clear();
+    var gPos = new Point(this.offset.x,this.offset.y);
+    for (var col = 0; col < this.cWidth ; col = col + 1) {
+        for (var row = 0; row < this.cHeight ; row = row + 1) {
             /* at this pane coordinate draw that grid cell content  */
             this.drawCell(new Point(col,row), gPos);
             gPos.y = gPos.y + 1;
             if (gPos.y > this.grid.height ) {gPos.y = 0;}
         }
+        gPos.y = this.offset.y;
         gPos.x = gPos.x + 1;
         if (gPos.x > this.grid.width ) {gPos.x = 0;}
     }
@@ -445,7 +466,7 @@ WPane.prototype.drawCells = function () {
 WPane.prototype.pSetTransform = function (point) {
     var xoff;
     var yoff;
-    if (( point.y & 1) === 0) {
+    if (( (point.y+this.offset.y) & 1) === 0) {
         xoff = (point.x + 0.5 ) * this.scale.x + this.pMargin;
     } else {
         xoff = (point.x + 1.0 )  * this.scale.x  + this.pMargin;
@@ -454,6 +475,13 @@ WPane.prototype.pSetTransform = function (point) {
     yoff = (point.y + 0.5 ) * this.scale.y + this.pMargin;
     this.ctx.setTransform(this.scale.x,0,0,this.scale.y,xoff,yoff);
 };
+
+/* WPane.drawCell(wPoint, gPoint)
+ *
+  * in the pane at Position WPoint draw the cell for global grid poinr gPoint
+  *
+*/
+
 
 WPane.prototype.drawCell = function( wPoint,  gPoint) {
     console.log( " WPane.prototype.drawCell wPoint "   + wPoint.format() + "  gPoint "  + gPoint.format() );
@@ -807,8 +835,8 @@ Game.prototype.getAvePos = function(w) {
     }
 
      if (nActiveAve > 1 ) {
-        this.avePos.x = this.avePos.x / nActiveAve;
-        this.avePos.y = this.avePos.y / nActiveAve;
+        this.avePos.x = Math.floor(this.avePos.x / nActiveAve);
+        this.avePos.y = Math.floor(this.avePos.y / nActiveAve);
     }
     // console.log(this.avePos.format());
 };
@@ -817,6 +845,7 @@ Game.prototype.drawZoom = function(aPos) {
     console.log (" drawZoom   "  + " at "  + aPos.format());
 
     this.zoomPane.setCenter(aPos);
+    // this.zoomPane.setCenter(new Point(9,9));
     this.zoomPane.drawCells();
 
     // zctx.drawImage(canvas,(this.avePos.x * this.scale.x) - 25 ,(this.avePos.y * this.scale.y) - 25 ,100,100,0,0,100,100);

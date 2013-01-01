@@ -455,11 +455,11 @@ WPane.prototype.drawCells = function () {
             /* at this pane coordinate draw that grid cell content  */
             this.drawCell(new Point(col,row), gPos);
             gPos.y = gPos.y + 1;
-            if (gPos.y > this.grid.height ) {gPos.y = 0;}
+            if (gPos.y >= this.grid.height ) {gPos.y = 0;}
         }
         gPos.y = this.offset.y;
         gPos.x = gPos.x + 1;
-        if (gPos.x > this.grid.width ) {gPos.x = 0;}
+        if (gPos.x >= this.grid.width ) {gPos.x = 0;}
     }
 };
 

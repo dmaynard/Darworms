@@ -3,6 +3,9 @@
     Author: David S. Maynard
     Deployment:
     scp -r -P 12960 ~/projects/SumoWorms/www/*.* dmaynard@bitbltstudios.com:/var/www/darworms/
+    git push bitbltstudios:~/repo/ master
+
+    darworms.com
 */
 
 var deviceInfo = function() {
@@ -589,16 +592,16 @@ function Game(gridWidth, gridHeight, canvas, context) {
         "#88443380", "#44883380", "#44338880", "#33884480"];
 
     this.xPts = [ 1.0, 0.5, -0.5, -1.0, -0.5, 0.5];
-   this.yPts = [ 0.0,  1.0,  1.0,  0.0,  -1.0, -1.0];
-   this.targetPts = [ new Point( 0.185,0), new Point( 0.10, 0.185), new Point( -0.10, 0.185),
-                      new Point(-0.185,0), new Point(-0.10,-0.185), new Point(  0.10,-0.185)];
-              
-   
+
+
+Game.prototype.log = function() {   this.yPts = [ 0.0,  1.0,  1.0,  0.0,  -1.0, -1.0];
+    this.targetPts = [ new Point( 0.180,0), new Point( 0.09, 0.180), new Point( -0.09, 0.180),
+        new Point(-0.180,0), new Point(-0.09,-0.180), new Point(  0.09,-0.180)];
+
+
 }
 
-
-Game.prototype.log = function() {
-  console.log( " Game grid size  " + new Point(this.grid.width,this.grid.height).format());
+console.log( " Game grid size  " + new Point(this.grid.width,this.grid.height).format());
   console.log( " Game Canvas size  " + new Point(this.canvas.width,this.canvas.height).format());
   console.log( " Game scale " + this.scale.format());
   for (var i = 0; i < this.worms.length; i = i + 1) {
@@ -720,7 +723,8 @@ Game.prototype.drawSelectCell = function(point) {
     }
     wGraphics.scale(this.grid.width-(this.margin*2.0)/2, this.grid.height-(this.margin*2.0)/2);
     // wGraphics.translate(1.0, 1.0);
-    wGraphics.setTransform(this.canvas.width, 0, 0, this.canvas.height, (this.canvas.width-this.margin-this.margin)/2+hoffset, (this.canvas.height-this.margin-this.margin)/2);
+    wGraphics.setTransform(this.canvas.width, 0, 0, this.canvas.height,
+        (this.canvas.width)/2  - this.margin - 4 + hoffset, (this.canvas.height)/2  - this.margin -4);
     // console.log( "drawSelectCell  scalex "  + this.grid.width/2 );
     wGraphics.fillStyle =  "rgba(222,222,222,0.2)";
     wGraphics.beginPath();

@@ -423,7 +423,7 @@ function WPane ( grid, size, center, canvas) {
     this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth+0.5),
                            (this.pHeight- (2*this.pMargin))/(this.cHeight+0.5));
     this.offset = new Point(center.x - (this.cWidth >> 1), center.y - (this.cHeight >>1));
-    this.offset.wrap(this.grid.width, this,grid.height);
+    this.offset.wrap(this.grid.width, this.grid.height);
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(this.scale.x, this.scale.y);
     this.colorTable = ["000000", "881C0A", "#1C880A", "#1C0A88",
@@ -576,7 +576,7 @@ function Game(gridWidth, gridHeight, canvas, context) {
   this.scale = new Point((this.canvas.width - (2*this.margin))/gridWidth, (this.canvas.height- (2*this.margin))/gridHeight);
   this.origin = new Point( gridWidth >> 1, gridHeight >>1);
   console.log( "newGame  scalex "  + (this.canvas.width - (2*this.margin))/gridWidth);   
-  context.scale(this.scale.x, this.scale.y);
+  // context.scale(this.scale.x, this.scale.y);
   this.worms = [];
   this.needsRedraw = true;
   this.avePos = new Point(0,0);
@@ -621,6 +621,8 @@ Game.prototype.printNonEmpty = function () {
     });
     
 };
+
+
 Game.prototype.setTranslate = function (point) {
     if (( point.y & 1) === 0) {
       wGraphics.translate(point.x + 0.5 + (this.margin/this.scale.x) , point.y + 0.5  + (this.margin/this.scale.y));       
@@ -821,7 +823,16 @@ Game.prototype.drawDirtyCells = function () {
 };
 
 Game.prototype.clearCanvas = function() {
-    wGraphics.clearRect(0,0,canvas.width,canvas.height);
+    // Store the current transformation matrix
+    wGraphics.save();
+
+// Use the identity matrix while clearing the canvas
+    wGraphics.setTransform(1, 0, 0, 1, 0, 0);
+    wGraphics.clearRect(0, 0, this.canvas.width, this. canvas.height);
+
+// Restore the transform
+    wGraphics.restore();
+//    wGraphics.clearRect(0,0,canvas.width,canvas.height);
 };
 
 
@@ -1046,7 +1057,8 @@ var makeMoves = function () {
             document.getElementById("startpause").innerHTML = "Start Game";
             theGame.showTimes();
             theGame.gameState = gameStates.over;
-            alert("Game Over ");
+            // theGame.clearCanvas();
+            // alert("Game Over ");
             wGraphics.restore();
           }
       }

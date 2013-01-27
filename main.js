@@ -30,7 +30,7 @@ var theGame;
 
  var canvas;
  var wGraphics;
- var zoomcanvas;
+ // var zoomcanvas;
  var zctx;
  var timer;
  // var xPts = [ 1.0, 0.5, -0.5, -1.0, -0.5, 0.5];
@@ -116,14 +116,14 @@ Point.prototype.dist = function( other) {
     return Math.sqrt((this.x - other.x * 2) * (this.x - other.x*2) +  (this.y - other.y*2) * (this.y - other.y*2));
 }
 
-Point.prototype.wrap = function(wg, hg) {
-    if (this.x >= wg) this.x  = this.x - wg;
-    if (this.x < 0) this.x  = this.x + wg;
-    if (this.y >= hg) this.y  = this.y - hg;
-    if (this.y < 0)  {
-        this.y  = this.y + hg;
+Point.prototype.wrap = function (wg, hg) {
+    if (this.x >= wg) this.x = this.x - wg;
+    if (this.x < 0) this.x = this.x + wg;
+    if (this.y >= hg) this.y = this.y - hg;
+    if (this.y < 0) {
+        this.y = this.y + hg;
     }
-}
+};
 
 Point.prototype.format = function( ) {
     return "(" + this.x + "," + this.y + ")";
@@ -224,7 +224,7 @@ Grid.prototype.move = function(from, to, dir, colorIndex) {
 
 // Returns next x,y position
 Grid.prototype.next = function(point, dir) {
-  nP = new Point( point.x, point.y);
+  var nP = new Point( point.x, point.y);
   // console.log ("  (" + point.x  + "," + point.y + ") dir: " + dir);
   if ((point.y & 1) === 0) {
       nP = nP.add(evenRowVec[dir]);
@@ -414,7 +414,7 @@ an object containing grid a canvas a scale and an offset
 function WPane ( grid, size, center, canvas) {
     this.grid = grid;
     this.canvas = canvas;
-    this.pWidth = canvas.width
+    this.pWidth = canvas.width;
     this.pHeight = canvas.height;
     this.ctx = canvas.getContext("2d");
     this.cWidth = size.x;
@@ -454,7 +454,7 @@ WPane.prototype.setCenter = function ( center ) {
     this.offset.wrap(this.grid.width, this.grid.height);
     console.log( "         WPane.prototype.setCenter  offset after wroa : "   + this.offset.format()  );
 
-    }
+    };
 WPane.prototype.drawCells = function () {
     this.clear();
     var gPos = new Point(this.offset.x,this.offset.y);
@@ -486,13 +486,13 @@ WPane.prototype.pSetTransform = function (point) {
 
 /* WPane.drawCell(wPoint, gPoint)
  *
-  * in the pane at Position WPoint draw the cell for global grid poinr gPoint
+  * in the pane at Position WPoint draw the cell for global grid pointer gPoint
   *
 */
 
 
 WPane.prototype.drawCell = function( wPoint,  gPoint) {
-    console.log( " WPane.prototype.drawCell wPoint "   + wPoint.format() + "  gPoint "  + gPoint.format() );
+    // console.log( " WPane.prototype.drawCell wPoint "   + wPoint.format() + "  gPoint "  + gPoint.format() );
 
     this.pSetTransform(wPoint);
     this.ctx.fillStyle =  "rgba(080,222,222,0.1)";
@@ -559,7 +559,7 @@ gameStateNames = ["over", "running", "waiting", "paused"];
 
 
 function Game(gridWidth, gridHeight, canvas, context) {
-    console.log ( " new Game wGraphics " + wGraphics);
+  console.log ( " new Game wGraphics " + wGraphics);
   this.gameState = gameStates.over;
   this.margin = 10;
   this.grid = new Grid(gridWidth, gridHeight);
@@ -571,8 +571,9 @@ function Game(gridWidth, gridHeight, canvas, context) {
   this.dirtyCells = [];
   this.numTurns = 0;
   this.numMoves = 0;
+  this.cellsInZoomPane = new Point(5,5);
 
-  this.zoomPane = new WPane(this.grid, new Point(5,5) , new Point( gridWidth >> 1, gridHeight >>1) , document.getElementById("wcanvas"))
+  this.zoomPane = new WPane(this.grid, this.cellsInZoomPane , new Point( gridWidth >> 1, gridHeight >>1) , document.getElementById("wcanvas"))
   this.scale = new Point((this.canvas.width - (2*this.margin))/gridWidth, (this.canvas.height- (2*this.margin))/gridHeight);
   this.origin = new Point( gridWidth >> 1, gridHeight >>1);
   console.log( "newGame  scalex "  + (this.canvas.width - (2*this.margin))/gridWidth);   
@@ -592,16 +593,13 @@ function Game(gridWidth, gridHeight, canvas, context) {
         "#88443380", "#44883380", "#44338880", "#33884480"];
 
     this.xPts = [ 1.0, 0.5, -0.5, -1.0, -0.5, 0.5];
-
-
-Game.prototype.log = function() {   this.yPts = [ 0.0,  1.0,  1.0,  0.0,  -1.0, -1.0];
+    this.yPts = [ 0.0,  1.0,  1.0,  0.0,  -1.0, -1.0];
     this.targetPts = [ new Point( 0.180,0), new Point( 0.09, 0.180), new Point( -0.09, 0.180),
-        new Point(-0.180,0), new Point(-0.09,-0.180), new Point(  0.09,-0.180)];
+         new Point(-0.180,0), new Point(-0.09,-0.180), new Point(  0.09,-0.180)];
 
-
-}
-
-console.log( " Game grid size  " + new Point(this.grid.width,this.grid.height).format());
+    Game.prototype.log = function() {
+    };
+    console.log( " Game grid size  " + new Point(this.grid.width,this.grid.height).format());
   console.log( " Game Canvas size  " + new Point(this.canvas.width,this.canvas.height).format());
   console.log( " Game scale " + this.scale.format());
   for (var i = 0; i < this.worms.length; i = i + 1) {
@@ -689,9 +687,7 @@ Game.prototype.drawCell = function( point) {
              wGraphics.closePath();            
         }
         if ((invec & outMask[i]) !== 0) {
-             var inSpokeColor = this.colorTable[this.grid.spokeAt(point, i)];
-             // console.log (" inSpokeColor " + i + " :  " + inSpokeColor + " at "  + point.format());
-             wGraphics.strokeStyle  = inSpokeColor;
+             wGraphics.strokeStyle  = this.colorTable[this.grid.spokeAt(point, i)];
              wGraphics.lineWidth = 1.0/this.scale.x;
              wGraphics.lineCap = 'round';
              wGraphics.beginPath();
@@ -709,10 +705,10 @@ Game.prototype.drawCell = function( point) {
 Game.prototype.drawSelectCell = function(point) {
     theGame.drawZoom(point);
     wGraphics.save();
-    // console.log( "drawSelectCell  canvas "  + this.canvas.width + " height "  + this.canvas.height);   
-    // console.log( "drawSelectCell  grid "  + this.grid.width + " height "  + this.grid.height); 
+    console.log( "drawSelectCell  canvas "  + this.canvas.width + " height "  + this.canvas.height);
+    console.log( "drawSelectCell  grid "  + this.grid.width + " height "  + this.grid.height);
     
-    // This workd to draw the image bitmap 
+    // This worked to draw the image bitmap
     // wGraphics.setTransform(1.0, 0, 0, 1.0 , 0, 0);
     // wGraphics.drawImage(localImage, 10, 10);
     // return;
@@ -721,14 +717,14 @@ Game.prototype.drawSelectCell = function(point) {
     var hoffset = 0;
 
     if((point.y & 1) === 1)  {
-        hoffset = (this.canvas.width-(this.margin*2.0)) / 10;
+        hoffset = ((this.canvas.width-(this.margin*2.0)) / (this.cellsInZoomPane.x+0.5))/2.0;
     }
-    wGraphics.scale(this.grid.width-(this.margin*2.0)/2, this.grid.height-(this.margin*2.0)/2);
+    // wGraphics.scale(this.grid.width/2, this.grid.height/2);
     // wGraphics.translate(1.0, 1.0);
-    wGraphics.setTransform(this.canvas.width, 0, 0, this.canvas.height,
-        (this.canvas.width)/2  - this.margin - 4 + hoffset, (this.canvas.height)/2  - this.margin -4);
+     wGraphics.setTransform(this.canvas.width, 0,0, this.canvas.height,
+         (this.canvas.width)/2 + hoffset - this.margin  , (this.canvas.height)/2 - this.margin);
     // console.log( "drawSelectCell  scalex "  + this.grid.width/2 );
-    wGraphics.fillStyle =  "rgba(222,222,222,0.2)";
+    wGraphics.fillStyle =  "rgba(622,222,222,0.2)";
     wGraphics.beginPath();
     wGraphics.rect(-1.0, -1.0, 2.0, 2.0);
     wGraphics.closePath();
@@ -745,7 +741,8 @@ Game.prototype.drawSelectCell = function(point) {
         if ((outvec & outMask[i]) !== 0) {
              var outSpokeColor = this.alphaColorTable[this.grid.spokeAt(point, i)];
              // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
-             wGraphics.strokeStyle  = "rgba(0,0,0,0.2)";
+             // wGraphics.strokeStyle  = "rgba(0,0,0,0.2)";
+             wGraphics.strokeStyle  = outSpokeColor;
              wGraphics.lineWidth = 8/this.canvas.width;
              wGraphics.lineCap = 'round';
              wGraphics.beginPath();
@@ -764,7 +761,7 @@ Game.prototype.drawSelectCell = function(point) {
       */       
             wGraphics.strokeStyle  = this.alphaColorTable[focusWorm.colorIndex];
             wGraphics.lineWidth = 8/this.canvas.width;
-            wGraphics.moveTo(this.targetPts[i].x, this.targetPts[i].y);
+            // wGraphics.moveTo(this.targetPts[i].x, this.targetPts[i].y);
             wGraphics.beginPath();
             wGraphics.arc(this.targetPts[i].x*2, this.targetPts[i].y*2,  (0.125 / 64) * (animFrame & 0x3F), 0, Math.PI*2, false);
             wGraphics.closePath();

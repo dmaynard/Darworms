@@ -1,0 +1,5 @@
+git add main.js
+git commit
+scp -r -P 12960 ~/projects/SumoWorms/www/*.* dmaynard@bitbltstudios.com:/var/www/darworms/
+git push
+

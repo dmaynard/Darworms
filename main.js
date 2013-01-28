@@ -112,8 +112,8 @@ Point.prototype.add = function( other) {
 };
 
 Point.prototype.dist = function( other) {
-//    console.log (" adding (" + other.x + "," + other.y + " to (" + this.x + "," + this.y );
-    return Math.sqrt((this.x - other.x * 2) * (this.x - other.x*2) +  (this.y - other.y*2) * (this.y - other.y*2));
+     console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
+    return Math.sqrt((this.x - other.x ) * (this.x - other.x) +  (this.y - other.y) * (this.y - other.y));
 }
 
 Point.prototype.wrap = function (wg, hg) {
@@ -447,12 +447,12 @@ WPane.prototype.clear = function() {
 }
 
 WPane.prototype.setCenter = function ( center ) {
-    console.log( " WPane.prototype.setCenter  center: "   + center.format()  );
+    // console.log( " WPane.prototype.setCenter  center: "   + center.format()  );
 
     this.offset = new Point(center.x - Math.floor(this.cWidth /2), center.y - Math.floor(this.cHeight /2));
-    console.log( "     WPane.prototype.setCenter  offset: "   + this.offset.format()  );
+    // console.log( "     WPane.prototype.setCenter  offset: "   + this.offset.format()  );
     this.offset.wrap(this.grid.width, this.grid.height);
-    console.log( "         WPane.prototype.setCenter  offset after wroa : "   + this.offset.format()  );
+    // console.log( "         WPane.prototype.setCenter  offset after wroa : "   + this.offset.format()  );
 
     };
 WPane.prototype.drawCells = function () {
@@ -594,8 +594,6 @@ function Game(gridWidth, gridHeight, canvas, context) {
 
     this.xPts = [ 1.0, 0.5, -0.5, -1.0, -0.5, 0.5];
     this.yPts = [ 0.0,  1.0,  1.0,  0.0,  -1.0, -1.0];
-    this.targetPts = [ new Point( 0.180,0), new Point( 0.09, 0.180), new Point( -0.09, 0.180),
-         new Point(-0.180,0), new Point(-0.09,-0.180), new Point(  0.09,-0.180)];
 
     Game.prototype.log = function() {
     };
@@ -705,8 +703,8 @@ Game.prototype.drawCell = function( point) {
 Game.prototype.drawSelectCell = function(point) {
     theGame.drawZoom(point);
     wGraphics.save();
-    console.log( "drawSelectCell  canvas "  + this.canvas.width + " height "  + this.canvas.height);
-    console.log( "drawSelectCell  grid "  + this.grid.width + " height "  + this.grid.height);
+//    console.log( "drawSelectCell  canvas "  + this.canvas.width + " height "  + this.canvas.height);
+//    console.log( "drawSelectCell  grid "  + this.grid.width + " height "  + this.grid.height);
     
     // This worked to draw the image bitmap
     // wGraphics.setTransform(1.0, 0, 0, 1.0 , 0, 0);
@@ -721,7 +719,7 @@ Game.prototype.drawSelectCell = function(point) {
     }
     // wGraphics.scale(this.grid.width/2, this.grid.height/2);
     // wGraphics.translate(1.0, 1.0);
-     wGraphics.setTransform(this.canvas.width, 0,0, this.canvas.height,
+     wGraphics.setTransform(this.canvas.width/2, 0,0, this.canvas.height/2,
          (this.canvas.width)/2 + hoffset - this.margin  , (this.canvas.height)/2 - this.margin);
     // console.log( "drawSelectCell  scalex "  + this.grid.width/2 );
     wGraphics.fillStyle =  "rgba(622,222,222,0.2)";
@@ -747,7 +745,7 @@ Game.prototype.drawSelectCell = function(point) {
              wGraphics.lineCap = 'round';
              wGraphics.beginPath();
              wGraphics.moveTo(0,0);
-             wGraphics.lineTo(this.targetPts[i].x, this.targetPts[i].y);
+             wGraphics.lineTo(this.xPts[i]/this.cellsInZoomPane.x , this.yPts[i]/this.cellsInZoomPane.y);
              wGraphics.stroke();
              wGraphics.closePath();            
         } else {
@@ -763,11 +761,11 @@ Game.prototype.drawSelectCell = function(point) {
             wGraphics.lineWidth = 8/this.canvas.width;
             // wGraphics.moveTo(this.targetPts[i].x, this.targetPts[i].y);
             wGraphics.beginPath();
-            wGraphics.arc(this.targetPts[i].x*2, this.targetPts[i].y*2,  (0.125 / 64) * (animFrame & 0x3F), 0, Math.PI*2, false);
+            wGraphics.arc(this.xPts[i] * .75, this.yPts[i]* .75,  (0.250 / 64) * (animFrame & 0x3F), 0, Math.PI*2, false);
             wGraphics.closePath();
             wGraphics.stroke();
             wGraphics.moveTo(0,0);
-            wGraphics.lineTo((this.targetPts[i].x ) /  64.0  * (animFrame & 0x3F)  , (this.targetPts[i].y)  / 64.0 * (animFrame & 0x3F));
+            wGraphics.lineTo((this.xPts[i] * .75  ) /  64.0  * (animFrame & 0x3F)  , (this.yPts[i] * .75)  / 64.0 * (animFrame & 0x3F));
             wGraphics.stroke();
             wGraphics.closePath();
        }
@@ -870,7 +868,7 @@ Game.prototype.getAvePos = function(w) {
 };
 
 Game.prototype.drawZoom = function(aPos) {
-    console.log (" drawZoom   "  + " at "  + aPos.format());
+//    console.log (" drawZoom   "  + " at "  + aPos.format());
 
     this.zoomPane.setCenter(aPos);
     // this.zoomPane.setCenter(new Point(9,9));
@@ -1082,22 +1080,22 @@ var updateGameState = function () {
 };
 
 var selectDirection = function ( point ) {
-    // console.log( "selectDirection: " + point.format());
+    console.log( "selectDirection: " + point.format());
     var outvec = theGame.grid.stateAt(focusPoint);
     var minDist = 100000;
     var dist;
     var select = -1;
     for (var i = 0; i < 6 ; i = i + 1) {
         if ((outvec & outMask[i]) === 0) {
-          dist = point.dist(theGame.targetPts[i]);
+          dist = point.dist(new Point(theGame.xPts[i], theGame.yPts[i]));
           if (dist < minDist) {
              minDist = dist; 
              select = i;
           }
-         // console.log( "selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist); 
+         console.log( "selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
         } 
     }
-    if ((minDist < 0.2)  && (select >= 0)) {
+    if ((minDist < 0.5)  && (select >= 0)) {
         focusWorm.dna[focusValue & 0x3F] = select;
         theGame.gameState = gameStates.running;
         // console.log( "   focusWorm.dna[ " + focusValue + "] =  " + select); 
@@ -1117,7 +1115,9 @@ var wormEventHandler = function(event){
                         // wGraphics.fillText("X: " + touchX + " Y: " + touchY, touchX, touchY);
   console.log ( " Tap Event at x: " + touchX + " y: " + touchY);
   if (theGame.gameState === gameStates.waiting) {
-    selectDirection( new Point((touchX/theGame.canvas.width) - 0.5, (touchY/theGame.canvas.height) - 0.5));
+    // TODO  - 50 is because canvas appears at y = 50 and touchY is screen relative
+    // or is this because of the JetBrains Debug banner at the top ?
+    selectDirection( new Point((touchX/theGame.canvas.width)*2.0 - 1.0, ((touchY-50)/theGame.canvas.height)*2.0 - 1.0));
   }
 };
 

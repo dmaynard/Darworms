@@ -3,3 +3,5 @@ git commit
 scp -r -P 12960 ~/projects/SumoWorms/www/*.* dmaynard@bitbltstudios.com:/var/www/darworms/
 git push
 
+# to clone the remote repository
+git clone bitbltstudios:~/repo www

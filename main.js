@@ -416,6 +416,7 @@ function WPane ( grid, size, center, canvas) {
     this.canvas = canvas;
     this.pWidth = canvas.width;
     this.pHeight = canvas.height;
+    this.focus = center;
     this.ctx = canvas.getContext("2d");
     this.cWidth = size.x;
     this.cHeight =  size.y;
@@ -446,9 +447,22 @@ WPane.prototype.clear = function() {
     this.ctx.fill();
 }
 
-WPane.prototype.setCenter = function ( center ) {
-    // console.log( " WPane.prototype.setCenter  center: "   + center.format()  );
+WPane.prototype.setScale = function() {
+    this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth+0.5),
+        (this.pHeight- (2*this.pMargin))/(this.cHeight+0.5));
+    this.offset = new Point(this.focus.x - (this.cWidth >> 1), this.focus.y - (this.cHeight >>1));
+    this.offset.wrap(this.grid.width, this.grid.height);
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.ctx.scale(this.scale.x, this.scale.y);
+}
 
+WPane.prototype.setCenter = function ( center, size ) {
+    // console.log( " WPane.prototype.setCenter  center: "   + center.format()  );
+    this.cWidth = size.x;
+    this.cHeight =  size.y;
+
+    this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth+0.5),
+        (this.pHeight- (2*this.pMargin))/(this.cHeight+0.5));
     this.offset = new Point(center.x - Math.floor(this.cWidth /2), center.y - Math.floor(this.cHeight /2));
     // console.log( "     WPane.prototype.setCenter  offset: "   + this.offset.format()  );
     this.offset.wrap(this.grid.width, this.grid.height);
@@ -870,7 +884,10 @@ Game.prototype.getAvePos = function(w) {
 Game.prototype.drawZoom = function(aPos) {
 //    console.log (" drawZoom   "  + " at "  + aPos.format());
 
-    this.zoomPane.setCenter(aPos);
+    this.zoomPane.setCenter(aPos, this.cellsInZoomPane);
+    // this.zoomPane.cWidth = this.cellsInZoomPane.x;
+    // this.zoomPane.cHeight = this.cellsInZoomPane.y;
+    // this.zoomPane.setScale();
     // this.zoomPane.setCenter(new Point(9,9));
     this.zoomPane.drawCells();
 
@@ -1008,7 +1025,7 @@ Game.prototype.showTimes = function() {
 /* end of Game */
 
 
- var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused),  new Worm(3, wormStates.paused), new Worm(4, wormStates.paused)];
+var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused),  new Worm(3, wormStates.paused), new Worm(4, wormStates.paused)];
  // var localImage;
 
 var updateScores = function () {
@@ -1079,6 +1096,29 @@ var updateGameState = function () {
     
 };
 
+var doZoomOut = function ( tapPoint ) {
+    if (tapPoint.dist(new Point(0, 1.0)) < 0.2 ) {
+        if (theGame.cellsInZoomPane.x > 5) {
+            theGame.cellsInZoomPane.x = theGame.cellsInZoomPane.x  - 2;
+            theGame.cellsInZoomPane.y = theGame.cellsInZoomPane.y - 2;
+        }
+        console.log( "doZoomIN: returning true  wPane size ="  +  theGame.cellsInZoomPane.x );
+        theGame.drawZoom(theGame.zoomPane.focus, theGame.cellsInZoomPane);
+        return true;
+    }
+    if (tapPoint.dist(new Point(0, -1.0)) < 0.2 ) {
+        if (theGame.cellsInZoomPane.x < theGame.grid.width - 2) {
+            theGame.cellsInZoomPane.x = theGame.cellsInZoomPane.x + 2;
+            theGame.cellsInZoomPane.y = theGame.cellsInZoomPane.y + 2;
+            console.log( "doZoomOut: returning true  wPane size ="  +  theGame.cellsInZoomPane.x );
+            theGame.drawZoom(theGame.zoomPane.focus, theGame.cellsInZoomPane);
+
+        return true;
+        }
+    }
+    return false;
+
+}
 var selectDirection = function ( point ) {
     console.log( "selectDirection: " + point.format());
     var outvec = theGame.grid.stateAt(focusPoint);
@@ -1117,7 +1157,11 @@ var wormEventHandler = function(event){
   if (theGame.gameState === gameStates.waiting) {
     // TODO  - 50 is because canvas appears at y = 50 and touchY is screen relative
     // or is this because of the JetBrains Debug banner at the top ?
-    selectDirection( new Point((touchX/theGame.canvas.width)*2.0 - 1.0, ((touchY-50)/theGame.canvas.height)*2.0 - 1.0));
+    if ( doZoomOut(new Point((touchX/theGame.canvas.width)*2.0 - 1.0, ((touchY-50)/theGame.canvas.height)*2.0 - 1.0) )) {
+        console.log(" do zoomout here");
+    } else {
+        selectDirection( new Point((touchX/theGame.canvas.width)*2.0 - 1.0, ((touchY-50)/theGame.canvas.height)*2.0 - 1.0));
+    }
   }
 };
 

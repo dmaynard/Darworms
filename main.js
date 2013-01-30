@@ -15,13 +15,14 @@ var deviceInfo = function() {
     document.getElementById("colorDepth").innerHTML = screen.colorDepth;
 };
 
-/* Game Globals    */
+/* Game Globals  TODO   wrap these globals in a function  */
 
 
 var theGameOver = true;
 var focusPoint;
 var focusWorm;
 var focusValue;
+var nextToMove = 0;
 var animFrame = 0;
 
 var players = [1, 0, 0, 0];
@@ -112,7 +113,7 @@ Point.prototype.add = function( other) {
 };
 
 Point.prototype.dist = function( other) {
-     console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
+   //  console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
     return Math.sqrt((this.x - other.x ) * (this.x - other.x) +  (this.y - other.y) * (this.y - other.y));
 }
 
@@ -457,7 +458,7 @@ WPane.prototype.setScale = function() {
 }
 
 WPane.prototype.setCenter = function ( center, size ) {
-    // console.log( " WPane.prototype.setCenter  center: "   + center.format()  );
+//    console.log( " WPane.prototype.setCenter  center: "   + center.format() + " zoomSize: "  + size.format() );
     this.cWidth = size.x;
     this.cHeight =  size.y;
 
@@ -882,7 +883,7 @@ Game.prototype.getAvePos = function(w) {
 };
 
 Game.prototype.drawZoom = function(aPos) {
-//    console.log (" drawZoom   "  + " at "  + aPos.format());
+//   console.log (" drawZoom   "  + " at "  + aPos.format());
 
     this.zoomPane.setCenter(aPos, this.cellsInZoomPane);
     // this.zoomPane.cWidth = this.cellsInZoomPane.x;
@@ -893,13 +894,13 @@ Game.prototype.drawZoom = function(aPos) {
 
     // zctx.drawImage(canvas,(this.avePos.x * this.scale.x) - 25 ,(this.avePos.y * this.scale.y) - 25 ,100,100,0,0,100,100);
 }
-Game.prototype.makeMove = function() {
+Game.prototype.makeMove = function( ) {
     var nAlive = 0;
     if (this.gameState === gameStates.waiting) {
         return;
     }
     // console.log ("Game  StartingTurn " + this.numTurns );
-    for (var i = 0; i < this.worms.length; i = i + 1) {
+    for (var i = nextToMove; i < this.worms.length; i = i + 1) {
       var active = this.worms[i];
       // console.log (" GamemakeMove   for worm" + i + " :  " + wormStateNames[active.state] + " at "  + active.pos.format());
       if (active.state === wormStates.sleeping) {
@@ -914,31 +915,32 @@ Game.prototype.makeMove = function() {
       // console.log (" Current State = " + currentState);
       if (currentState == 0x3F) {
         active.state = wormStates.dead;  
-        console.log (" death of worm " + active.colorIndex + " Current State = " + currentState);
+        // console.log (" death of worm " + active.colorIndex + " Current State = " + currentState);
       } else {
         var direction = active.getMoveDir(currentState);
         if (direction === codons.unSet) {
             this.gameState = gameStates.waiting;
-            console.log(this.grid.formatStateAt(active.pos));
-            console.log ( " setting gamestate to gameStates.waiting " +  this.gameState);
+            // console.log(this.grid.formatStateAt(active.pos));
+            // console.log ( " setting gamestate to gameStates.waiting " +  this.gameState);
             focusPoint = active.pos;
             focusWorm = active;
             focusValue = currentState;
-            return(true);           
+            nextToMove = i;
+            this.numMoves = this.numMoves + 1;
+            active.nMoves = active.nMoves + 1;
+            return(true);
         }
         this.dirtyCells.push(active.pos);
         // console.log (" Move Direction = " + direction);
         var next = this.grid.next(active.pos,direction);
         
-        if( active.nMoves <= this.numTurns) {
+
           active.score = active.score + this.grid.move(active.pos,next,direction,active.colorIndex);
           this.numMoves = this.numMoves + 1; 
           active.nMoves = active.nMoves + 1;
           // console.log("    Worm " + active.colorIndex + "  just made move " + active.nMoves + " game turn " + this.numTurns + " From " + this.grid.formatStateAt(active.pos) + " direction  " + direction);
           active.pos = next;
-        } else {
-          console.log(" skipping turn worm " +  active.colorIndex + " has made "  + active.nMoves + " turn number is  " + this.numTurns);            
-        }
+
         this.dirtyCells.push(next);
         
         // console.log(" active.score [" +  i + "] ="  + active.score);
@@ -955,9 +957,9 @@ Game.prototype.makeMove = function() {
       //console.log (" Game  After Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
       // this.grid.logValueAt(active.pos);    
     }
+    nextToMove = 0;
     this.numTurns = this.numTurns + 1;
-
-    return ( nAlive > 0);
+    return ( nAlive > 0 || (nextToMove !== 0));
 };
 
 Game.prototype.showTimes = function() {
@@ -1120,7 +1122,7 @@ var doZoomOut = function ( tapPoint ) {
 
 }
 var selectDirection = function ( point ) {
-    console.log( "selectDirection: " + point.format());
+    // console.log( "selectDirection: " + point.format());
     var outvec = theGame.grid.stateAt(focusPoint);
     var minDist = 100000;
     var dist;
@@ -1132,14 +1134,12 @@ var selectDirection = function ( point ) {
              minDist = dist; 
              select = i;
           }
-         console.log( "selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
+         // console.log( "selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
         } 
     }
     if ((minDist < 0.5)  && (select >= 0)) {
         focusWorm.dna[focusValue & 0x3F] = select;
         theGame.gameState = gameStates.running;
-        // console.log( "   focusWorm.dna[ " + focusValue + "] =  " + select); 
-        // console.log( "focusWorm .position :" + focusWorm.pos.format() ); 
         theGame.clearCanvas();
         theGame.drawCells();
     }
@@ -1153,7 +1153,7 @@ var wormEventHandler = function(event){
  
                         // wGraphics.font = "20pt Arial";
                         // wGraphics.fillText("X: " + touchX + " Y: " + touchY, touchX, touchY);
-  console.log ( " Tap Event at x: " + touchX + " y: " + touchY);
+  // console.log ( " Tap Event at x: " + touchX + " y: " + touchY);
   if (theGame.gameState === gameStates.waiting) {
     // TODO  - 50 is because canvas appears at y = 50 and touchY is screen relative
     // or is this because of the JetBrains Debug banner at the top ?

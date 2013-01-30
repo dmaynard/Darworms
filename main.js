@@ -1166,27 +1166,7 @@ var wormEventHandler = function(event){
 };
 
 var startgame = function() {
-    /* grid = new Grid(4, 4, ctx);
-    grid.logValueAt(new Point(0,0));
-    grid.logValueAt(new Point(0,1));
-    grid.move( new Point(0,0), new Point(0,1), 0);
-    alert("This is a test5.");
-    console.log(" moved");
-    grid.logValueAt(new Point(0,0));
-    grid.logValueAt(new Point(0,1));
-    
-    alert("This is a test2.");
-   
-    grid.each ( function (point, value) {
-        grid.logValueAt (point) ;
-        for (var dir = 0; dir < 6; dir ++) {
-            nxt = grid.next(point, dir);
-            console.log ("    next: " + dir + " [" + nxt.x + "," + nxt.y + "]");
-            grid.move(point, nxt, dir);
-            console.log ("    move: " + dir + grid.formatValueAt(point) + " next.state" + grid.formatValueAt(nxt) );            
-        }
-    });
-    */
+
     if (theGame === undefined) {
         console.log(" theGame is undefined ");
         return;

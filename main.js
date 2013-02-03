@@ -42,6 +42,27 @@ var theGame;
  //    new Point(-0.375,0), new Point(-0.25,-0.375), new Point(  0.25,-0.375)];
 
 
+evenRowVec = [ new Point( 1, 0), new Point(  0,  1), new Point(-1,  1),
+    new Point(-1, 0), new Point( -1, -1),  new Point(0,-1) ];
+
+oddRowVec = [ new Point( 1, 0), new Point( 1,  1), new Point( 0,  1),
+    new Point( -1,0), new Point( 0, -1), new Point( 1, -1) ];
+
+
+
+/* Worm  Constants */
+codons = { "e": 0, "se": 1, "sw": 2, "w": 3, "nw": 4, "ne": 5, "unSet" : 6 , "isTrapped": 7};
+compassPts = [ "e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"];
+wormStates = {"dead": 0, "moving" : 1, "paused": 2, "sleeping": 3};
+wormStateNames = ["dead", "moving", "paused", "sleeping"];
+initialWormStates = [3, 2, 2, 2];
+
+
+var outMask = [1, 2, 4, 8, 16, 32];
+var inMask =  [8, 16, 32, 1, 2, 4];
+
+var inDir =   [3, 4, 5, 0, 1, 2];
+
 var setTypes = function () {
     document.getElementById("p1button").innerHTML = typeNames[players[0]];
     document.getElementById("p2button").innerHTML = typeNames[players[1]];
@@ -86,18 +107,6 @@ var player4 = function() {
 
 
 
-
-var test2 = function() {
-    alert("This is a test.");
-};
-var locationWatch = false;
-
-
-var outMask = [1, 2, 4, 8, 16, 32];
-var inMask =  [8, 16, 32, 1, 2, 4];
-
-var inDir =   [3, 4, 5, 0, 1, 2];
-
 function Point(x, y) { 
     this.x = x;
     this.y = y;
@@ -129,12 +138,6 @@ Point.prototype.wrap = function (wg, hg) {
 Point.prototype.format = function( ) {
     return "(" + this.x + "," + this.y + ")";
 };
-
-evenRowVec = [ new Point( 1, 0), new Point(  0,  1), new Point(-1,  1),
-               new Point(-1, 0), new Point( -1, -1),  new Point(0,-1) ];
-               
-oddRowVec = [ new Point( 1, 0), new Point( 1,  1), new Point( 0,  1),
-              new Point( -1,0), new Point( 0, -1), new Point( 1, -1) ];
 
 /*    Grid   */
 function Grid(width, height) {
@@ -201,8 +204,8 @@ Grid.prototype.isInside = function(point) {
 
 Grid.prototype.move = function(from, to, dir, colorIndex) {
   if ( (this.valueAt(to)  & inMask[dir])  !== 0) {
-      alert(" Attempted to eat eaten spoke at " + to.format());
-    console.log ("  (" + to.x  + "," + to.y + ") dir: " + dir + " value: " );
+     alert(" Attempted to eat eaten spoke at " + to.format());
+     console.log ("  (" + to.x  + "," + to.y + ") dir: " + dir + " value: " );
      console.log( "Attempted to eat eaten spoke at " + to.format() + " dir " + dir  +" value: 0x" + value.toString(16));
   }
   this.setValueAt(to, this.valueAt(to) | inMask[dir] | (inMask[dir] << 16));
@@ -270,12 +273,6 @@ Grid.prototype.formatStateAt = function(point) {
 
 /* end Grid */
 
-/* Worm  Constants */
-codons = { "e": 0, "se": 1, "sw": 2, "w": 3, "nw": 4, "ne": 5, "unSet" : 6 , "isTrapped": 7};
-compassPts = [ "e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"];
-wormStates = {"dead": 0, "moving" : 1, "paused": 2, "sleeping": 3};
-wormStateNames = ["dead", "moving", "paused", "sleeping"];
-initialWormStates = [3, 2, 2, 2];
 
 /* Worm Object */
 
@@ -422,8 +419,8 @@ function WPane ( grid, size, center, canvas) {
     this.cWidth = size.x;
     this.cHeight =  size.y;
     this.pMargin  = 10;
-    this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth+0.5),
-                           (this.pHeight- (2*this.pMargin))/(this.cHeight+0.5));
+    this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
+                           (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
     this.offset = new Point(center.x - (this.cWidth >> 1), center.y - (this.cHeight >>1));
     this.offset.wrap(this.grid.width, this.grid.height);
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -449,8 +446,8 @@ WPane.prototype.clear = function() {
 }
 
 WPane.prototype.setScale = function() {
-    this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth+0.5),
-        (this.pHeight- (2*this.pMargin))/(this.cHeight+0.5));
+    this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
+        (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
     this.offset = new Point(this.focus.x - (this.cWidth >> 1), this.focus.y - (this.cHeight >>1));
     this.offset.wrap(this.grid.width, this.grid.height);
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -462,8 +459,8 @@ WPane.prototype.setCenter = function ( center, size ) {
     this.cWidth = size.x;
     this.cHeight =  size.y;
 
-    this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth+0.5),
-        (this.pHeight- (2*this.pMargin))/(this.cHeight+0.5));
+    this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
+        (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
     this.offset = new Point(center.x - Math.floor(this.cWidth /2), center.y - Math.floor(this.cHeight /2));
     // console.log( "     WPane.prototype.setCenter  offset: "   + this.offset.format()  );
     this.offset.wrap(this.grid.width, this.grid.height);
@@ -489,7 +486,7 @@ WPane.prototype.drawCells = function () {
 WPane.prototype.pSetTransform = function (point) {
     var xoff;
     var yoff;
-    if (( (point.y+this.offset.y) & 1) === 0) {
+    if (( (point.y+this.offset.y) & 1) === 0 || (this.cWidth == 1)) {
         xoff = (point.x + 0.5 ) * this.scale.x + this.pMargin;
     } else {
         xoff = (point.x + 1.0 )  * this.scale.x  + this.pMargin;
@@ -504,7 +501,6 @@ WPane.prototype.pSetTransform = function (point) {
   * in the pane at Position WPoint draw the cell for global grid pointer gPoint
   *
 */
-
 
 WPane.prototype.drawCell = function( wPoint,  gPoint) {
     // console.log( " WPane.prototype.drawCell wPoint "   + wPoint.format() + "  gPoint "  + gPoint.format() );
@@ -564,14 +560,12 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
     }
 };
 
-
 /*  End of wPane */
 
 /*    Game   */
 
 gameStates = {"over": 0, "running" : 1, "waiting": 2, "paused": 3};
 gameStateNames = ["over", "running", "waiting", "paused"];
-
 
 function Game(gridWidth, gridHeight, canvas, context) {
   console.log ( " new Game wGraphics " + wGraphics);
@@ -622,7 +616,6 @@ function Game(gridWidth, gridHeight, canvas, context) {
     // this.grid.logValueAt(this.worms[i].pos);
   }
 };
-
 Game.prototype.printNonEmpty = function () {
     
     this.grid.each ( function (point, value) {
@@ -632,8 +625,6 @@ Game.prototype.printNonEmpty = function () {
     });
     
 };
-
-
 Game.prototype.setTranslate = function (point) {
     if (( point.y & 1) === 0) {
       wGraphics.translate(point.x + 0.5 + (this.margin/this.scale.x) , point.y + 0.5  + (this.margin/this.scale.y));       
@@ -713,29 +704,23 @@ Game.prototype.drawCell = function( point) {
     wGraphics.restore(); 
    
 };
-
-
 Game.prototype.drawSelectCell = function(point) {
     theGame.drawZoom(point);
     wGraphics.save();
 //    console.log( "drawSelectCell  canvas "  + this.canvas.width + " height "  + this.canvas.height);
 //    console.log( "drawSelectCell  grid "  + this.grid.width + " height "  + this.grid.height);
-    
-    // This worked to draw the image bitmap
-    // wGraphics.setTransform(1.0, 0, 0, 1.0 , 0, 0);
-    // wGraphics.drawImage(localImage, 10, 10);
-    // return;
-
 
     var hoffset = 0;
 
-    if((point.y & 1) === 1)  {
-        hoffset = ((this.canvas.width-(this.margin*2.0)) / (this.cellsInZoomPane.x+0.5))/2.0;
+    if((point.y & 1) === 1  && (this.cellsInZoomPane.x > 1))  {
+        hoffset = ((this.canvas.width-(this.margin*2.0)) / (this.cellsInZoomPane === 1 ? this.cellsInZoomPane.x :
+            this.cellsInZoomPane.x+0.5)) / 2 ;
+          // console.log( "drawSelectCell  hoffset "  + hoffset);
     }
     // wGraphics.scale(this.grid.width/2, this.grid.height/2);
     // wGraphics.translate(1.0, 1.0);
-     wGraphics.setTransform(this.canvas.width/2, 0,0, this.canvas.height/2,
-         (this.canvas.width)/2 + hoffset - this.margin  , (this.canvas.height)/2 - this.margin);
+     wGraphics.setTransform((this.canvas.width-(2*this.margin))/2, 0,0, (this.canvas.height-(2*this.margin))/2,
+         (this.canvas.width-(2*this.margin))/2 + hoffset , (this.canvas.height-(2*this.margin))/2 );
     // console.log( "drawSelectCell  scalex "  + this.grid.width/2 );
     wGraphics.fillStyle =  "rgba(622,222,222,0.2)";
     wGraphics.beginPath();
@@ -812,7 +797,6 @@ Game.prototype.highlightCell = function(point, color) {
     wGraphics.restore(); 
     
 };
-
 Game.prototype.drawCells = function () {
     for (var col = 0; col < this.grid.width ; col = col + 1) {
       for (var row = 0; row < this.grid.height ; row = row + 1) {
@@ -824,14 +808,12 @@ Game.prototype.drawCells = function () {
       this.highlightCell(active.pos, this.colorTable[active.colorIndex]);
     }
 };
-
 Game.prototype.drawDirtyCells = function () {
     var pt;
     while ((pt = this.dirtyCells.pop()) !== undefined ) {
        this.drawCell(pt);   
     }
 };
-
 Game.prototype.clearCanvas = function() {
     // Store the current transformation matrix
     wGraphics.save();
@@ -844,15 +826,12 @@ Game.prototype.clearCanvas = function() {
     wGraphics.restore();
 //    wGraphics.clearRect(0,0,canvas.width,canvas.height);
 };
-
-
 Game.prototype.clear = function() {
     this.clearCanvas();
     this.grid.clear();
     this.elapsedTime = - new Date().getTime();
     // this.worms = [];
 };
-
 Game.prototype.addWorm = function(w) {
   w.pos = this.origin;
   w.nMoves = 0;
@@ -860,7 +839,6 @@ Game.prototype.addWorm = function(w) {
   w.state = wormStates.paused;
   this.worms.push(w);
 };
-
 Game.prototype.getAvePos = function(w) {
     var nActiveAve = 0;
     this.avePos.x = 0;
@@ -881,7 +859,6 @@ Game.prototype.getAvePos = function(w) {
     }
     // console.log(this.avePos.format());
 };
-
 Game.prototype.drawZoom = function(aPos) {
 //   console.log (" drawZoom   "  + " at "  + aPos.format());
 
@@ -1025,11 +1002,8 @@ Game.prototype.showTimes = function() {
 };
 
 /* end of Game */
-
-
 var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused),  new Worm(3, wormStates.paused), new Worm(4, wormStates.paused)];
  // var localImage;
-
 var updateScores = function () {
 
     if (theGame.worms[0] !== undefined  &&  theGame.worms[0].shouldDrawScore()) {
@@ -1050,8 +1024,6 @@ var updateScores = function () {
       document.getElementById('p4score').innerHTML = "\t" + theGame.worms[3].score;    
     }
 };
-
-
 var makeMoves = function () {
       // console.log(" makeMoves theGameOver " + theGameOver +  "  gameState " + gameStateNames[theGame.gameState] );
       var startTime = new Date().getTime();
@@ -1085,7 +1057,6 @@ var makeMoves = function () {
       var elapsed = new Date().getTime() - startTime;
       theGame.frameTimes.push(elapsed);
 };
-
 var updateGameState = function () {
     // console.log(" updateGameState: gameState " +  gameStateNames[theGame.gameState]);   
     animFrame = animFrame + 1;    
@@ -1097,10 +1068,9 @@ var updateGameState = function () {
     }
     
 };
-
 var doZoomOut = function ( tapPoint ) {
     if (tapPoint.dist(new Point(0, 1.0)) < 0.2 ) {
-        if (theGame.cellsInZoomPane.x > 5) {
+        if (theGame.cellsInZoomPane.x >= 3) {
             theGame.cellsInZoomPane.x = theGame.cellsInZoomPane.x  - 2;
             theGame.cellsInZoomPane.y = theGame.cellsInZoomPane.y - 2;
         }
@@ -1144,7 +1114,6 @@ var selectDirection = function ( point ) {
         theGame.drawCells();
     }
 };
-
 var wormEventHandler = function(event){
   touchX = event.pageX;
   touchY = event.pageY;
@@ -1164,7 +1133,6 @@ var wormEventHandler = function(event){
     }
   }
 };
-
 var startgame = function() {
 
     if (theGame === undefined) {
@@ -1198,22 +1166,12 @@ var startgame = function() {
     }
  
 };
-
-
-
 var preventBehavior = function(e) {
     e.preventDefault();
 };
-
-
-
 function fail(msg) {
     alert(msg);
 }
-
-
-
- 
 function initTheGame(startNow) {
     console.log(" initTheGame: startnow  " + startNow);
     console.log ( " initTheGame wGraphics " + wGraphics);
@@ -1252,22 +1210,13 @@ function initTheGame(startNow) {
     theGame.needsRedraw = true;
     
 }
-
 function init() {
     document.addEventListener("deviceready", deviceInfo, true);
     setTypes();
     canvas = document.getElementById("wcanvas");
     wGraphics = canvas.getContext("2d");
-    // zcanvas = document.getElementById("zoomcanvas");
-    // zctx =  zcanvas.getContext("2d");
-    // localImage = document.getElementById("myImage");
-    // console.log ( " localImage " + localImage + " width " + localImage.width);
-    // wGraphics.drawImage(localImage, 10, 10);
-    // alert( " init called");
     console.log ( " init wGraphics " + wGraphics);
     $('#wcanvas').bind('tap', wormEventHandler);
-    // alert( " initTheGame to bw  called ");
-
     initTheGame(false);
 
 

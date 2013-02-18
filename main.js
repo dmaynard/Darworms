@@ -414,6 +414,7 @@ function WPane ( grid, size, center, canvas) {
     this.canvas = canvas;
     this.pWidth = canvas.width;
     this.pHeight = canvas.height;
+    this.savedCanvas = null;
     this.focus = center;
     this.ctx = canvas.getContext("2d");
     this.cWidth = size.x;
@@ -455,14 +456,17 @@ WPane.prototype.setScale = function() {
 }
 
 WPane.prototype.setCenter = function ( center, size ) {
-//    console.log( " WPane.prototype.setCenter  center: "   + center.format() + " zoomSize: "  + size.format() );
+    console.log( " WPane.prototype.setCenter  center: "   + center.format() + " zoomSize: "  + size.format() );
+    if ( size.x != this.cWidth || size.y != this.cHeight) {
+        this.savedCtx = null;
+    };
+    // console.log( "     WPane.prototype.setCenter  offset: "   + this.offset.format()  );
     this.cWidth = size.x;
-    this.cHeight =  size.y;
+    this.cHeight = size.y;
 
     this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
         (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
     this.offset = new Point(center.x - Math.floor(this.cWidth /2), center.y - Math.floor(this.cHeight /2));
-    // console.log( "     WPane.prototype.setCenter  offset: "   + this.offset.format()  );
     this.offset.wrap(this.grid.width, this.grid.height);
     // console.log( "         WPane.prototype.setCenter  offset after wroa : "   + this.offset.format()  );
 
@@ -470,16 +474,27 @@ WPane.prototype.setCenter = function ( center, size ) {
 WPane.prototype.drawCells = function () {
     this.clear();
     var gPos = new Point(this.offset.x,this.offset.y);
-    for (var col = 0; col < this.cWidth ; col = col + 1) {
-        for (var row = 0; row < this.cHeight ; row = row + 1) {
-            /* at this pane coordinate draw that grid cell content  */
-            this.drawCell(new Point(col,row), gPos);
-            gPos.y = gPos.y + 1;
-            if (gPos.y >= this.grid.height ) {gPos.y = 0;}
+    if (true || this.savedCtx == null) {
+        for (var col = 0; col < this.cWidth ; col = col + 1) {
+            for (var row = 0; row < this.cHeight ; row = row + 1) {
+                /* at this pane coordinate draw that grid cell content  */
+                this.drawCell(new Point(col,row), gPos);
+                gPos.y = gPos.y + 1;
+                if (gPos.y >= this.grid.height ) {gPos.y = 0;}
+            }
+            gPos.y = this.offset.y;
+            gPos.x = gPos.x + 1;
+            if (gPos.x >= this.grid.width ) {gPos.x = 0;}
         }
-        gPos.y = this.offset.y;
-        gPos.x = gPos.x + 1;
-        if (gPos.x >= this.grid.width ) {gPos.x = 0;}
+        this.savedCanvas = document.createElement('canvas');
+
+        this.savedCanvas.width = canvas.width;
+        this.savedCanvas.height = canvas.height;
+        this.savedCtx = this.savedCanvas.getContext('2d');
+
+        this.savedCtx.drawImage(this.canvas,0,0);
+    }  else { // use the saved canvas background for this size
+     this.ctx.drawImage(this.savedCanvas,0,0);
     }
 };
 
@@ -506,11 +521,14 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
     // console.log( " WPane.prototype.drawCell wPoint "   + wPoint.format() + "  gPoint "  + gPoint.format() );
 
     this.pSetTransform(wPoint);
-    this.ctx.fillStyle =  "rgba(080,222,222,0.1)";
+    /*
+    this.ctx.fillStyle =  "rgba(080,222,222,0.5)";
+
     this.ctx.beginPath();
     this.ctx.rect(-0.5, -0.5, 1.0, 1.0);
     this.ctx.closePath();
     this.ctx.fill();
+     */
     var owner = this.grid.spokeAt( gPoint, 7);
     if (owner > 0 ) {
         this.ctx.strokeStyle = this.colorTable[owner & 0xF];
@@ -537,7 +555,7 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
             var outSpokeColor = this.colorTable[this.grid.spokeAt(gPoint, i)];
             // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + gPoint.format());
             this.ctx.strokeStyle  = outSpokeColor;
-            this.ctx.lineWidth =   5.0/this.scale.x ;
+            this.ctx.lineWidth =   3.0/this.scale.x ;
             this.ctx.lineCap = 'round';
             this.ctx.beginPath();
             this.ctx.moveTo(0,0);
@@ -547,9 +565,9 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
         }
         if ((invec & outMask[i]) !== 0) {
             var inSpokeColor = this.colorTable[this.grid.spokeAt(gPoint, i)];
-            // console.log (" inSpokeColor " + i + " :  " + inSpokeColor + " at "  + gpoint.format());
+            // console.log (" inSpokeColor " + i + " :  " + inSpokeColor + " at "  + gPoint.format());
             this.ctx.strokeStyle  = inSpokeColor;
-            this.ctx.lineWidth = 5.0/this.scale.x;
+            this.ctx.lineWidth = 3.0/this.scale.x;
             this.ctx.lineCap = 'round';
             this.ctx.beginPath();
             this.ctx.moveTo(xPts[i], yPts[i]);
@@ -596,7 +614,7 @@ function Game(gridWidth, gridHeight, canvas, context) {
                      "#FF1C0A", "#1CFF0A", "#1C0AFF", "#0AFF1C",
                      "#884433", "#448833", "#443388", "#338844"];
   this.alphaColorTable = ["rgba(  0,   0,   0, 0.2)",
-        "rgba(  255,   0,   0, 0.2)", "rgba(    0, 255,   0, 0.2)", "rgba(    0,   0, 255, 0.2)", "rgba(  255, 255, 0, 0.2)",
+        "rgba(  255,   0,   0, 0.8)", "rgba(    0, 255,   0, 0.8)", "rgba(    0,   0, 255, 0.8)", "rgba(  255, 200, 0, 0.8)",
         "#AAAA0080", "#44883380", "#44338880", "#33884480",
         "#FF1C0A80", "#1CFF0A80", "#1C0AFF80", "#0AFF1C80",
         "#88443380", "#44883380", "#44338880", "#33884480"];
@@ -705,6 +723,8 @@ Game.prototype.drawCell = function( point) {
    
 };
 Game.prototype.drawSelectCell = function(point) {
+    //  Draw the large direction selectors screen
+    //  A rectangle 2.0 x 2.0
     theGame.drawZoom(point);
     wGraphics.save();
 //    console.log( "drawSelectCell  canvas "  + this.canvas.width + " height "  + this.canvas.height);
@@ -722,13 +742,15 @@ Game.prototype.drawSelectCell = function(point) {
      wGraphics.setTransform((this.canvas.width-(2*this.margin))/2, 0,0, (this.canvas.height-(2*this.margin))/2,
          (this.canvas.width-(2*this.margin))/2 + hoffset , (this.canvas.height-(2*this.margin))/2 );
     // console.log( "drawSelectCell  scalex "  + this.grid.width/2 );
-    wGraphics.fillStyle =  "rgba(622,222,222,0.2)";
+    /* wGraphics.fillStyle =  "rgba(622,222,222,0.8)";
     wGraphics.beginPath();
     wGraphics.rect(-1.0, -1.0, 2.0, 2.0);
     wGraphics.closePath();
-    wGraphics.fill();    
+    wGraphics.fill();
+    */
+
     var owner = this.grid.spokeAt( point, 7);
-    wGraphics.fillStyle = "rgba(0,0,0,0.2)";
+    wGraphics.fillStyle = "rgba(0,0,0,0.8)";
     wGraphics.beginPath();
     wGraphics.arc(0, 0, 0.1, 0, Math.PI*2, true);
     wGraphics.closePath();
@@ -745,7 +767,7 @@ Game.prototype.drawSelectCell = function(point) {
              wGraphics.lineCap = 'round';
              wGraphics.beginPath();
              wGraphics.moveTo(0,0);
-             wGraphics.lineTo(this.xPts[i]/this.cellsInZoomPane.x , this.yPts[i]/this.cellsInZoomPane.y);
+             wGraphics.lineTo(this.xPts[i]/this.cellsInZoomPane.x * 2.0 , this.yPts[i]/this.cellsInZoomPane.y * 2.0);
              wGraphics.stroke();
              wGraphics.closePath();            
         } else {

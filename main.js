@@ -415,6 +415,7 @@ function WPane ( grid, size, center, canvas) {
     this.pWidth = canvas.width;
     this.pHeight = canvas.height;
     this.savedCanvas = null;
+    this.canvasIsDirty = true;
     this.focus = center;
     this.ctx = canvas.getContext("2d");
     this.cWidth = size.x;
@@ -446,17 +447,13 @@ WPane.prototype.clear = function() {
     this.ctx.fill();
 }
 
-WPane.prototype.setScale = function() {
-    this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
-        (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
-    this.offset = new Point(this.focus.x - (this.cWidth >> 1), this.focus.y - (this.cHeight >>1));
-    this.offset.wrap(this.grid.width, this.grid.height);
-    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-    this.ctx.scale(this.scale.x, this.scale.y);
-}
 
 WPane.prototype.setCenter = function ( center, size ) {
-    console.log( " WPane.prototype.setCenter  center: "   + center.format() + " zoomSize: "  + size.format() );
+    // sets the scale, screen offset, and
+    // centers the focused point on the canvas
+    // should be acalled whenever the focus point changes
+    // or the user zooms in or out.
+    // console.log( " WPane.prototype.setCenter  center: "   + center.format() + " zoomSize: "  + size.format() );
     if ( size.x != this.cWidth || size.y != this.cHeight) {
         this.savedCtx = null;
     };
@@ -474,7 +471,7 @@ WPane.prototype.setCenter = function ( center, size ) {
 WPane.prototype.drawCells = function () {
     this.clear();
     var gPos = new Point(this.offset.x,this.offset.y);
-    if (true || this.savedCtx == null) {
+    if (this.canvasIsDirty) {
         for (var col = 0; col < this.cWidth ; col = col + 1) {
             for (var row = 0; row < this.cHeight ; row = row + 1) {
                 /* at this pane coordinate draw that grid cell content  */
@@ -491,8 +488,8 @@ WPane.prototype.drawCells = function () {
         this.savedCanvas.width = canvas.width;
         this.savedCanvas.height = canvas.height;
         this.savedCtx = this.savedCanvas.getContext('2d');
-
         this.savedCtx.drawImage(this.canvas,0,0);
+        this.canvasIsDirty = false;
     }  else { // use the saved canvas background for this size
      this.ctx.drawImage(this.savedCanvas,0,0);
     }
@@ -927,6 +924,7 @@ Game.prototype.makeMove = function( ) {
             nextToMove = i;
             this.numMoves = this.numMoves + 1;
             active.nMoves = active.nMoves + 1;
+            this.zoomPane.canvasIsDirty = true;
             return(true);
         }
         this.dirtyCells.push(active.pos);
@@ -1080,6 +1078,11 @@ var makeMoves = function () {
       theGame.frameTimes.push(elapsed);
 };
 var updateGameState = function () {
+    // This is the game loop
+    // We either make one round of moves
+    // or if we are waiting for user input
+    // we draw the direction selection screen
+    //
     // console.log(" updateGameState: gameState " +  gameStateNames[theGame.gameState]);   
     animFrame = animFrame + 1;    
     if (theGame.gameState === gameStates.running) {
@@ -1097,7 +1100,8 @@ var doZoomOut = function ( tapPoint ) {
             theGame.cellsInZoomPane.y = theGame.cellsInZoomPane.y - 2;
         }
         console.log( "doZoomIN: returning true  wPane size ="  +  theGame.cellsInZoomPane.x );
-        theGame.drawZoom(theGame.zoomPane.focus, theGame.cellsInZoomPane);
+        theGame.zoomPane.canvasIsDirty = true;
+        // theGame.drawZoom(theGame.zoomPane.focus, theGame.cellsInZoomPane);
         return true;
     }
     if (tapPoint.dist(new Point(0, -1.0)) < 0.2 ) {
@@ -1105,7 +1109,8 @@ var doZoomOut = function ( tapPoint ) {
             theGame.cellsInZoomPane.x = theGame.cellsInZoomPane.x + 2;
             theGame.cellsInZoomPane.y = theGame.cellsInZoomPane.y + 2;
             console.log( "doZoomOut: returning true  wPane size ="  +  theGame.cellsInZoomPane.x );
-            theGame.drawZoom(theGame.zoomPane.focus, theGame.cellsInZoomPane);
+            theGame.zoomPane.canvasIsDirty = true;
+            // theGame.drawZoom(theGame.zoomPane.focus, theGame.cellsInZoomPane);
 
         return true;
         }

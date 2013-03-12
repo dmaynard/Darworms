@@ -17,7 +17,8 @@ var deviceInfo = function() {
 
 /* Game Globals  TODO   wrap these globals in a function  */
 
-
+var scoreCanvas;
+var scorectx;
 var theGameOver = true;
 var focusPoint;
 var focusWorm;
@@ -29,6 +30,8 @@ var players = [1, 0, 0, 0];
 var typeNames = [" None ", "Random", " Same ", " New  " ];
 var theGame;
 
+
+// var scorectx = sCanvas.getContext("2d");
  var canvas;
  var wGraphics;
  // var zoomcanvas;
@@ -427,7 +430,9 @@ function WPane ( grid, size, center, canvas) {
     this.offset.wrap(this.grid.width, this.grid.height);
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(this.scale.x, this.scale.y);
+    /*
     this.colorTable = ["000000", "881C0A", "#1C880A", "#1C0A88",
+
         "#AAAA00", "#448833", "#443388", "#338844",
         "#FF1C0A", "#1CFF0A", "#1C0AFF", "#0AFF1C",
         "#884433", "#448833", "#443388", "#338844"];
@@ -436,6 +441,7 @@ function WPane ( grid, size, center, canvas) {
         "#AAAA0080", "#44883380", "#44338880", "#33884480",
         "#FF1C0A80", "#1CFF0A80", "#1C0AFF80", "#0AFF1C80",
         "#88443380", "#44883380", "#44338880", "#33884480"];
+     */
 }
 
 WPane.prototype.clear = function() {
@@ -528,14 +534,14 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
      */
     var owner = this.grid.spokeAt( gPoint, 7);
     if (owner > 0 ) {
-        this.ctx.strokeStyle = this.colorTable[owner & 0xF];
+        this.ctx.strokeStyle = theGame.colorTable[owner & 0xF];
         this.ctx.lineWidth = 1.0/this.scale.x;
         this.ctx.beginPath();
         this.ctx.arc(0, 0, 0.2, 0, Math.PI*2, true);
         this.ctx.closePath();
         this.ctx.stroke();
     } else {
-        this.ctx.fillStyle = this.colorTable[this.grid.spokeAt(gPoint,6) & 0xF];
+        this.ctx.fillStyle = theGame.colorTable[this.grid.spokeAt(gPoint,6) & 0xF];
         this.ctx.lineWidth = 1.0/this.scale.x;
         this.ctx.beginPath();
         this.ctx.arc(0, 0, 0.1, 0, Math.PI*2, true);
@@ -549,7 +555,7 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
 
     for (var i = 0; i < 6 ; i = i + 1) {
         if ((outvec & outMask[i]) !== 0) {
-            var outSpokeColor = this.colorTable[this.grid.spokeAt(gPoint, i)];
+            var outSpokeColor = theGame.colorTable[this.grid.spokeAt(gPoint, i)];
             // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + gPoint.format());
             this.ctx.strokeStyle  = outSpokeColor;
             this.ctx.lineWidth =   3.0/this.scale.x ;
@@ -561,7 +567,7 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
             this.ctx.closePath();
         }
         if ((invec & outMask[i]) !== 0) {
-            var inSpokeColor = this.colorTable[this.grid.spokeAt(gPoint, i)];
+            var inSpokeColor = theGame.colorTable[this.grid.spokeAt(gPoint, i)];
             // console.log (" inSpokeColor " + i + " :  " + inSpokeColor + " at "  + gPoint.format());
             this.ctx.strokeStyle  = inSpokeColor;
             this.ctx.lineWidth = 3.0/this.scale.x;
@@ -768,14 +774,7 @@ Game.prototype.drawSelectCell = function(point) {
              wGraphics.stroke();
              wGraphics.closePath();            
         } else {
-      /*
-      wGraphics.fillStyle = this.colorTable[focusWorm.colorIndex];
-            wGraphics.strokeStyle  = this.colorTable[focusWorm.colorIndex];
-            wGraphics.beginPath();
-            wGraphics.arc(this.targetPts[i].x, this.targetPts[i].y,  (0.125 / 64) * (64 - (animFrame & 0x3F)), 0, Math.PI*2, false);
-            wGraphics.closePath();
-            wGraphics.fill();               
-      */       
+
             wGraphics.strokeStyle  = this.alphaColorTable[focusWorm.colorIndex];
             wGraphics.lineWidth = 8/this.canvas.width;
             // wGraphics.moveTo(this.targetPts[i].x, this.targetPts[i].y);
@@ -1024,24 +1023,27 @@ Game.prototype.showTimes = function() {
 /* end of Game */
 var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused),  new Worm(3, wormStates.paused), new Worm(4, wormStates.paused)];
  // var localImage;
-var updateScores = function () {
 
-    if (theGame.worms[0] !== undefined  &&  theGame.worms[0].shouldDrawScore()) {
-      // console.log( " worm 0 score is " + theGame.worms[0].score);
-      document.getElementById('worm0score').innerHTML = theGame.worms[0].score;    
-      document.getElementById('p1score').innerHTML = "\t" + theGame.worms[0].score;    
-    }
-    if (theGame.worms[1] !== undefined ) {
-      document.getElementById('worm1score').innerHTML = theGame.worms[1].score;    
-      document.getElementById('p2score').innerHTML = "\t" + theGame.worms[1].score;    
-   }
-    if (theGame.worms[2] !== undefined ) {
-      document.getElementById('worm2score').innerHTML = theGame.worms[2].score;    
-      document.getElementById('p3score').innerHTML = "\t" + theGame.worms[2].score;    
-    }
-    if (theGame.worms[3] !== undefined ) {
-      document.getElementById('worm3score').innerHTML = theGame.worms[3].score;    
-      document.getElementById('p4score').innerHTML = "\t" + theGame.worms[3].score;    
+var clearScore = function(segmentIndex, totalSegments)  {
+    var segWidth = scoreCanvas.width / totalSegments;
+    scorectx.fillStyle =  "rgba(222,222,222, 1.0)";
+    scorectx.fillRect(segWidth * segmentIndex,  0, segWidth, scoreCanvas.height);
+}
+
+var scoreStartx = function( segmentIndex, totalSegments, text) {
+    var segWidth = scoreCanvas.width / totalSegments;
+    var twidth = scorectx.measureText(text).width;
+    return  ((segWidth * segmentIndex) + (segWidth/2) - (twidth / 2));
+
+}
+var updateScores = function () {
+    var i;
+    for (i = 0; i < 4; i++ ) {
+        if (theGame.worms[i] !== undefined  &&  theGame.worms[i].shouldDrawScore()) {
+            clearScore(i,4);
+            scorectx.fillStyle = theGame.colorTable[i+1];
+            scorectx.fillText(theGame.worms[i].score, scoreStartx(i,4,theGame.worms[i].score.toString()), 25);
+        }
     }
 };
 var makeMoves = function () {
@@ -1245,6 +1247,11 @@ function init() {
     console.log ( " init wGraphics " + wGraphics);
     $('#wcanvas').bind('tap', wormEventHandler);
     initTheGame(false);
-
+    scoreCanvas = document.getElementById("scorecanvas");
+    scorectx =  scoreCanvas.getContext("2d");
+    scorectx.font = "bold 18px sans-serif";
+    // scorectx.shadowColor = "rgb(190, 190, 190)";
+    // scorectx.shadowOffsetX = 3;
+    // scorectx.shadowOffsetY = 3;
 
 }

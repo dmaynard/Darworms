@@ -45,10 +45,10 @@ var theGame;
  //    new Point(-0.375,0), new Point(-0.25,-0.375), new Point(  0.25,-0.375)];
 
 
-evenRowVec = [ new Point( 1, 0), new Point(  0,  1), new Point(-1,  1),
+var evenRowVec = [ new Point( 1, 0), new Point(  0,  1), new Point(-1,  1),
     new Point(-1, 0), new Point( -1, -1),  new Point(0,-1) ];
 
-oddRowVec = [ new Point( 1, 0), new Point( 1,  1), new Point( 0,  1),
+var oddRowVec = [ new Point( 1, 0), new Point( 1,  1), new Point( 0,  1),
     new Point( -1,0), new Point( 0, -1), new Point( 1, -1) ];
 
 
@@ -60,6 +60,8 @@ wormStates = {"dead": 0, "moving" : 1, "paused": 2, "sleeping": 3};
 wormStateNames = ["dead", "moving", "paused", "sleeping"];
 initialWormStates = [3, 2, 2, 2];
 
+gameStates = {"over": 0, "running" : 1, "waiting": 2, "paused": 3};
+gameStateNames = ["over", "running", "waiting", "paused"];
 
 var outMask = [1, 2, 4, 8, 16, 32];
 var inMask =  [8, 16, 32, 1, 2, 4];
@@ -1027,13 +1029,16 @@ var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused),  n
 var clearScore = function(segmentIndex, totalSegments)  {
     var segWidth = scoreCanvas.width / totalSegments;
     scorectx.fillStyle =  "rgba(222,222,222, 1.0)";
+    scorectx.shadowOffsetX = 0;
+    scorectx.shadowOffsetY = 0;
+
     scorectx.fillRect(segWidth * segmentIndex,  0, segWidth, scoreCanvas.height);
 }
 
 var scoreStartx = function( segmentIndex, totalSegments, text) {
     var segWidth = scoreCanvas.width / totalSegments;
     var twidth = scorectx.measureText(text).width;
-    return  ((segWidth * segmentIndex) + (segWidth/2) - (twidth / 2));
+    return  ((segWidth * segmentIndex) + (segWidth/2) - (twidth/2));
 
 }
 var updateScores = function () {
@@ -1042,6 +1047,8 @@ var updateScores = function () {
         if (theGame.worms[i] !== undefined  &&  theGame.worms[i].shouldDrawScore()) {
             clearScore(i,4);
             scorectx.fillStyle = theGame.colorTable[i+1];
+            scorectx.shadowOffsetX = 3;
+            scorectx.shadowOffsetY = 3;
             scorectx.fillText(theGame.worms[i].score, scoreStartx(i,4,theGame.worms[i].score.toString()), 25);
         }
     }
@@ -1070,11 +1077,8 @@ var makeMoves = function () {
             wGraphics.restore();
           }
       }
-      // theGame.drawCells();
       theGame.drawDirtyCells();
       theGame.getAvePos();
-      // theGame.drawZoom(theGame.avePos);
-      // zctx.drawImage(canvas,100,100,100,100,0,0,100,100);
       updateScores();
       var elapsed = new Date().getTime() - startTime;
       theGame.frameTimes.push(elapsed);
@@ -1250,8 +1254,8 @@ function init() {
     scoreCanvas = document.getElementById("scorecanvas");
     scorectx =  scoreCanvas.getContext("2d");
     scorectx.font = "bold 18px sans-serif";
-    // scorectx.shadowColor = "rgb(190, 190, 190)";
-    // scorectx.shadowOffsetX = 3;
-    // scorectx.shadowOffsetY = 3;
+    scorectx.shadowColor = "rgb(190, 190, 190)";
+    scorectx.shadowOffsetX = 3;
+    scorectx.shadowOffsetY = 3;
 
 }

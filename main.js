@@ -7,16 +7,13 @@
 
     darworms.com
 */
-
 var deviceInfo = function() {
     alert("This is a deviceInfo.");
     document.getElementById("width").innerHTML = screen.width;
     document.getElementById("height").innerHTML = screen.height;
     document.getElementById("colorDepth").innerHTML = screen.colorDepth;
 };
-
 /* Game Globals  TODO   wrap these globals in a function  */
-
 var scoreCanvas;
 var scorectx;
 var theGameOver = true;
@@ -25,31 +22,22 @@ var focusWorm;
 var focusValue;
 var nextToMove = 0;
 var animFrame = 0;
-
 var players = [1, 0, 0, 0];
 var typeNames = [" None ", "Random", " Same ", " New  " ];
 var theGame;
+var canvas;
+var wGraphics;
 
- var canvas;
- var wGraphics;
- // var zoomcanvas;
- var zctx;
- var timer;
- // var xPts = [ 1.0, 0.5, -0.5, -1.0, -0.5, 0.5];
- // var yPts = [ 0.0,  1.0,  1.0,  0.0,  -1.0, -1.0];
- var xPts = [ 0.5, 0.25, -0.25, -0.5, -0.25, 0.25];
- var yPts = [ 0.0,  0.5,  0.5,  0.0,  -0.5, -0.5];
+var timer;
+var xPts = [ 0.5, 0.25, -0.25, -0.5, -0.25, 0.25];
+var yPts = [ 0.0,  0.5,  0.5,  0.0,  -0.5, -0.5];
  // var targetPts = [ new Point( 0.375,0), new Point( 0.25, 0.375), new Point( -0.25, 0.375),
  //    new Point(-0.375,0), new Point(-0.25,-0.375), new Point(  0.25,-0.375)];
-
-
 var evenRowVec = [ new Point( 1, 0), new Point(  0,  1), new Point(-1,  1),
     new Point(-1, 0), new Point( -1, -1),  new Point(0,-1) ];
 
 var oddRowVec = [ new Point( 1, 0), new Point( 1,  1), new Point( 0,  1),
     new Point( -1,0), new Point( 0, -1), new Point( 1, -1) ];
-
-
 
 /* Worm  Constants */
 codons = { "e": 0, "se": 1, "sw": 2, "w": 3, "nw": 4, "ne": 5, "unSet" : 6 , "isTrapped": 7};
@@ -137,11 +125,9 @@ Point.prototype.wrap = function (wg, hg) {
         this.y = this.y + hg;
     }
 };
-
 Point.prototype.format = function( ) {
     return "(" + this.x + "," + this.y + ")";
 };
-
 /*    Grid   */
 function Grid(width, height) {
   this.width = Math.floor(width);
@@ -161,50 +147,40 @@ function Grid(width, height) {
       this.animFraction = 0;
   }
 }
-
 Grid.prototype.clear = function() {
   for (var i = 0; i < width * height; i = i + 1) {
       this.cells[i] = 0;
       this.colors[i] = 0;
   }
 };
-
 Grid.prototype.valueAt = function(point) {
   return this.cells[point.y * this.width + point.x];
 };
-
 Grid.prototype.hexValueAt = function(point) {
   return (" 0x" + ( this.valueAt(point)).toString(16));
 };
 Grid.prototype.stateAt = function(point) {
    return this.valueAt(point) & 0x3F;
 };
-
 Grid.prototype.outVectorsAt = function(point) {
    return (this.valueAt(point) >> 8) & 0x3F;
 };
-
 Grid.prototype.inVectorsAt = function(point) {
    return (this.valueAt(point) >> 16) & 0x3F;
 };
-
 Grid.prototype.spokeAt = function(point, dir) {
    return (this.colors[point.y * this.width + point.x] >> (dir*4)) & 0x0F;
 };
-
 Grid.prototype.setSpokeAt = function(point, dir, colorIndex) {
    this.colors[point.y * this.width + point.x] =  this.colors[point.y * this.width + point.x] | (colorIndex << (dir*4)) ;
 };
-
 Grid.prototype.setValueAt = function(point, value) {
   this.cells[point.y * this.width + point.x] = value;
 };
-
 Grid.prototype.isInside = function(point) {
   return point.x >= 0 && point.y >= 0 &&
          point.x < this.width && point.y < this.height;
 };
-
 Grid.prototype.move = function(from, to, dir, colorIndex) {
   if ( (this.valueAt(to)  & inMask[dir])  !== 0) {
      alert(" Attempted to eat eaten spoke at " + to.format());
@@ -228,7 +204,6 @@ Grid.prototype.move = function(from, to, dir, colorIndex) {
   }
   return captures;
 };
-
 // Returns next x,y position
 Grid.prototype.next = function(point, dir) {
   var nP = new Point( point.x, point.y);
@@ -255,7 +230,6 @@ Grid.prototype.next = function(point, dir) {
   // console.log ("    next from: (" + point.format()  + " dir " + dir + " next:  " + nP.format());
   return nP;
 };
-
 Grid.prototype.each = function(action) {
     for (var y=0; y < this.height; y++ ) {
         for ( var x=0; x < this.width; x++) {
@@ -264,21 +238,15 @@ Grid.prototype.each = function(action) {
         }
     }
 };
-
 Grid.prototype.logValueAt = function(point) {
   console.log("[ " + point.x + "," + point.y + "] val = 0x"+ this.valueAt(point).toString(16) + " outVectors = 0x",
                this.outVectorsAt(point).toString(16) + " inVectors = 0x" +  this.inVectorsAt(point).toString(16));
 };
-
 Grid.prototype.formatStateAt = function(point) {
   return " x " + point.x + " y " + point.y + " state 0x"+ this.stateAt(point).toString(16);
 };
-
 /* end Grid */
-
-
 /* Worm Object */
-
 function Worm(colorIndex, state) {
   this.colorIndex = colorIndex;
   this.dna = new Array(64);
@@ -297,7 +265,6 @@ function Worm(colorIndex, state) {
   }
   this.randomize();
 }
-
 Worm.prototype.init = function( wType) {
     this.nMoves = 0;
     this.score = 0;
@@ -338,7 +305,6 @@ Worm.prototype.getMoveDir = function (value) {
       }
       return this.dna[value & 0x3F];
 };
-
 Worm.prototype.shouldDrawScore = function () {
    if (this.score !== this.prevScore  || (this.nMoves < 2)) {
        this.prevScore = this.score;
@@ -346,7 +312,6 @@ Worm.prototype.shouldDrawScore = function () {
    }
     return false;
 };
-
 Worm.prototype.randomize = function() {
     var dir;
       for (var i = 0; i < 63; i = i + 1) {
@@ -368,12 +333,10 @@ Worm.prototype.randomize = function() {
       // console.log(" randomize loop end  i = " + i + " dna[i] = " + this.dna[i]);
    }
 };
-
 Worm.prototype.log = function() {
   var dir;
   console.log( " Worm State: " + wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
   };
-  
 Worm.prototype.place = function(aState, aGame) {
   this.pos = aGame.origin;
   this.nMoves = 0;
@@ -381,7 +344,6 @@ Worm.prototype.place = function(aState, aGame) {
   this.state = aState;
   console.log(" placing worm   i = " + this.colorIndex + " state " + aState);
 };
-
 Worm.prototype.dump = function() {
    this.log();
    for (var i = 0; i < 64; i = i + 1) {
@@ -397,7 +359,6 @@ Worm.prototype.dump = function() {
   
 };
 /* end of Worm */
-
 /* WPane
 
 an object containing grid a canvas a scale and an offset
@@ -411,7 +372,6 @@ an object containing grid a canvas a scale and an offset
    *  margin ?
    *
 */
-
 function WPane ( grid, size, center, canvas) {
     this.grid = grid;
     this.canvas = canvas;
@@ -443,7 +403,6 @@ function WPane ( grid, size, center, canvas) {
         "#88443380", "#44883380", "#44338880", "#33884480"];
      */
 }
-
 WPane.prototype.clear = function() {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.fillStyle =  "rgba(222,222,222, 1.0)";
@@ -452,8 +411,6 @@ WPane.prototype.clear = function() {
     this.ctx.closePath();
     this.ctx.fill();
 }
-
-
 WPane.prototype.setCenter = function ( center, size ) {
     // sets the scale, screen offset, and
     // centers the focused point on the canvas
@@ -518,14 +475,13 @@ WPane.prototype.drawCells = function () {
         this.savedCtx.shadowColor = "rgb(190, 190, 190)";
         this.savedCtx.shadowOffsetX = 3;
         this.savedCtx.shadowOffsetY = 3;
-        this.savedCtx.fillText("-",this.savedCanvas.width/2, 25);
-        this.savedCtx.fillText("+",this.savedCanvas.width/2, this.savedCanvas.height - 25);
+        this.savedCtx.fillText("-",this.savedCanvas.width/2, 10);
+        this.savedCtx.fillText("+",this.savedCanvas.width/2, this.savedCanvas.height - 10);
 
     }  else { // use the saved canvas background for this size
      this.ctx.drawImage(this.savedCanvas,0,0);
     }
 };
-
 WPane.prototype.pSetTransform = function (point) {
     var xoff;
     var yoff;
@@ -540,13 +496,11 @@ WPane.prototype.pSetTransform = function (point) {
     yoff = (point.y + 0.5 ) * this.scale.y + this.pMargin + (this.scale.y/4.0);
     this.ctx.setTransform(this.scale.x,0,0,this.scale.y,xoff,yoff);
 };
-
 /* WPane.drawCell(wPoint, gPoint)
  *
   * in the pane at Position WPoint draw the cell for global grid pointer gPoint
   *
 */
-
 WPane.prototype.drawCell = function( wPoint,  gPoint) {
     // console.log( " WPane.prototype.drawCell wPoint "   + wPoint.format() + "  gPoint "  + gPoint.format() );
 
@@ -607,14 +561,10 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
         }
     }
 };
-
 /*  End of wPane */
-
 /*    Game   */
-
 var gameStates = {"over": 0, "running" : 1, "waiting": 2, "paused": 3};
 var gameStateNames = ["over", "running", "waiting", "paused"];
-
 function Game(gridWidth, gridHeight, canvas, context) {
   console.log ( " new Game wGraphics " + wGraphics);
   this.gameState = gameStates.over;
@@ -1059,7 +1009,6 @@ var clearScore = function(segmentIndex, totalSegments)  {
 
     scorectx.fillRect(segWidth * segmentIndex,  0, segWidth, scoreCanvas.height);
 }
-
 var scoreStartx = function( segmentIndex, totalSegments, text) {
     var segWidth = scoreCanvas.width / totalSegments;
     var twidth = scorectx.measureText(text).width;

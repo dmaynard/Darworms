@@ -317,7 +317,7 @@ Worm.prototype.randomize = function() {
       for (var i = 0; i < 63; i = i + 1) {
           // console.log(" randomize loop start  i = " + i + " dna[i] = " + this.dna[i]);
           if (this.dna[i] === codons.unSet ) {
-            for (var j = 0; j < 100; j = j + 1) {
+            for (var j = 0; j < 1000; j = j + 1) {
               dir = Math.floor(Math.random() * 6);
               //console.log( " dir = " + dir +  " i=" + i + " outMask[dir] = " + outMask[dir] + "& = " + (i & outMask[dir]));
               if ((i & outMask[dir]) === 0) {

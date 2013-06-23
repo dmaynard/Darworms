@@ -1177,10 +1177,10 @@ var startgame = function() {
 var preventBehavior = function(e) {
     e.preventDefault();
 };
-function fail(msg) {
+var fail = function (msg) {
     alert(msg);
 }
-function initTheGame(startNow) {
+var initTheGame = function(startNow) {
     console.log(" initTheGame: startnow  " + startNow);
     console.log ( " initTheGame wGraphics " + wGraphics);
     
@@ -1218,7 +1218,9 @@ function initTheGame(startNow) {
     theGame.needsRedraw = true;
     
 }
-function init() {
+var init = function () {
+    // This may be needed when we actually build a phoneGap app
+    // in this case delay initialization untill we get the deviceready event
     document.addEventListener("deviceready", deviceInfo, true);
     setTypes();
     canvas = document.getElementById("wcanvas");

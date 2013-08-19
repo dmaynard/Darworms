@@ -40,10 +40,10 @@ var darworms = {
 window.addEventListener("load", function() {
 
 // determine jewel size
-    var jewelProto = document.getElementById("jewel-proto"),
-        rect = jewelProto.getBoundingClientRect();
+   //  var jewelProto = document.getElementById("jewel-proto"),
+     //   rect = jewelProto.getBoundingClientRect();
 
-    darworms.settings.jewelSize = rect.width;
+    // darworms.settings.jewelSize = rect.width;
 
 
     Modernizr.addTest("standalone", function() {
@@ -91,29 +91,20 @@ window.addEventListener("load", function() {
     Modernizr.load([
         {
             load : [
-                "scripts/sizzle.js",
-                "scripts/dom.js",
-                "scripts/requestAnimationFrame.js",
-                "scripts/game.js"
+                "jquery.mobile/jquery-1.6.4.min.js",
+                "jquery.mobile/jquery.mobile-1.0rc1.js",
+                "main.js"
             ]
         },{
-            test : Modernizr.standalone,
-            yep : "scripts/screen.splash.js",
-            nope : "scripts/screen.splash.js",
             complete : function() {
-                darworms.game.setup();
-                if (Modernizr.standalone) {
-                    darworms.game.showScreen("splash-screen",
-                        getLoadProgress);
-                } else {
-                    darworms.game.showScreen("splash-screen",getLoadProgress);
-                }
+                init();
             }
         }
     ]);
 
 // loading stage 2
     if (Modernizr.standalone) {
+        console.log("Loading finds Modenizr.standalone true: ")
         Modernizr.load([
             {
                 test : Modernizr.canvas,

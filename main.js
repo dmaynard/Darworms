@@ -998,6 +998,12 @@ Game.prototype.showTimes = function() {
 };
 
 /* end of Game */
+
+/* The following code is called from the game timer */
+
+/* This should be wrapped in an anonymous function closure */
+
+
 var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused),  new Worm(3, wormStates.paused), new Worm(4, wormStates.paused)];
  // var localImage;
 

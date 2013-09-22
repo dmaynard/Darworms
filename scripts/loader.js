@@ -93,45 +93,22 @@ window.addEventListener("load", function() {
             load : [
                 "jquery.mobile/jquery-1.6.4.min.js",
                 "jquery.mobile/jquery.mobile-1.0rc1.js",
+                "scripts/Point.js",
+                "scripts/Grid.js",
+                "scripts/Worm.js",
+                "scripts/WPane.js",
+                "scripts/Game.js",
                 "main.js"
             ]
         },{
             complete : function() {
+                console.log(" stage 1 loading finished");
                 init();
             }
         }
     ]);
 
 // loading stage 2
-    if (Modernizr.standalone) {
-        console.log("Loading finds Modenizr.standalone true: ")
-        Modernizr.load([
-            {
-                test : Modernizr.canvas,
-                yep : ["loader!scripts/display.canvas.js","loader!scripts/wdisplay.canvas.js"],
-                nope : "loader!scripts/display.dom.js"
-            },{
-                test : Modernizr.webworkers,
-                yep : [
-                    "loader!scripts/board.js"
-                    //    "loader!scripts/board.worker-interface.js",
-                    //    "preload!scripts/board.worker.js"
-                ],
-                nope : "loader!scripts/board.js"
-            },{
-                load : [
-                    "loader!scripts/dwboard.js",
-                    "loader!scripts/audio.js",
-                    "loader!scripts/input.js",
-                    "loader!scripts/screen.main-menu.js",
-                    "loader!scripts/screen.game.js",
-                    "loader!scripts/screen.wormgame.js",
-                    "loader!images/jewels"
-                        + darworms.settings.jewelSize + ".png"
-                ]
-            }
-        ]);
-    }
 
 
 

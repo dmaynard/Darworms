@@ -79,7 +79,7 @@ Worm.prototype.randomize = function() {
             for (var j = 0; j < 1000; j = j + 1) {
                 dir = Math.floor(Math.random() * 6);
                 //console.log( " dir = " + dir +  " i=" + i + " outMask[dir] = " + outMask[dir] + "& = " + (i & outMask[dir]));
-                if ((i & outMask[dir]) === 0) {
+                if ((i & darworms.outMask[dir]) === 0) {
                     this.dna[i] = dir;
                     // console.log(" Setting dir 0x" + i.toString(16) + " to " + compassPts[dir]);
                     break;
@@ -109,7 +109,7 @@ Worm.prototype.dump = function() {
         console.log (" dna" + i + " = " + compassPts[this.dna[i]]);
         var spokes = [];
         for (var spoke = 0; spoke < 6; spoke = spoke + 1) {
-            if ((i & outMask[spoke]) !== 0 ) {
+            if ((i & darworms.outMask[spoke]) !== 0 ) {
                 spokes.push(compassPts[spoke]);
             }
         }

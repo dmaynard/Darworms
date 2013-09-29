@@ -36,18 +36,6 @@ function WPane ( grid, size, center, canvas) {
     this.offset.wrap(this.grid.width, this.grid.height);
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(this.scale.x, this.scale.y);
-    /*
-     this.colorTable = ["000000", "881C0A", "#1C880A", "#1C0A88",
-
-     "#AAAA00", "#448833", "#443388", "#338844",
-     "#FF1C0A", "#1CFF0A", "#1C0AFF", "#0AFF1C",
-     "#884433", "#448833", "#443388", "#338844"];
-     this.alphaColorTable = ["rgba(  0,   0,   0, 0.2)",
-     "rgba(  255,   0,   0, 0.2)", "rgba(    0, 255,   0, 0.2)", "rgba(    0,   0, 255, 0.2)", "rgba(  255, 255, 0, 0.2)",
-     "#AAAA0080", "#44883380", "#44338880", "#33884480",
-     "#FF1C0A80", "#1CFF0A80", "#1C0AFF80", "#0AFF1C80",
-     "#88443380", "#44883380", "#44338880", "#33884480"];
-     */
 }
 WPane.prototype.clear = function() {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -181,7 +169,7 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
     // console.log (" drawCell at" +  gPoint.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
 
     for (var i = 0; i < 6 ; i = i + 1) {
-        if ((outvec & outMask[i]) !== 0) {
+        if ((outvec & darworms.outMask[i]) !== 0) {
             var outSpokeColor = theGame.colorTable[this.grid.spokeAt(gPoint, i)];
             // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + gPoint.format());
             this.ctx.strokeStyle  = outSpokeColor;
@@ -189,18 +177,18 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
             this.ctx.lineCap = 'round';
             this.ctx.beginPath();
             this.ctx.moveTo(0,0);
-            this.ctx.lineTo(xPts[i], yPts[i]);
+            this.ctx.lineTo(darworms.graphics.xPts[i], darworms.graphics.yPts[i]);
             this.ctx.stroke();
             this.ctx.closePath();
         }
-        if ((invec & outMask[i]) !== 0) {
+        if ((invec & darworms.outMask[i]) !== 0) {
             var inSpokeColor = theGame.colorTable[this.grid.spokeAt(gPoint, i)];
             // console.log (" inSpokeColor " + i + " :  " + inSpokeColor + " at "  + gPoint.format());
             this.ctx.strokeStyle  = inSpokeColor;
             this.ctx.lineWidth = 3.0/this.scale.x;
             this.ctx.lineCap = 'round';
             this.ctx.beginPath();
-            this.ctx.moveTo(xPts[i], yPts[i]);
+            this.ctx.moveTo(darworms.graphics.xPts[i], darworms.graphics.yPts[i]);
             this.ctx.lineTo(0,0);
             this.ctx.stroke();
             this.ctx.closePath();

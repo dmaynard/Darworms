@@ -14,23 +14,18 @@ var deviceInfo = function() {
     document.getElementById("colorDepth").innerHTML = screen.colorDepth;
 };
 /* Game Globals  TODO   wrap these globals in a function  */
-var scoreCanvas;
-var scorectx;
-var theGameOver = true;
+
 var focusPoint;
 var focusWorm;
 var focusValue;
 var nextToMove = 0;
-var animFrame = 0;
 var players = [1, 0, 0, 0];
 var typeNames = [" None ", "Random", " Same ", " New  " ];
 var theGame;
 var canvas;
 var wGraphics;
 
-var timer;
-var xPts = [ 0.5, 0.25, -0.25, -0.5, -0.25, 0.25];
-var yPts = [ 0.0,  0.5,  0.5,  0.0,  -0.5, -0.5];
+
  // var targetPts = [ new Point( 0.375,0), new Point( 0.25, 0.375), new Point( -0.25, 0.375),
  //    new Point(-0.375,0), new Point(-0.25,-0.375), new Point(  0.25,-0.375)];
 var evenRowVec = [ new Point( 1, 0), new Point(  0,  1), new Point(-1,  1),
@@ -49,10 +44,10 @@ initialWormStates = [3, 2, 2, 2];
 gameStates = {"over": 0, "running" : 1, "waiting": 2, "paused": 3};
 gameStateNames = ["over", "running", "waiting", "paused"];
 
-var outMask = [1, 2, 4, 8, 16, 32];
-var inMask =  [8, 16, 32, 1, 2, 4];
+darworms.outMask = [1, 2, 4, 8, 16, 32];
+darworms.inMask =  [8, 16, 32, 1, 2, 4];
 
-var inDir =   [3, 4, 5, 0, 1, 2];
+darworms.inDir =   [3, 4, 5, 0, 1, 2];
 
 var setTypes = function () {
     document.getElementById("p1button").innerHTML = typeNames[players[0]];
@@ -111,16 +106,16 @@ var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused),  n
  // var localImage;
 
 var clearScore = function(segmentIndex, totalSegments)  {
-    var segWidth = scoreCanvas.width / totalSegments;
-    scorectx.fillStyle =  "rgba(222,222,222, 1.0)";
-    scorectx.shadowOffsetX = 0;
-    scorectx.shadowOffsetY = 0;
+    var segWidth = darworms.dwsettings.scoreCanvas.width / totalSegments;
+    darworms.graphics.scorectx.fillStyle =  "rgba(222,222,222, 1.0)";
+    darworms.graphics.scorectx.shadowOffsetX = 0;
+    darworms.graphics.scorectx.shadowOffsetY = 0;
 
-    scorectx.fillRect(segWidth * segmentIndex,  0, segWidth, scoreCanvas.height);
+    darworms.graphics.scorectx.fillRect(segWidth * segmentIndex,  0, segWidth, darworms.dwsettings.scoreCanvas.height);
 }
 var scoreStartx = function( segmentIndex, totalSegments, text) {
-    var segWidth = scoreCanvas.width / totalSegments;
-    var twidth = scorectx.measureText(text).width;
+    var segWidth = darworms.dwsettings.scoreCanvas.width / totalSegments;
+    var twidth = darworms.graphics.scorectx.measureText(text).width;
     return  ((segWidth * segmentIndex) + (segWidth/2) - (twidth/2));
 
 }
@@ -129,10 +124,10 @@ var updateScores = function () {
     for (i = 0; i < 4; i++ ) {
         if (theGame.worms[i] !== undefined  &&  theGame.worms[i].shouldDrawScore()) {
             clearScore(i,4);
-            scorectx.fillStyle = theGame.colorTable[i+1];
-            scorectx.shadowOffsetX = 3;
-            scorectx.shadowOffsetY = 3;
-            scorectx.fillText(theGame.worms[i].score, scoreStartx(i,4,theGame.worms[i].score.toString()), 25);
+            darworms.graphics.scorectx.fillStyle = theGame.colorTable[i+1];
+            darworms.graphics.scorectx.shadowOffsetX = 3;
+            darworms.graphics.scorectx.shadowOffsetY = 3;
+            darworms.graphics.scorectx.fillText(theGame.worms[i].score, scoreStartx(i,4,theGame.worms[i].score.toString()), 25);
         }
     }
 };
@@ -146,12 +141,11 @@ var makeMoves = function () {
         // wGraphics.drawImage(localImage, 10, 10);
         
       }
-      if (theGameOver === false) {
+      if (theGame.gameState != gameStates.over ) {
           if (theGame.makeMove() === false) {
-            theGameOver = true;
             theGame.elapsedTime = theGame.elapsedTime  + new Date().getTime();
             console.log(" Game Over");
-            clearInterval(timer);
+            clearInterval(darworms.graphics.timer);
             document.getElementById("startpause").innerHTML = "Start Game";
             theGame.showTimes();
             theGame.gameState = gameStates.over;
@@ -173,7 +167,7 @@ var updateGameState = function () {
     // we draw the direction selection screen
     //
     // console.log(" updateGameState: gameState " +  gameStateNames[theGame.gameState]);   
-    animFrame = animFrame + 1;    
+    darworms.graphics.animFrame = darworms.graphics.animFrame + 1;
     if (theGame.gameState === gameStates.running) {
         makeMoves();
     }
@@ -208,14 +202,14 @@ var doZoomOut = function ( tapPoint ) {
     return false;
 
 }
-var selectDirection = function ( point ) {
+darworms.selectDirection = function ( point ) {
     // console.log( "selectDirection: " + point.format());
     var outvec = theGame.grid.stateAt(focusPoint);
     var minDist = 100000;
     var dist;
     var select = -1;
     for (var i = 0; i < 6 ; i = i + 1) {
-        if ((outvec & outMask[i]) === 0) {
+        if ((outvec & darworms.outMask[i]) === 0) {
           dist = point.dist(new Point(theGame.xPts[i], theGame.yPts[i]));
           if (dist < minDist) {
              minDist = dist; 
@@ -246,19 +240,39 @@ var wormEventHandler = function(event){
     if ( doZoomOut(new Point((touchX/theGame.canvas.width)*2.0 - 1.0, ((touchY-50)/theGame.canvas.height)*2.0 - 1.0) )) {
         console.log(" do zoomout here");
     } else {
-        selectDirection( new Point((touchX/theGame.canvas.width)*2.0 - 1.0, ((touchY-50)/theGame.canvas.height)*2.0 - 1.0));
+        darworms.selectDirection( new Point((touchX/theGame.canvas.width)*2.0 - 1.0, ((touchY-50)/theGame.canvas.height)*2.0 - 1.0));
     }
   }
 };
-var startgame = function() {
-
-    if (theGame === undefined) {
-        console.log(" theGame is undefined ");
-        return;
+darworms.startgame = function(startNow) {
+    var  heightSlider = Math.floor($("#gridsize").val());
+    if (theGame === undefined  ||theGame.grid.height != heightSlider ) {
+        console.log(" theGame size has changed ");
+        if ((heightSlider & 1) !== 0) {
+            // height must be an even number because of toroid shape
+            heightSlider = heightSlider*1 + 1;
+        }
+        theGame = new Game(heightSlider, heightSlider, canvas, wGraphics);
     }
+    if (theGame.gameState === gameStates.over) {
+        theGame.clear();
+
+        theGame.needsRedraw = true;
+        theGame.drawCells();
+        theGame.worms = gWorms;
+        console.log(" init gridsize: " + $("#gridsize").val() + " gHeight" + heightSlider);
+        for (var i = 0; i < gWorms.length; i = i + 1) {
+            if (players[i] !== 0) { //  not None
+                gWorms[i].init(players[i]);
+            }
+            gWorms[i].place( initialWormStates[players[i]] , theGame);
+        }
+    }
+
+    if (startNow === false) return;
     if (theGame.gameState === gameStates.running) {
         // This is now a pause game button 
-        clearInterval(timer);
+        clearInterval(darworms.graphics.timer);
         document.getElementById("startpause").innerHTML = "Resume Game";
         theGame.gameState = gameStates.paused;
         return;
@@ -267,7 +281,7 @@ var startgame = function() {
         // This is now a pause game button 
         document.getElementById("startpause").innerHTML = "Pause Game";
         theGame.gameState = gameStates.running;        
-        timer = setInterval(updateGameState,1000/$("#fps").val());
+        darworms.graphics.timer = setInterval(updateGameState,1000/$("#fps").val());
         return;
     }
     if (theGame.gameState === gameStates.over) {
@@ -279,7 +293,7 @@ var startgame = function() {
         document.getElementById("startpause").innerHTML = "Pause Game";
         initTheGame(true);
         theGame.log();
-        timer = setInterval(updateGameState,1000/$("#fps").val());
+        darworms.graphics.timer = setInterval(updateGameState,1000/$("#fps").val());
     }
  
 };
@@ -290,40 +304,16 @@ var fail = function (msg) {
     alert(msg);
 }
 var initTheGame = function(startNow) {
-    console.log(" initTheGame: startnow  " + startNow);
-    console.log ( " initTheGame wGraphics " + wGraphics);
-    
-    var gWidth = 16;
-    var gHeight = 16;
-    gHeight = $("#gridsize").val();
-    if ((gHeight & 1) !== 0) {
-        // height must be an even number because of toroid shape
-        gHeight = gHeight*1 + 1;       
-    }
-    gWidth = gHeight; 
-    
-    var game = new Game(gWidth, gHeight, canvas, wGraphics);
-    game.clear();
-    game.drawCells();
-    game.worms = gWorms;
-    console.log(" init gridsize: " + $("#gridsize").val() + " gHeight" + gHeight);
-    for (var i = 0; i < gWorms.length; i = i + 1) {
-        if (players[i] !== 0) { //  not None
-            gWorms[i].init(players[i]);
-        }
-        gWorms[i].place( initialWormStates[players[i]] , game);
-    }    
- 
-    theGame = game;
+
+
     if (startNow) {
-        theGameOver = false;
         theGame.gameState = gameStates.running;
         
     } else {
-        theGameOver = true;
         theGame.gameState = gameStates.over;
        
     }
+    // startgame(startNow);
     theGame.needsRedraw = true;
     
 }
@@ -336,12 +326,12 @@ var init = function () {
     wGraphics = canvas.getContext("2d");
     console.log ( " init wGraphics " + wGraphics);
     $('#wcanvas').bind('tap', wormEventHandler);
-    initTheGame(false);
-    scoreCanvas = document.getElementById("scorecanvas");
-    scorectx =  scoreCanvas.getContext("2d");
-    scorectx.font = "bold 18px sans-serif";
-    scorectx.shadowColor = "rgb(190, 190, 190)";
-    scorectx.shadowOffsetX = 3;
-    scorectx.shadowOffsetY = 3;
-
+    // initTheGame(false);
+    darworms.dwsettings.scoreCanvas = document.getElementById("scorecanvas");
+    darworms.graphics.scorectx =  darworms.dwsettings.scoreCanvas.getContext("2d");
+    darworms.graphics.scorectx.font = "bold 18px sans-serif";
+    darworms.graphics.scorectx.shadowColor = "rgb(190, 190, 190)";
+    darworms.graphics.scorectx.shadowOffsetX = 3;
+    darworms.graphics.scorectx.shadowOffsetY = 3;
+    darworms.startgame(false);
 }

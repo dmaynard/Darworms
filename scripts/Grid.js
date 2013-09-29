@@ -25,7 +25,7 @@ function Grid(width, height) {
     }
 }
 Grid.prototype.clear = function() {
-    for (var i = 0; i < width * height; i = i + 1) {
+    for (var i = 0; i < this.width * this.height; i = i + 1) {
         this.cells[i] = 0;
         this.colors[i] = 0;
     }
@@ -59,16 +59,16 @@ Grid.prototype.isInside = function(point) {
         point.x < this.width && point.y < this.height;
 };
 Grid.prototype.move = function(from, to, dir, colorIndex) {
-    if ( (this.valueAt(to)  & inMask[dir])  !== 0) {
+    if ( (this.valueAt(to)  & darworms.inMask[dir])  !== 0) {
         alert(" Attempted to eat eaten spoke at " + to.format());
         console.log ("  (" + to.x  + "," + to.y + ") dir: " + dir + " value: " );
         console.log( "Attempted to eat eaten spoke at " + to.format() + " dir " + dir  +" value: 0x" + value.toString(16));
     }
-    this.setValueAt(to, this.valueAt(to) | inMask[dir] | (inMask[dir] << 16));
-    this.setValueAt(from, this.valueAt(from) | outMask[dir] | (outMask[dir] << 8));
+    this.setValueAt(to, this.valueAt(to) | darworms.inMask[dir] | (darworms.inMask[dir] << 16));
+    this.setValueAt(from, this.valueAt(from) | darworms.outMask[dir] | (darworms.outMask[dir] << 8));
     this.setSpokeAt(from, dir, colorIndex);
     this.setSpokeAt(from, 6, colorIndex);
-    this.setSpokeAt(to, inDir[dir], colorIndex);
+    this.setSpokeAt(to, darworms.inDir[dir], colorIndex);
     this.setSpokeAt(to, 6, colorIndex);
     var captures = 0;
     if (this.stateAt(to) === 0x3f) {

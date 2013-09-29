@@ -16,6 +16,7 @@ function Game(gridWidth, gridHeight, canvas, context) {
     this.canvas = canvas;
 
 
+
     this.frameTimes = [];
     this.startFrameTimes = [];
     this.dirtyCells = [];
@@ -119,7 +120,7 @@ Game.prototype.drawCell = function( point) {
     // console.log (" drawCell at" +  point.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
 
     for (var i = 0; i < 6 ; i = i + 1) {
-        if ((outvec & outMask[i]) !== 0) {
+        if ((outvec & darworms.outMask[i]) !== 0) {
             var outSpokeColor = this.colorTable[this.grid.spokeAt(point, i)];
             // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
             wGraphics.strokeStyle  = outSpokeColor;
@@ -131,7 +132,7 @@ Game.prototype.drawCell = function( point) {
             wGraphics.stroke();
             wGraphics.closePath();
         }
-        if ((invec & outMask[i]) !== 0) {
+        if ((invec & darworms.outMask[i]) !== 0) {
             wGraphics.strokeStyle  = this.colorTable[this.grid.spokeAt(point, i)];
             wGraphics.lineWidth = 1.0/this.scale.x;
             wGraphics.lineCap = 'round';
@@ -181,7 +182,7 @@ Game.prototype.drawSelectCell = function(point) {
 
     var outvec = this.grid.stateAt(point);
     for (var i = 0; i < 6 ; i = i + 1) {
-        if ((outvec & outMask[i]) !== 0) {
+        if ((outvec & darworms.outMask[i]) !== 0) {
             var outSpokeColor = this.alphaColorTable[this.grid.spokeAt(point, i)];
             // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
             // wGraphics.strokeStyle  = "rgba(0,0,0,0.2)";
@@ -199,11 +200,12 @@ Game.prototype.drawSelectCell = function(point) {
             wGraphics.lineWidth = 8/this.canvas.width;
             // wGraphics.moveTo(this.targetPts[i].x, this.targetPts[i].y);
             wGraphics.beginPath();
-            wGraphics.arc(this.xPts[i] * .75, this.yPts[i]* .75,  (0.250 / 64) * (animFrame & 0x3F), 0, Math.PI*2, false);
+            wGraphics.arc(this.xPts[i] * .75, this.yPts[i]* .75,  (0.250 / 64) * (darworms.graphics.animFrame & 0x3F), 0, Math.PI*2, false);
             wGraphics.closePath();
             wGraphics.stroke();
             wGraphics.moveTo(0,0);
-            wGraphics.lineTo((this.xPts[i] * .75  ) /  64.0  * (animFrame & 0x3F)  , (this.yPts[i] * .75)  / 64.0 * (animFrame & 0x3F));
+            wGraphics.lineTo((this.xPts[i] * .75  ) /  64.0  * (darworms.graphics.animFrame & 0x3F),
+                (this.yPts[i] * .75)  / 64.0 * (darworms.graphics.animFrame & 0x3F));
             wGraphics.stroke();
             wGraphics.closePath();
         }
@@ -212,18 +214,8 @@ Game.prototype.drawSelectCell = function(point) {
     this.needsReDraw = true;
 
 };
+
 Game.prototype.highlightCell = function(point, color) {
-    /*
-     wGraphics.save();
-     this.setTranslate(point);
-     //the rectangle is half transparent
-     wGraphics.fillStyle =  "rgba(250,250,000,0.2)";
-     wGraphics.beginPath();
-     wGraphics.rect(-0.5, -0.5, 1.0, 1.0);
-     wGraphics.closePath();
-     wGraphics.fill();
-     wGraphics.restore();
-     */
     wGraphics.save();
     this.gsetTranslate(point);
     //the rectangle is half transparent
@@ -299,15 +291,8 @@ Game.prototype.getAvePos = function(w) {
 };
 Game.prototype.drawZoom = function(aPos) {
 //   console.log (" drawZoom   "  + " at "  + aPos.format());
-
     this.zoomPane.setCenter(aPos, this.cellsInZoomPane);
-    // this.zoomPane.cWidth = this.cellsInZoomPane.x;
-    // this.zoomPane.cHeight = this.cellsInZoomPane.y;
-    // this.zoomPane.setScale();
-    // this.zoomPane.setCenter(new Point(9,9));
     this.zoomPane.drawCells();
-
-    // zctx.drawImage(canvas,(this.avePos.x * this.scale.x) - 25 ,(this.avePos.y * this.scale.y) - 25 ,100,100,0,0,100,100);
 }
 Game.prototype.makeMove = function( ) {
     var nAlive = 0;

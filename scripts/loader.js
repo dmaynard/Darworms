@@ -1,5 +1,12 @@
 var darworms = {
     screens : {},
+    graphics : {
+        timer: undefined,
+        scorectx: undefined,
+        animFrame: 0,
+        xPts: [ 0.5, 0.25, -0.25, -0.5, -0.25, 0.25],
+        yPts: [ 0.0,  0.5,  0.5,  0.0,  -0.5, -0.5],
+    },
     settings : {
         rows : 8,
         cols : 8,
@@ -22,7 +29,10 @@ var darworms = {
     dwsettings : {
         rows : 8,
         cols : 8,
+        gWidth: 16,
+        gHeight: 16,
         vgridsize :  1.0,
+        scoreCanvas : undefined,
         controls : {
             KEY_UP : "moveUp",
             KEY_LEFT : "moveLeft",

@@ -99,13 +99,13 @@ WPane.prototype.drawCells = function () {
         }
         this.savedCanvas = document.createElement('canvas');
 
-        this.savedCanvas.width = canvas.width;
-        this.savedCanvas.height = canvas.height;
+        this.savedCanvas.width = this.canvas.width;
+        this.savedCanvas.height = this.canvas.height;
         this.savedCtx = this.savedCanvas.getContext('2d');
         this.savedCtx.drawImage(this.canvas,0,0);
         this.canvasIsDirty = false;
         this.savedCtx.font = "bold 18px sans-serif";
-        this.savedCtx.fillStyle = theGame.colorTable[0];
+        this.savedCtx.fillStyle = darworms.theGame.colorTable[0];
         this.savedCtx.shadowColor = "rgb(190, 190, 190)";
         this.savedCtx.shadowOffsetX = 3;
         this.savedCtx.shadowOffsetY = 3;
@@ -125,7 +125,7 @@ WPane.prototype.pSetTransform = function (point) {
         xoff = (point.x + 1.0 )  * this.scale.x  + this.pMargin;
 
     }
-    // because screnn is N+.5 cells wide and ony n cells hight
+    // because screen is N+.5 cells wide and only N cells high
     // we need extra vertical margins
     yoff = (point.y + 0.5 ) * this.scale.y + this.pMargin + (this.scale.y/4.0);
     this.ctx.setTransform(this.scale.x,0,0,this.scale.y,xoff,yoff);
@@ -149,14 +149,14 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
      */
     var owner = this.grid.spokeAt( gPoint, 7);
     if (owner > 0 ) {
-        this.ctx.strokeStyle = theGame.colorTable[owner & 0xF];
+        this.ctx.strokeStyle = darworms.theGame.colorTable[owner & 0xF];
         this.ctx.lineWidth = 1.0/this.scale.x;
         this.ctx.beginPath();
         this.ctx.arc(0, 0, 0.2, 0, Math.PI*2, true);
         this.ctx.closePath();
         this.ctx.stroke();
     } else {
-        this.ctx.fillStyle = theGame.colorTable[this.grid.spokeAt(gPoint,6) & 0xF];
+        this.ctx.fillStyle = darworms.theGame.colorTable[this.grid.spokeAt(gPoint,6) & 0xF];
         this.ctx.lineWidth = 1.0/this.scale.x;
         this.ctx.beginPath();
         this.ctx.arc(0, 0, 0.1, 0, Math.PI*2, true);
@@ -170,7 +170,7 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
 
     for (var i = 0; i < 6 ; i = i + 1) {
         if ((outvec & darworms.outMask[i]) !== 0) {
-            var outSpokeColor = theGame.colorTable[this.grid.spokeAt(gPoint, i)];
+            var outSpokeColor = darworms.theGame.colorTable[this.grid.spokeAt(gPoint, i)];
             // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + gPoint.format());
             this.ctx.strokeStyle  = outSpokeColor;
             this.ctx.lineWidth =   3.0/this.scale.x ;
@@ -182,7 +182,7 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
             this.ctx.closePath();
         }
         if ((invec & darworms.outMask[i]) !== 0) {
-            var inSpokeColor = theGame.colorTable[this.grid.spokeAt(gPoint, i)];
+            var inSpokeColor = darworms.theGame.colorTable[this.grid.spokeAt(gPoint, i)];
             // console.log (" inSpokeColor " + i + " :  " + inSpokeColor + " at "  + gPoint.format());
             this.ctx.strokeStyle  = inSpokeColor;
             this.ctx.lineWidth = 3.0/this.scale.x;

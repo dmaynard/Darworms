@@ -6,6 +6,15 @@
  * To change this template use File | Settings | File Templates.
  */
 /*    Grid   */
+darworms.gridModule = (function() {
+    var evenRowVec = [ new Point( 1, 0), new Point(  0,  1), new Point(-1,  1),
+        new Point(-1, 0), new Point( -1, -1),  new Point(0,-1) ];
+
+
+var oddRowVec = [ new Point( 1, 0), new Point( 1,  1), new Point( 0,  1),
+    new Point( -1,0), new Point( 0, -1), new Point( 1, -1) ];
+
+
 function Grid(width, height) {
     this.width = Math.floor(width);
     this.height = Math.floor(height);
@@ -122,4 +131,9 @@ Grid.prototype.logValueAt = function(point) {
 Grid.prototype.formatStateAt = function(point) {
     return " x " + point.x + " y " + point.y + " state 0x"+ this.stateAt(point).toString(16);
 };
+    return {
+        Grid : Grid
+    };
+
+})();
 /* end Grid */

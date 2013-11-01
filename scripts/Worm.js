@@ -15,9 +15,9 @@ function Worm(colorIndex, state) {
     this.prevScore = 0;
 
     for (var i = 0; i < 64; i = i + 1) {
-        this.dna[i] = codons.unSet;
+        this.dna[i] =darworms.dwsettings.codons.unSet;
     }
-    this.dna[63] = codons.isTrapped;
+    this.dna[63] = darworms.dwsettings.codons.isTrapped;
     // set all the forced moves
     for (var j = 0; j < 6 ; j = j+ 1) {
         this.dna[ 0x3F ^ (1<<j)] = j;
@@ -33,9 +33,9 @@ Worm.prototype.init = function( wType) {
     }
     if (wType === 1) { // random
         for (var i = 0; i < 64; i = i + 1) {
-            this.dna[i] = codons.unSet;
+            this.dna[i] = darworms.dwsettings.codons.unSet;
         }
-        this.dna[63] = codons.isTrapped;
+        this.dna[63] = darworms.dwsettings.codons.isTrapped;
         // set all the forced moves
         for (var j = 0; j < 6 ; j = j+ 1) {
             this.dna[ 0x3F ^ (1<<j)] = j;
@@ -47,9 +47,9 @@ Worm.prototype.init = function( wType) {
     }
     if (wType === 3) { // new
         for (var  k = 0; k < 64; k = k + 1) {
-            this.dna[k] = codons.unSet;
+            this.dna[k] = darworms.dwsettings.codons.unSet;
         }
-        this.dna[63] = codons.isTrapped;
+        this.dna[63] = darworms.dwsettings.codons.isTrapped;
         // set all the forced moves
         for (var n = 0; n < 6 ; n = n+ 1) {
             this.dna[ 0x3F ^ (1<<n)] = n;
@@ -75,7 +75,7 @@ Worm.prototype.randomize = function() {
     var dir;
     for (var i = 0; i < 63; i = i + 1) {
         // console.log(" randomize loop start  i = " + i + " dna[i] = " + this.dna[i]);
-        if (this.dna[i] === codons.unSet ) {
+        if (this.dna[i] === darworms.dwsettings.codons.unSet ) {
             for (var j = 0; j < 1000; j = j + 1) {
                 dir = Math.floor(Math.random() * 6);
                 //console.log( " dir = " + dir +  " i=" + i + " outMask[dir] = " + outMask[dir] + "& = " + (i & outMask[dir]));
@@ -85,7 +85,7 @@ Worm.prototype.randomize = function() {
                     break;
                 }
             }
-            if (this.dna[i] == codons.unSet) {
+            if (this.dna[i] === darworms.dwsettings.codons.unSet) {
                 console.log ("Error we rolled craps 10,000 times in a row");
             }
         }

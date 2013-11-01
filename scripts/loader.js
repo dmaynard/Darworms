@@ -42,7 +42,9 @@ var darworms = {
             KEY_SPACE : "selectJewel",
             CLICK : "selectJewel",
             TOUCH : "selectJewel"
-        }
+        },
+     codons : { "e": 0, "se": 1, "sw": 2, "w": 3, "nw": 4, "ne": 5, "unSet" : 6 , "isTrapped": 7}
+
     },
     images : {}
 };
@@ -113,7 +115,7 @@ window.addEventListener("load", function() {
         },{
             complete : function() {
                 console.log(" stage 1 loading finished");
-                init();
+                darworms.main.init();
             }
         }
     ]);

@@ -13,14 +13,13 @@
 darworms.gameModule = (function() {
 
     var gameStates = {"over": 0, "running" : 1, "waiting": 2, "paused": 3};
-    var gameStateNames = ["over", "running", "waiting", "paused"];
     var wGraphics;
     var nextToMove;
 
 
     function Game(gridWidth, gridHeight, canvas, context) {
 
-        this.gameState = gameStates.over;
+        this.gameState = darworms.gameStates.over;
         this.margin = 10;
         this.grid = new darworms.gridModule.Grid(gridWidth, gridHeight);
         this.canvas = canvas;
@@ -307,7 +306,7 @@ darworms.gameModule = (function() {
     }
     Game.prototype.makeMove = function( ) {
         var nAlive = 0;
-        if (this.gameState === gameStates.waiting) {
+        if (this.gameState === darworms.gameStates.waiting) {
             return;
         }
         // console.log ("Game  StartingTurn " + this.numTurns );
@@ -330,7 +329,7 @@ darworms.gameModule = (function() {
             } else {
                 var direction = active.getMoveDir(currentState);
                 if (direction === darworms.dwsettings.codons.unSet) {
-                    this.gameState = gameStates.waiting;
+                    this.gameState = darworms.gameStates.waiting;
                     // console.log(this.grid.formatStateAt(active.pos));
                     // console.log ( " setting gamestate to gameStates.waiting " +  this.gameState);
                     darworms.focusPoint = active.pos;
@@ -373,7 +372,6 @@ darworms.gameModule = (function() {
         this.numTurns = this.numTurns + 1;
         return ( nAlive > 0 || (nextToMove !== 0));
     };
-
     Game.prototype.showTimes = function() {
         var min = 100000000;
         var max = 0;

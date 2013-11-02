@@ -35,8 +35,8 @@ darworms.main = (function() {
     wormStateNames = ["dead", "moving", "paused", "sleeping"];
     initialWormStates = [3, 2, 2, 2];
 
-    gameStates = {"over": 0, "running" : 1, "waiting": 2, "paused": 3};
-    gameStateNames = ["over", "running", "waiting", "paused"];
+    darworms.gameStates = {"over": 0, "running" : 1, "waiting": 2, "paused": 3};
+    darworms.gameStateNames = ["over", "running", "waiting", "paused"];
 
     darworms.outMask = [1, 2, 4, 8, 16, 32];
     darworms.inMask =  [8, 16, 32, 1, 2, 4];
@@ -135,14 +135,14 @@ darworms.main = (function() {
             // wGraphics.drawImage(localImage, 10, 10);
 
           }
-          if (darworms.theGame.gameState != gameStates.over ) {
+          if (darworms.theGame.gameState != darworms.gameStates.over ) {
               if (darworms.theGame.makeMove() === false) {
                 darworms.theGame.elapsedTime = darworms.theGame.elapsedTime  + new Date().getTime();
                 console.log(" Game Over");
                 clearInterval(darworms.graphics.timer);
                 document.getElementById("startpause").innerHTML = "Start Game";
                 darworms.theGame.showTimes();
-                darworms.theGame.gameState = gameStates.over;
+                darworms.theGame.gameState = darworms.gameStates.over;
                 // theGame.clearCanvas();
                 // alert("Game Over ");
                 // wGraphics.restore();
@@ -158,14 +158,14 @@ darworms.main = (function() {
         // This is the game loop
         // We either make one round of moves
         // or if we are waiting for user input
-        // we draw the direction selection screen
+        // and we draw the direction selection screen
         //
         // console.log(" updateGameState: gameState " +  gameStateNames[theGame.gameState]);
         darworms.graphics.animFrame = darworms.graphics.animFrame + 1;
-        if (darworms.theGame.gameState === gameStates.running) {
+        if (darworms.theGame.gameState === darworms.gameStates.running) {
             makeMoves();
         }
-        if (darworms.theGame.gameState === gameStates.waiting) {
+        if (darworms.theGame.gameState === darworms.gameStates.waiting) {
             darworms.theGame.drawSelectCell(darworms.focusPoint);
         }
 
@@ -214,7 +214,7 @@ darworms.main = (function() {
         }
         if ((minDist < 0.5)  && (select >= 0)) {
             darworms.focusWorm.dna[darworms.focusValue & 0x3F] = select;
-            darworms.theGame.gameState = gameStates.running;
+            darworms.theGame.gameState = darworms.gameStates.running;
             darworms.theGame.clearCanvas();
             darworms.theGame.drawCells();
         }
@@ -228,7 +228,7 @@ darworms.main = (function() {
                             // wGraphics.font = "20pt Arial";
                             // wGraphics.fillText("X: " + touchX + " Y: " + touchY, touchX, touchY);
       // console.log ( " Tap Event at x: " + touchX + " y: " + touchY);
-      if (darworms.theGame.gameState === gameStates.waiting) {
+      if (darworms.theGame.gameState === darworms.gameStates.waiting) {
         // TODO  - 50 is because canvas appears at y = 50 and touchY is screen relative
         // or is this because of the JetBrains Debug banner at the top ?
         if ( doZoomOut(new Point((touchX/darworms.theGame.canvas.width)*2.0 - 1.0, ((touchY-50)/darworms.theGame.canvas.height)*2.0 - 1.0) )) {
@@ -248,7 +248,7 @@ darworms.main = (function() {
             }
             darworms.theGame = new darworms.gameModule.Game(heightSlider, heightSlider, canvas, darworms.main.wGraphics);
         }
-        if (darworms.theGame.gameState === gameStates.over) {
+        if (darworms.theGame.gameState === darworms.gameStates.over) {
             darworms.theGame.clear();
 
             darworms.theGame.needsRedraw = true;
@@ -264,25 +264,26 @@ darworms.main = (function() {
         }
 
         if (startNow === false) return;
-        if (darworms.theGame.gameState === gameStates.running) {
+        if (darworms.theGame.gameState === darworms.gameStates.running) {
             // This is now a pause game button
             clearInterval(darworms.graphics.timer);
             document.getElementById("startpause").innerHTML = "Resume Game";
-            darworms.theGame.gameState = gameStates.paused;
+            darworms.theGame.gameState = darworms.gameStates.paused;
             return;
         }
-        if (darworms.theGame.gameState === gameStates.paused) {
+        if (darworms.theGame.gameState === darworms.gameStates.paused) {
             // This is now a pause game button
             document.getElementById("startpause").innerHTML = "Pause Game";
-            darworms.theGame.gameState = gameStates.running;
+            darworms.theGame.gameState = darworms.gameStates.running;
             darworms.graphics.timer = setInterval(updateGameState,1000/$("#fps").val());
             return;
         }
-        if (darworms.theGame.gameState === gameStates.over) {
+        if (darworms.theGame.gameState === darworms.gameStates.over) {
             // This is now a start game button
             // alert("About to Start Game.");
 
-            document.getElementById("startpause").innerHTML = "<b>Pause Game</b>";        darworms.theGame.gameState = gameStates.running;
+            document.getElementById("startpause").innerHTML = "<b>Pause Game</b>";
+            darworms.theGame.gameState = darworms.gameStates.running;
             console.log(" setInterval: " +  1000/$("#fps").val());
             document.getElementById("startpause").innerHTML = "Pause Game";
             initTheGame(true);
@@ -301,10 +302,10 @@ darworms.main = (function() {
 
 
         if (startNow) {
-            darworms.theGame.gameState = gameStates.running;
+            darworms.theGame.gameState = darworms.gameStates.running;
 
         } else {
-            darworms.theGame.gameState = gameStates.over;
+            darworms.theGame.gameState = darworms.gameStates.over;
 
         }
         // startgame(startNow);
@@ -331,7 +332,7 @@ darworms.main = (function() {
         //  These values are needed by both mainModule and gameModule
         //  so for now we keep them as globals
         //  Perhaps the time routins sould all be moved into the gameModule closure
-        // and we can make some or all of these provate to the gameModule closure
+        // and we can make some or all of these private to the gameModule closure
         darworms.theGame = null;
         darworms.focusPoint = null;
         darworms.focusWorm = null;

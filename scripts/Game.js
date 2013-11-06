@@ -276,6 +276,7 @@ darworms.gameModule = (function() {
         this.grid.clear();
         this.elapsedTime = - new Date().getTime();
         this.frameTimes.length = 0;
+        this.startFrameTimes.length = 0;
     };
     Game.prototype.addWorm = function(w) {
         w.pos = this.origin;

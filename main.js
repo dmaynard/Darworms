@@ -118,12 +118,7 @@ darworms.main = (function() {
     var wormEventHandler = function(event){
       touchX = event.pageX;
       touchY = event.pageY;
-                           //  wGraphics.fillStyle="#0f0";
-                            // wGraphics.fillRect(touchX - 75, touchY - 50, 50, 50);
-
-                            // wGraphics.font = "20pt Arial";
-                            // wGraphics.fillText("X: " + touchX + " Y: " + touchY, touchX, touchY);
-      // console.log ( " Tap Event at x: " + touchX + " y: " + touchY);
+       // console.log ( " Tap Event at x: " + touchX + " y: " + touchY);
       if (darworms.theGame.gameState === darworms.gameStates.waiting) {
         // TODO  - 50 is because canvas appears at y = 50 and touchY is screen relative
         // or is this because of the JetBrains Debug banner at the top ?
@@ -140,7 +135,7 @@ darworms.main = (function() {
             console.log(" theGame size has changed ");
             if ((heightSlider & 1) !== 0) {
                 // height must be an even number because of toroid shape
-                heightSlider = heightSlider*1 + 1;
+                heightSlider = heightSlider + 1;
             }
             darworms.theGame = new darworms.gameModule.Game(heightSlider, heightSlider, canvas, darworms.main.wGraphics);
         }
@@ -219,8 +214,8 @@ darworms.main = (function() {
         $('#wcanvas').bind('tap', wormEventHandler);
         var xxxslider =  $('.ui-slider-handle');
 
-        $('.ui-slider-handle').height(20);
-        $('.ui-slider-handle').width(10);
+        xxxslider.height(20);
+        xxxslider.width(10);
         // initTheGame(false);
         darworms.dwsettings.scoreCanvas = document.getElementById("scorecanvas");
         darworms.gameModule.init();  // needed to init local data the gameModule closure

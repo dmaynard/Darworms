@@ -523,7 +523,7 @@ darworms.gameModule = (function() {
     };
     var doZoomOut = function ( tapPoint ) {
         if (tapPoint.dist(new Point(0, 1.0)) < 0.2 ) {
-            if (cellsInZoomPane.x >= 3) {
+            if (cellsInZoomPane.x >= 5) {
                 cellsInZoomPane.x = cellsInZoomPane.x  - 2;
                 cellsInZoomPane.y = cellsInZoomPane.y - 2;
             }

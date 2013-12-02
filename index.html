@@ -1,73 +1,107 @@
 <!DOCTYPE HTML>
 <html>
-  <head>
-    <meta name="viewport" content="width=600"; user-scalable=no" />
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>DARWORMS </title>
-      <!-- Earlier JQuery Mobile
-      <link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.0rc1.css" type="text/css" charset="utf-8" />
-	  <link rel="stylesheet" href="pgandjqm-style-override.css" type="text/css" charset="utf-8" />
-       -->
-      <!-- Latest JQuery Mobile -->
-      <!-- full source  JQuery Mobile   -->
-      <link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.3.2.css" type="text/css" charset="utf-8" />
-      <script src="scripts/jquery.mobile-1.3.2.js"></script>
-       <!--
-      <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
-      <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-      -->
-      <!--script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script> -->
-      <!-- for new Darworms UI and loading scheme -->
-      <script src="scripts/modernizr.js"></script>
-      <script src="scripts/loader.js"></script>
-  </head>
+    <!-- Earlier JQuery Mobile
+    <link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.0rc1.css" type="text/css" charset="utf-8" />
+    <link rel="stylesheet" href="pgandjqm-style-override.css" type="text/css" charset="utf-8" />
+     -->
+    <!-- Latest JQuery Mobile -->
+    <!-- full source  JQuery Mobile   -->
+    <link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.3.2.css" type="text/css" charset="utf-8"/>
+    <script src="scripts/jquery.mobile-1.3.2.js"></script>
+    <!--
+   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+   -->
+    <!--script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script> -->
+    <!-- for new Darworms UI and loading scheme -->
+    <script src="scripts/modernizr.js"></script>
+    <script src="scripts/loader.js"></script>
+</head>
 
-  <body >
-    <div data-role="page" data-theme="b">
-  	<div data-role="header">
-    	<h1>DARWORMS</h1>
-	</div>
-    <div data-role="content">
-    <div id="canvascontainer">
-         <canvas id="wcanvas" width="300" height="300"></canvas>
-    </div>
-    <!-- div data-role="controlgroup" data-type="horizontal" -->
-    <div class="ui-grid-d">
-       <div class="ui-block-a" id="p1button" data-role="button" onclick="darworms.main.player1();">P1</div>
-       <div class="ui-block-b" id="p2button" data-role="button" onclick="darworms.main.player2();">P2</div>
-       <div class="ui-block-c" id="p3button" data-role="button" onclick="darworms.main.player3();">P3</div>
-       <div class="ui-block-d" id="p4button" data-role="button" onclick="darworms.main.player4();">P4</div>
-       
-     </div>
-        <div id="scorecanvascontainer">
-            <canvas id="scorecanvas" width="300" height="30"></canvas>
-      </div>
-
-    <div data-role="button"  id="startpause" onclick="darworms.startgame();">Start Game</div>
-
-    <div data-role="collapsible" >
-        <h1>Performance</h1>
-        <div>Frames <b><span id="wormframes"> &nbsp;</span></b>
-        <br/>Min Time:  <b><span id="wormmintime">&nbsp;</span></b>
-        <br/>Max Time:  <b><span id="wormmaxtime">&nbsp;</span></b>
-        <br/>Average Time:  <b><span id="wormavetime">&nbsp;</span></b>
-        <br/>FPS:  <b><span id="wormfps">&nbsp;</span></b><br/>
-        <br/>Min Interval:  <b><span id="wormframemintime">&nbsp;</span></b>
-        <br/>Max Interval:  <b><span id="wormframemaxtime">&nbsp;</span></b>
-        <br/>Average Interval:  <b><span id="wormframeavetime">&nbsp;</span></b>
-        <br/>Percent of Time in Draw:  <b><span id="wormframepercenttime">&nbsp;</span></b>
+<body>
+<div data-role="page" data-theme="b" id=menupage>
+    <div data-role="header">
+        <h1>DARWORMS</h1>
         </div>
-     </div>
-    </div><!-- end jqm content -->
+    <div data-role="content">
+        <a href=#playpage data-role=button> Play </a>
+        <a href=#settingspage data-role=button> Settings </a>
+        <a href=#aboutpage data-role=button> About </a>
+    </div>
+</div>
+<div data-role="page" data-theme="b" id=playpage data-add-back-btn=true>
+    <div data-role="header">
+        <h1>PLAY</h1>
+    </div>
+    <div data-role="content">
+        <div id="canvascontainer">
+            <canvas id="wcanvas" width="300" height="300"></canvas>
+        </div>
+        <!-- div data-role="controlgroup" data-type="horizontal" -->
+        <div class="ui-grid-d">
+            <div class="ui-block-a" id="p1button" data-role="button" onclick="darworms.main.player1();">P1</div>
+            <div class="ui-block-b" id="p2button" data-role="button" onclick="darworms.main.player2();">P2</div>
+            <div class="ui-block-c" id="p3button" data-role="button" onclick="darworms.main.player3();">P3</div>
+            <div class="ui-block-d" id="p4button" data-role="button" onclick="darworms.main.player4();">P4</div>
 
-        <div data-role="fieldcontain">
+        </div>
+    </div>
+
+
+    <div id="scorecanvascontainer">
+        <canvas id="scorecanvas" width="300" height="30"></canvas>
+    </div>
+
+    <div data-role="button" id="startpause" onclick="darworms.startgame();">Start Game</div>
+</div>
+<div data-role="page" data-theme="b"  id=settingspage data-add-back-btn=true>
+    <div data-role="header">
+        <h1>SETTINGS</h1>
+    </div>
+
+
+    <div data-role="fieldcontain">
         <label for="fps">Frames/Sec:</label>
-        <input type="range" name="fps" id="fps" value="30" min="1" max="60"  />
+        <input type="range" name="fps" id="fps" value="30" min="1" max="60"/>
     </div>
     <div data-role="fieldcontain">
         <label for="gridsize">Grid Size:</label>
-        <input type="range" name="gridsize" id="gridsize" value="18" min="2" max="64"  />
+        <input type="range" name="gridsize" id="gridsize" value="18" min="2" max="64"/>
     </div>
- 	</div><!-- end jqm page -->
-  </body>
+    <div data-role="collapsible">
+        <h1>Performance</h1>
+
+        <div>Frames <b><span id="wormframes"> &nbsp;</span></b>
+            <br/>Min Time: <b><span id="wormmintime">&nbsp;</span></b>
+            <br/>Max Time: <b><span id="wormmaxtime">&nbsp;</span></b>
+            <br/>Average Time: <b><span id="wormavetime">&nbsp;</span></b>
+            <br/>FPS: <b><span id="wormfps">&nbsp;</span></b><br/>
+            <br/>Min Interval: <b><span id="wormframemintime">&nbsp;</span></b>
+            <br/>Max Interval: <b><span id="wormframemaxtime">&nbsp;</span></b>
+            <br/>Average Interval: <b><span id="wormframeavetime">&nbsp;</span></b>
+            <br/>Percent of Time in Draw: <b><span id="wormframepercenttime">&nbsp;</span></b>
+        </div>
+    </div>
+</div>
+<div data-role="page" data-theme="b" id=aboutpage data-add-back-btn=true>
+<div data-role="header">
+    <h1>ABOUT</h1>
+</div>
+<div data-role="content">
+   <p> Darworms is a territory capture game played by one to four Darworms.</p>
+   <p> Darworms are creatures that crawl about on a hex grid. Each Darworm learns which direction to go for each of the possible configurations of the six spokes exiting the grid point it can encounter.  The Darworm is either trained by a preset set of instructions, or trained by you by asking you which direction to go in every time it encounters a pattern of spokes it hasn't seen before.</p>
+   <p> The Darworm that captures the sixth and last spoke in any grid point captures that gridpoint.</p>
+    <p> You can generate a Darworm with a preset randomly chosen direction for each grid point spoke configuration or train a new Darworm yourself.  It may take many games to completely train a Darworm since it may not see all possible grip point spokes configurations for many games.</p>
+    <p> Copyright 1983, 2013 by David S. Maynard</p>
+    <p> Based on the 1983 Electron Arts Game  "Worms?" By David S. Maynard</p>
+    <p> Inspired by Martin Gardner's  1971 column "patterson's Worms" in Scientific American</p>
+
+</div>
+</div>
+<!-- end jqm page -->
+</body>
 </html>

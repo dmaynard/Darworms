@@ -212,11 +212,7 @@ darworms.main = (function() {
         darworms.main.wGraphics = canvas.getContext("2d");
         console.log ( " init wGraphics " + darworms.main.wGraphics);
         $('#wcanvas').bind('tap', wormEventHandler);
-        var xxxslider =  $('.ui-slider-handle');
 
-        xxxslider.height(20);
-        xxxslider.width(10);
-        // initTheGame(false);
         darworms.dwsettings.scoreCanvas = document.getElementById("scorecanvas");
         darworms.gameModule.init();  // needed to init local data the gameModule closure
         //  These values are needed by both mainModule and gameModule

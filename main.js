@@ -217,7 +217,7 @@ darworms.main = (function() {
         darworms.gameModule.init();  // needed to init local data the gameModule closure
         //  These values are needed by both mainModule and gameModule
         //  so for now we keep them as globals
-        //  Perhaps the time routins sould all be moved into the gameModule closure
+        //  Perhaps the time routins should all be moved into the gameModule closure
         // and we can make some or all of these private to the gameModule closure
         darworms.theGame = null;
         darworms.startgame(false);

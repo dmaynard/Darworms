@@ -410,6 +410,8 @@ darworms.gameModule = (function() {
         document.getElementById('wormmintime').innerHTML = min;
         document.getElementById('wormmaxtime').innerHTML = max;
         document.getElementById('wormavetime').innerHTML = ave;
+        document.getElementById('wormframetargettime').innerHTML = 1000/$("#fps").val();
+
         document.getElementById('wormfps').innerHTML = fps;
     //  frame Intervals.  How often did out update get called
         min = 1000000;

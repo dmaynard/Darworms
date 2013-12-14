@@ -122,10 +122,10 @@ darworms.main = (function() {
       if (darworms.theGame.gameState === darworms.gameStates.waiting) {
         // TODO  - 50 is because canvas appears at y = 50 and touchY is screen relative
         // or is this because of the JetBrains Debug banner at the top ?
-        if ( darworms.gameModule.doZoomOut(new Point((touchX/darworms.theGame.canvas.width)*2.0 - 1.0, ((touchY-50)/darworms.theGame.canvas.height)*2.0 - 1.0) )) {
+        if ( darworms.gameModule.doZoomOut(new Point((touchX/darworms.theGame.canvas.width)*2.0 - 1.0, ((touchY)/darworms.theGame.canvas.height)*2.0 - 1.0) )) {
             console.log(" do zoomout here");
         } else {
-            darworms.gameModule.selectDirection( new Point((touchX/darworms.theGame.canvas.width)*2.0 - 1.0, ((touchY-50)/darworms.theGame.canvas.height)*2.0 - 1.0));
+            darworms.gameModule.selectDirection( new Point((touchX/darworms.theGame.canvas.width)*2.0 - 1.0, ((touchY)/darworms.theGame.canvas.height)*2.0 - 1.0));
         }
       }
     };

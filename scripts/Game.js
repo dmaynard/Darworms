@@ -466,7 +466,7 @@ darworms.gameModule = (function() {
                 scorectx.fillStyle = darworms.theGame.colorTable[i+1];
                 scorectx.shadowOffsetX = 3;
                 scorectx.shadowOffsetY = 3;
-                scorectx.fillText(darworms.theGame.worms[i].score, scoreStartx(i,4,darworms.theGame.worms[i].score.toString()), 25);
+                scorectx.fillText(darworms.theGame.worms[i].score, scoreStartx(i,4,darworms.theGame.worms[i].score.toString()), 15);
             }
         }
     };

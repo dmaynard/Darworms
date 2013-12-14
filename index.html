@@ -40,6 +40,9 @@
 
         }
 
+        #playpage {
+            font-size: 14px;
+        }
     </style>
 
     <script src="scripts/modernizr.js"></script>
@@ -58,43 +61,69 @@
         <a href=#aboutpage data-role=button> About </a>
     </div>
 </div>
-<div data-role="page" data-theme="b" id=playpage data-add-back-btn=true>
-    <div data-role="header">
-        <h1>PLAY</h1>
-    </div>
+<div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true>
     <div data-role="content">
         <div id="canvascontainer">
             <canvas id="wcanvas" width="300" height="300"></canvas>
         </div>
         <!-- div data-role="controlgroup" data-type="horizontal" -->
-        <div class="ui-grid-d">
-            <div class="ui-block-a" id="p1button" data-role="button" onclick="darworms.main.player1();">P1</div>
-            <div class="ui-block-b" id="p2button" data-role="button" onclick="darworms.main.player2();">P2</div>
-            <div class="ui-block-c" id="p3button" data-role="button" onclick="darworms.main.player3();">P3</div>
-            <div class="ui-block-d" id="p4button" data-role="button" onclick="darworms.main.player4();">P4</div>
+        <div data-role=navbar>
+            <ul>
+            <li>
+                <div id="p1button" data-role=button onclick="darworms.main.player1();">Random</div>
+            </li>
+            <li>
+                <div id="p2button" data-role=button onclick="darworms.main.player2();">None</div>
+            </li>
+            <li>
+                <div id="p3button" data-role=button onclick="darworms.main.player3();")>None</div>
+            </li>
+            <li>
+                <div id="p4button" data-role=button onclick="darworms.main.player4();">None</div>
+            </li>
+            </ul>
+            <!--
+                        <div class="ui-block-a" id="p1button" data-role="button" onclick="darworms.main.player1();">P1</div>
+                        <div class="ui-block-a" id="p1button" data-role="button" onclick="darworms.main.player1();">P1</div>
+                        <div class="ui-block-b" id="p2button" data-role="button" onclick="darworms.main.player2();">P2</div>
+                        <div class="ui-block-c" id="p3button" data-role="button" onclick="darworms.main.player3();">P3</div>
+                        <div class="ui-block-d" id="p4button" data-role="button" onclick="darworms.main.player4();">P4</div>
+ -->
+        </div>
+    </div>
+    <div id="scorecanvascontainer">
+        <canvas id="scorecanvas" width="300" height="20"></canvas>
+    </div>
 
+
+    <!-- div data-role="button" id="startpause2" onclick="darworms.startgame();">Start Game</div
+    <div data-role=footer data-position=fixed>
+            <div id="startpause" data-role=button onclick=darworms.startgame()>Start Game</div>
+            <a href=#menupage data-role=button> Menu </a>
+    </div>
+    -->
+    <div data-role=footer data-position=fixed>
+        <div data-role=navbar>
+            <ul>
+                <li>
+                    <div id="startpause" data-role=button onclick=darworms.startgame()>Start Game</div>
+                </li>
+                <li><a href=#menupage>Menu</a></li>
+            </ul>
         </div>
     </div>
 
-
-    <div id="scorecanvascontainer">
-        <canvas id="scorecanvas" width="300" height="30"></canvas>
-    </div>
-
-    <div data-role="button" id="startpause" onclick="darworms.startgame();">Start Game</div>
 </div>
-<div data-role="page" data-theme="b" id=settingspage data-add-back-btn=true>
+</div>
+<div data-role="page" data-theme="b" id=settingspage data-add-back-btn=true data-back-btn-text=Menu>
     <div data-role="header">
         <h1>SETTINGS</h1>
     </div>
     <div data-role=content>
-
         <div data-role="fieldcontain">
             <label for="fps">Frames/Sec:</label>
             <input type="range" name="fps" id="fps" value="30" min="1" max="60" data-mini="true"/>
         </div>
-
-
         <div data-role="fieldcontain">
             <label for="gridsize">Grid Size:</label>
             <input type="range" name="gridsize" id="gridsize" value="18" min="2" max="64"/>
@@ -116,7 +145,7 @@
         </div>
     </div>
 </div>
-<div data-role="page" data-theme="b" id=aboutpage data-add-back-btn=true>
+<div data-role="page" data-theme="b" id=aboutpage data-add-back-btn=true data-back-btn-text=Menu>
     <div data-role="header">
         <h1>ABOUT</h1>
     </div>

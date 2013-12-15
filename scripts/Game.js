@@ -230,27 +230,11 @@ darworms.gameModule = (function() {
 
     };
 
-    Game.prototype.highlightCell = function(point, color) {
-        wGraphics.save();
-        this.gsetTranslate(point);
-        //the rectangle is half transparent
-        wGraphics.fillStyle =  "rgba(250,250,000,0.2)";
-        wGraphics.beginPath();
-        wGraphics.rect(-0.5, -0.5, 1.0, 1.0);
-        wGraphics.closePath();
-        wGraphics.fill();
-        wGraphics.restore();
-
-    };
     Game.prototype.drawCells = function () {
         for (var col = 0; col < this.grid.width ; col = col + 1) {
             for (var row = 0; row < this.grid.height ; row = row + 1) {
                 this.drawCell(new Point(col,row));
             }
-        }
-        for (var i = 0; i < this.worms.length; i = i + 1) {
-            var active = this.worms[i];
-            this.highlightCell(active.pos, this.colorTable[active.colorIndex]);
         }
     };
     Game.prototype.drawDirtyCells = function () {

@@ -103,8 +103,6 @@ window.addEventListener("load", function() {
     Modernizr.load([
         {
             load : [
-                "jquery.mobile/jquery-1.6.4.min.js",
-                "jquery.mobile/jquery.mobile-1.0rc1.js",
                 "scripts/Point.js",
                 "scripts/Grid.js",
                 "scripts/Worm.js",

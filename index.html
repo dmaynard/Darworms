@@ -9,9 +9,14 @@
     <link rel="stylesheet" href="pgandjqm-style-override.css" type="text/css" charset="utf-8" />
      -->
     <!-- Latest JQuery Mobile -->
-    <!-- full source  JQuery Mobile   -->
+    <!-- full source  JQuery Mobile
     <link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.3.2.css" type="text/css" charset="utf-8"/>
     <script src="scripts/jquery.mobile-1.3.2.js"></script>
+    -->
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
     <!--
    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
@@ -19,31 +24,7 @@
     <!--script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script> -->
     <!-- for new Darworms UI and loading scheme -->
 
-    <style type=text/css>
 
-        .ui-slider {
-
-            width: 90% !important;
-
-        }
-
-        input.ui-slider-input {
-
-        }
-
-        .ui-slider-handle {
-
-            width: 1em;
-            height: 1em;
-            top: -0.3em;
-            margin-left: -0.6em;
-
-        }
-
-        #playpage {
-            font-size: 14px;
-        }
-    </style>
 
     <script src="scripts/modernizr.js"></script>
     <script src="scripts/loader.js"></script>
@@ -102,12 +83,10 @@
             <a href=#menupage data-role=button> Menu </a>
     </div>
     -->
-    <div data-role=footer data-position=fixed>
+    <div data-role=footer data-theme="b" data-position=fixed>
         <div data-role=navbar>
             <ul>
-                <li>
-                    <div id="startpause" data-role=button onclick=darworms.startgame()>Start Game</div>
-                </li>
+                <li> <a id="startpause"  onclick=darworms.startgame()>Start Game</a></li>
                 <li><a href=#menupage>Menu</a></li>
             </ul>
         </div>
@@ -115,18 +94,18 @@
 
 </div>
 </div>
-<div data-role="page" data-theme="b" id=settingspage data-add-back-btn=true data-back-btn-text=Menu>
+<div data-role="page" data-theme="a" id=settingspage data-add-back-btn=true data-back-btn-text=Menu>
     <div data-role="header">
         <h1>SETTINGS</h1>
     </div>
     <div data-role=content>
         <div data-role="fieldcontain">
             <label for="fps">Frames/Sec:</label>
-            <input type="range" name="fps" id="fps" value="30" min="1" max="60" data-mini="true"/>
+            <input type="range" name="fps" id="fps" value="30" min="1" max="60" />
         </div>
         <div data-role="fieldcontain">
             <label for="gridsize">Grid Size:</label>
-            <input type="range" name="gridsize" id="gridsize" value="18" min="2" max="64"/>
+            <input type="range" name="gridsize" id="gridsize" value="18" step="2" min="4" max="64"/>
         </div>
         <div data-role="collapsible">
             <h1>Performance</h1>
@@ -145,7 +124,7 @@
         </div>
     </div>
 </div>
-<div data-role="page" data-theme="b" id=aboutpage data-add-back-btn=true data-back-btn-text=Menu>
+<div data-role="page" data-theme="a" id=aboutpage data-add-back-btn=true data-back-btn-text=Menu>
     <div data-role="header">
         <h1>ABOUT</h1>
     </div>

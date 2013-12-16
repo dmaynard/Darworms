@@ -5,7 +5,7 @@ var darworms = {
         scorectx: undefined,
         animFrame: 0,
         xPts: [ 0.5, 0.25, -0.25, -0.5, -0.25, 0.25],
-        yPts: [ 0.0,  0.5,  0.5,  0.0,  -0.5, -0.5],
+        yPts: [ 0.0,  0.5,  0.5,  0.0,  -0.5, -0.5]
     },
     settings : {
         rows : 8,
@@ -43,9 +43,19 @@ var darworms = {
             CLICK : "selectJewel",
             TOUCH : "selectJewel"
         },
-     codons : { "e": 0, "se": 1, "sw": 2, "w": 3, "nw": 4, "ne": 5, "unSet" : 6 , "isTrapped": 7}
+     codons : { "e": 0, "se": 1, "sw": 2, "w": 3, "nw": 4, "ne": 5, "unSet" : 6 , "isTrapped": 7},
+     colorTable :["000000", "#881C0A", "#1C880A", "#1C0A88",
+        "#AAAA00", "#448833", "#443388", "#338844",
+        "#FF1C0A", "#1CFF0A", "#1C0AFF", "#0AFF1C",
+        "#884433", "#448833", "#443388", "#338844"],
+    alphaColorTable : ["rgba(  0,   0,   0, 0.2)",
+    "rgba(  255,   0,   0, 0.8)", "rgba(    0, 255,   0, 0.8)", "rgba(    0,   0, 255, 0.8)", "rgba(  255, 200, 0, 0.8)",
+    "#AAAA0080", "#44883380", "#44338880", "#33884480",
+    "#FF1C0A80", "#1CFF0A80", "#1C0AFF80", "#0AFF1C80",
+    "#88443380", "#44883380", "#44338880", "#33884480"]
 
-    },
+
+},
     images : {}
 };
 

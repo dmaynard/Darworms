@@ -41,10 +41,15 @@ darworms.main = (function() {
     darworms.inDir =   [3, 4, 5, 0, 1, 2];
 
     var setTypes = function () {
-        document.getElementById("p1button").innerHTML = typeNames[players[0]];
-        document.getElementById("p2button").innerHTML = typeNames[players[1]];
-        document.getElementById("p3button").innerHTML = typeNames[players[2]];
-        document.getElementById("p4button").innerHTML = typeNames[players[3]];
+        // document.getElementById("p1button").innerHTML = typeNames[players[0]];
+        // document.getElementById("p1button").html(typeNames[players[0]]).button("refresh");
+        $("#p1button .ui-btn-text").text(typeNames[players[0]]);
+        $("#p2button .ui-btn-text").text(typeNames[players[1]]);
+        $("#p3button .ui-btn-text").text(typeNames[players[2]]);
+        $("#p4button .ui-btn-text").text(typeNames[players[3]]);
+        // document.getElementById("p2button").innerHTML = typeNames[players[1]];
+        // document.getElementById("p3button").innerHTML = typeNames[players[2]];
+        // document.getElementById("p4button").innerHTML = typeNames[players[3]];
         for (var i = 0; i < gWorms.length; i = i + 1) {
             gWorms[i].wType = players[i];
         }
@@ -158,13 +163,15 @@ darworms.main = (function() {
         if (darworms.theGame.gameState === darworms.gameStates.running) {
             // This is now a pause game button
             clearInterval(darworms.graphics.timer);
-            document.getElementById("startpause").innerHTML = "Resume Game";
+            // document.getElementById("startpause").innerHTML = "Resume Game";
+            $("#startpause .ui-btn-text").text("Resume Game");
             darworms.theGame.gameState = darworms.gameStates.paused;
             return;
         }
         if (darworms.theGame.gameState === darworms.gameStates.paused) {
             // This is now a pause game button
-            document.getElementById("startpause").innerHTML = "Pause Game";
+            // document.getElementById("startpause").innerHTML = "Pause Game";
+            $("#startpause .ui-btn-text").text("Pause");
             darworms.theGame.gameState = darworms.gameStates.running;
             darworms.graphics.timer = setInterval(updateGameState,1000/$("#fps").val());
             return;
@@ -172,11 +179,10 @@ darworms.main = (function() {
         if (darworms.theGame.gameState === darworms.gameStates.over) {
             // This is now a start game button
             // alert("About to Start Game.");
-
-            document.getElementById("startpause").innerHTML = "<b>Pause Game</b>";
             darworms.theGame.gameState = darworms.gameStates.running;
             console.log(" setInterval: " +  1000/$("#fps").val());
-            document.getElementById("startpause").innerHTML = "Pause Game";
+            // document.getElementById("startpause").innerHTML = "Pause Game";
+            $("#startpause .ui-btn-text").text("Pause Game");
             initTheGame(true);
             darworms.theGame.log();
             darworms.graphics.timer = setInterval(updateGameState,1000/$("#fps").val());

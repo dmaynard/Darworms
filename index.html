@@ -29,6 +29,39 @@
     <script src="scripts/modernizr.js"></script>
     <script src="scripts/loader.js"></script>
 
+    <style type=text/css>
+
+           .ui-page .ui-content  .ui-btn.playerbutton1 .ui-btn-inner {
+            color     : red;
+            background : #8c8c8c;
+            font-size:0.8em;
+            padding-bottom: 4px;
+            padding-top: 4px;
+        }
+           .ui-page .ui-content  .ui-btn.playerbutton2 .ui-btn-inner {
+               color     : green;
+               background : #8c8c8c;
+               font-size:0.8em;
+               padding-bottom: 4px;
+               padding-top: 4px;
+           }
+            .ui-page .ui-content  .ui-btn.playerbutton3 .ui-btn-inner {
+               color     : blue;
+               background : #8c8c8c;
+               font-size:0.8em;
+               padding-bottom: 4px;
+               padding-top: 4px;
+           }
+           .ui-page .ui-content  .ui-btn.playerbutton4 .ui-btn-inner {
+               color     : yellow;
+               background : #8c8c8c;
+               font-size:0.8em;
+               padding-bottom: 4px;
+               padding-top: 4px;
+           }
+
+
+    </style>
 </head>
 
 <body>
@@ -51,16 +84,16 @@
         <div data-role=navbar>
             <ul>
             <li>
-                <div id="p1button" data-role=button onclick="darworms.main.player1();">Random</div>
+                <div id="p1button" class="playerbutton1" data-role=button onclick="darworms.main.player1();">Random</div>
             </li>
             <li>
-                <div id="p2button" data-role=button onclick="darworms.main.player2();">None</div>
+                <div id="p2button" class="playerbutton2" data-role=button onclick="darworms.main.player2();">None</div>
             </li>
             <li>
-                <div id="p3button" data-role=button onclick="darworms.main.player3();")>None</div>
+                <div id="p3button" class="playerbutton3" data-role=button onclick="darworms.main.player3();">None</div>
             </li>
             <li>
-                <div id="p4button" data-role=button onclick="darworms.main.player4();">None</div>
+                <div id="p4button" class="playerbutton4" data-role=button onclick="darworms.main.player4();">None</div>
             </li>
             </ul>
             <!--
@@ -86,7 +119,7 @@
     <div data-role=footer data-theme="b" data-position=fixed>
         <div data-role=navbar>
             <ul>
-                <li> <a id="startpause"  onclick=darworms.startgame()>Start Game</a></li>
+                <li> <a id="startpause"  data-role=button onclick=darworms.startgame()>Start Game</a></li>
                 <li><a href=#menupage>Menu</a></li>
             </ul>
         </div>

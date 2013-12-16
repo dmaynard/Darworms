@@ -48,15 +48,6 @@ darworms.gameModule = (function() {
         this.needsRedraw = true;
         this.avePos = new Point(0,0);
         // worm index of zero means unclaimed.
-        this.colorTable = ["000000", "881C0A", "#1C880A", "#1C0A88",
-            "#AAAA00", "#448833", "#443388", "#338844",
-            "#FF1C0A", "#1CFF0A", "#1C0AFF", "#0AFF1C",
-            "#884433", "#448833", "#443388", "#338844"];
-        this.alphaColorTable = ["rgba(  0,   0,   0, 0.2)",
-            "rgba(  255,   0,   0, 0.8)", "rgba(    0, 255,   0, 0.8)", "rgba(    0,   0, 255, 0.8)", "rgba(  255, 200, 0, 0.8)",
-            "#AAAA0080", "#44883380", "#44338880", "#33884480",
-            "#FF1C0A80", "#1CFF0A80", "#1C0AFF80", "#0AFF1C80",
-            "#88443380", "#44883380", "#44338880", "#33884480"];
 
         this.xPts = [ 1.0, 0.5, -0.5, -1.0, -0.5, 0.5];
         this.yPts = [ 0.0,  1.0,  1.0,  0.0,  -1.0, -1.0];
@@ -116,14 +107,14 @@ darworms.gameModule = (function() {
         wGraphics.fill();
         var owner = this.grid.spokeAt( point, 7);
         if (owner > 0 ) {
-            wGraphics.strokeStyle = this.colorTable[owner & 0xF];
+            wGraphics.strokeStyle = darworms.dwsettings.colorTable[owner & 0xF];
             wGraphics.lineWidth = 1.0/this.scale.x;
             wGraphics.beginPath();
             wGraphics.arc(0, 0, 0.25, 0, Math.PI*2, true);
             wGraphics.closePath();
             wGraphics.stroke();
         } else {
-            wGraphics.fillStyle = this.colorTable[this.grid.spokeAt(point,6) & 0xF];
+            wGraphics.fillStyle =  darworms.dwsettings.colorTable[this.grid.spokeAt(point,6) & 0xF];
             wGraphics.beginPath();
             wGraphics.arc(0, 0, 0.1, 0, Math.PI*2, true);
             wGraphics.closePath();
@@ -136,7 +127,7 @@ darworms.gameModule = (function() {
 
         for (var i = 0; i < 6 ; i = i + 1) {
             if ((outvec & darworms.outMask[i]) !== 0) {
-                var outSpokeColor = this.colorTable[this.grid.spokeAt(point, i)];
+                var outSpokeColor = darworms.dwsettings.colorTable[this.grid.spokeAt(point, i)];
                 // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
                 wGraphics.strokeStyle  = outSpokeColor;
                 wGraphics.lineWidth =   1.0/this.scale.x ;
@@ -148,7 +139,7 @@ darworms.gameModule = (function() {
                 wGraphics.closePath();
             }
             if ((invec & darworms.outMask[i]) !== 0) {
-                wGraphics.strokeStyle  = this.colorTable[this.grid.spokeAt(point, i)];
+                wGraphics.strokeStyle  = darworms.dwsettings.colorTable[this.grid.spokeAt(point, i)];
                 wGraphics.lineWidth = 1.0/this.scale.x;
                 wGraphics.lineCap = 'round';
                 wGraphics.beginPath();
@@ -198,7 +189,7 @@ darworms.gameModule = (function() {
         var outvec = this.grid.stateAt(focusPoint);
         for (var i = 0; i < 6 ; i = i + 1) {
             if ((outvec & darworms.outMask[i]) !== 0) {
-                var outSpokeColor = this.alphaColorTable[this.grid.spokeAt(focusPoint, i)];
+                var outSpokeColor = darworms.dwsettings.alphaColorTable[this.grid.spokeAt(focusPoint, i)];
                 // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + focusPoint.format());
                 // wGraphics.strokeStyle  = "rgba(0,0,0,0.2)";
                 wGraphics.strokeStyle  = outSpokeColor;
@@ -211,7 +202,7 @@ darworms.gameModule = (function() {
                 wGraphics.closePath();
             } else {
 
-                wGraphics.strokeStyle  = this.alphaColorTable[focusWorm.colorIndex];
+                wGraphics.strokeStyle  = darworms.dwsettings.alphaColorTable[focusWorm.colorIndex];
                 wGraphics.lineWidth = 8/this.canvas.width;
                 // wGraphics.moveTo(this.targetPts[i].x, this.targetPts[i].y);
                 wGraphics.beginPath();
@@ -447,7 +438,7 @@ darworms.gameModule = (function() {
         for (i = 0; i < 4; i++ ) {
             if (darworms.theGame.worms[i] !== undefined  &&  darworms.theGame.worms[i].shouldDrawScore()) {
                 clearScore(i,4);
-                scorectx.fillStyle = darworms.theGame.colorTable[i+1];
+                scorectx.fillStyle = darworms.dwsettings.colorTable[i+1];
                 scorectx.shadowOffsetX = 3;
                 scorectx.shadowOffsetY = 3;
                 scorectx.fillText(darworms.theGame.worms[i].score, scoreStartx(i,4,darworms.theGame.worms[i].score.toString()), 15);
@@ -469,7 +460,8 @@ darworms.gameModule = (function() {
                 darworms.theGame.elapsedTime = darworms.theGame.elapsedTime  + new Date().getTime();
                 console.log(" Game Over");
                 clearInterval(darworms.graphics.timer);
-                document.getElementById("startpause").innerHTML = "Start Game";
+                // document.getElementById("startpause").innerHTML = "Start Game";
+                $("#startpause .ui-btn-text").text("Start Game");
                 darworms.theGame.showTimes();
                 darworms.theGame.gameState = darworms.gameStates.over;
                 // theGame.clearCanvas();

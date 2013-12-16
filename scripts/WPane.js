@@ -105,7 +105,7 @@ WPane.prototype.drawCells = function () {
         this.savedCtx.drawImage(this.canvas,0,0);
         this.canvasIsDirty = false;
         this.savedCtx.font = "bold 18px sans-serif";
-        this.savedCtx.fillStyle = darworms.theGame.colorTable[0];
+        this.savedCtx.fillStyle = darworms.dwsettings.colorTable[0];
         this.savedCtx.shadowColor = "rgb(190, 190, 190)";
         this.savedCtx.shadowOffsetX = 3;
         this.savedCtx.shadowOffsetY = 3;
@@ -149,14 +149,14 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
      */
     var owner = this.grid.spokeAt( gPoint, 7);
     if (owner > 0 ) {
-        this.ctx.strokeStyle = darworms.theGame.colorTable[owner & 0xF];
+        this.ctx.strokeStyle = darworms.dwsettings.colorTable[owner & 0xF];
         this.ctx.lineWidth = 1.0/this.scale.x;
         this.ctx.beginPath();
         this.ctx.arc(0, 0, 0.2, 0, Math.PI*2, true);
         this.ctx.closePath();
         this.ctx.stroke();
     } else {
-        this.ctx.fillStyle = darworms.theGame.colorTable[this.grid.spokeAt(gPoint,6) & 0xF];
+        this.ctx.fillStyle = darworms.dwsettings.colorTable[this.grid.spokeAt(gPoint,6) & 0xF];
         this.ctx.lineWidth = 1.0/this.scale.x;
         this.ctx.beginPath();
         this.ctx.arc(0, 0, 0.1, 0, Math.PI*2, true);
@@ -170,7 +170,7 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
 
     for (var i = 0; i < 6 ; i = i + 1) {
         if ((outvec & darworms.outMask[i]) !== 0) {
-            var outSpokeColor = darworms.theGame.colorTable[this.grid.spokeAt(gPoint, i)];
+            var outSpokeColor = darworms.dwsettings.colorTable[this.grid.spokeAt(gPoint, i)];
             // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + gPoint.format());
             this.ctx.strokeStyle  = outSpokeColor;
             this.ctx.lineWidth =   3.0/this.scale.x ;
@@ -182,7 +182,7 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
             this.ctx.closePath();
         }
         if ((invec & darworms.outMask[i]) !== 0) {
-            var inSpokeColor = darworms.theGame.colorTable[this.grid.spokeAt(gPoint, i)];
+            var inSpokeColor = darworms.dwsettings.colorTable[this.grid.spokeAt(gPoint, i)];
             // console.log (" inSpokeColor " + i + " :  " + inSpokeColor + " at "  + gPoint.format());
             this.ctx.strokeStyle  = inSpokeColor;
             this.ctx.lineWidth = 3.0/this.scale.x;

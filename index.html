@@ -4,61 +4,45 @@
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>DARWORMS </title>
-    <!-- Earlier JQuery Mobile
-    <link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.0rc1.css" type="text/css" charset="utf-8" />
-    <link rel="stylesheet" href="pgandjqm-style-override.css" type="text/css" charset="utf-8" />
-     -->
-    <!-- Latest JQuery Mobile -->
-    <!-- full source  JQuery Mobile
-    <link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.3.2.css" type="text/css" charset="utf-8"/>
-    <script src="scripts/jquery.mobile-1.3.2.js"></script>
-    -->
-
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css"/>
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
-    <!--
-   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
-   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-   -->
-    <!--script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script> -->
-    <!-- for new Darworms UI and loading scheme -->
-
-
-
     <script src="scripts/modernizr.js"></script>
     <script src="scripts/loader.js"></script>
 
     <style type=text/css>
 
-           .ui-page .ui-content  .ui-btn.playerbutton1 .ui-btn-inner {
-            color     : red;
-            background : #8c8c8c;
-            font-size:0.8em;
+        .ui-page .ui-content  .ui-btn.playerbutton1 .ui-btn-inner {
+            color: red;
+            background: #8c8c8c;
+            font-size: 0.8em;
             padding-bottom: 4px;
             padding-top: 4px;
         }
-           .ui-page .ui-content  .ui-btn.playerbutton2 .ui-btn-inner {
-               color     : green;
-               background : #8c8c8c;
-               font-size:0.8em;
-               padding-bottom: 4px;
-               padding-top: 4px;
-           }
-            .ui-page .ui-content  .ui-btn.playerbutton3 .ui-btn-inner {
-               color     : blue;
-               background : #8c8c8c;
-               font-size:0.8em;
-               padding-bottom: 4px;
-               padding-top: 4px;
-           }
-           .ui-page .ui-content  .ui-btn.playerbutton4 .ui-btn-inner {
-               color     : yellow;
-               background : #8c8c8c;
-               font-size:0.8em;
-               padding-bottom: 4px;
-               padding-top: 4px;
-           }
+
+        .ui-page .ui-content  .ui-btn.playerbutton2 .ui-btn-inner {
+            color: green;
+            background: #8c8c8c;
+            font-size: 0.8em;
+            padding-bottom: 4px;
+            padding-top: 4px;
+        }
+
+        .ui-page .ui-content  .ui-btn.playerbutton3 .ui-btn-inner {
+            color: blue;
+            background: #8c8c8c;
+            font-size: 0.8em;
+            padding-bottom: 4px;
+            padding-top: 4px;
+        }
+
+        .ui-page .ui-content  .ui-btn.playerbutton4 .ui-btn-inner {
+            color: yellow;
+            background: #8c8c8c;
+            font-size: 0.8em;
+            padding-bottom: 4px;
+            padding-top: 4px;
+        }
 
 
     </style>
@@ -72,6 +56,7 @@
     <div data-role="content">
         <a href=#playpage data-role=button> Play </a>
         <a href=#settingspage data-role=button> Settings </a>
+        <a href=#debugpage data-role=button> Peformance </a>
         <a href=#aboutpage data-role=button> About </a>
     </div>
 </div>
@@ -83,49 +68,38 @@
         <!-- div data-role="controlgroup" data-type="horizontal" -->
         <div data-role=navbar>
             <ul>
-            <li>
-                <div id="p1button" class="playerbutton1" data-role=button onclick="darworms.main.player1();">Random</div>
-            </li>
-            <li>
-                <div id="p2button" class="playerbutton2" data-role=button onclick="darworms.main.player2();">None</div>
-            </li>
-            <li>
-                <div id="p3button" class="playerbutton3" data-role=button onclick="darworms.main.player3();">None</div>
-            </li>
-            <li>
-                <div id="p4button" class="playerbutton4" data-role=button onclick="darworms.main.player4();">None</div>
-            </li>
+                <li>
+                    <div id="p1button" class="playerbutton1" data-role=button onclick="darworms.main.player1();">
+                        Random
+                    </div>
+                </li>
+                <li>
+                    <div id="p2button" class="playerbutton2" data-role=button onclick="darworms.main.player2();">None
+                    </div>
+                </li>
+                <li>
+                    <div id="p3button" class="playerbutton3" data-role=button onclick="darworms.main.player3();">None
+                    </div>
+                </li>
+                <li>
+                    <div id="p4button" class="playerbutton4" data-role=button onclick="darworms.main.player4();">None
+                    </div>
+                </li>
             </ul>
-            <!--
-                        <div class="ui-block-a" id="p1button" data-role="button" onclick="darworms.main.player1();">P1</div>
-                        <div class="ui-block-a" id="p1button" data-role="button" onclick="darworms.main.player1();">P1</div>
-                        <div class="ui-block-b" id="p2button" data-role="button" onclick="darworms.main.player2();">P2</div>
-                        <div class="ui-block-c" id="p3button" data-role="button" onclick="darworms.main.player3();">P3</div>
-                        <div class="ui-block-d" id="p4button" data-role="button" onclick="darworms.main.player4();">P4</div>
- -->
         </div>
     </div>
     <div id="scorecanvascontainer">
         <canvas id="scorecanvas" width="300" height="20"></canvas>
     </div>
-
-
-    <!-- div data-role="button" id="startpause2" onclick="darworms.startgame();">Start Game</div
-    <div data-role=footer data-position=fixed>
-            <div id="startpause" data-role=button onclick=darworms.startgame()>Start Game</div>
-            <a href=#menupage data-role=button> Menu </a>
-    </div>
-    -->
     <div data-role=footer data-theme="b" data-position=fixed>
         <div data-role=navbar>
             <ul>
-                <li> <a id="startpause"  data-role=button onclick=darworms.startgame()>Start Game</a></li>
+                <li><a id="startpause" data-role=button onclick=darworms.startgame()>Start Game</a></li>
                 <li><a href=#menupage>Menu</a></li>
             </ul>
         </div>
     </div>
 
-</div>
 </div>
 <div data-role="page" data-theme="a" id=settingspage data-add-back-btn=true data-back-btn-text=Menu>
     <div data-role="header">
@@ -134,12 +108,19 @@
     <div data-role=content>
         <div data-role="fieldcontain">
             <label for="fps">Frames/Sec:</label>
-            <input type="range" name="fps" id="fps" value="30" min="1" max="60" />
+            <input type="range" name="fps" id="fps" value="30" min="1" max="60"/>
         </div>
         <div data-role="fieldcontain">
             <label for="gridsize">Grid Size:</label>
             <input type="range" name="gridsize" id="gridsize" value="18" step="2" min="4" max="64"/>
         </div>
+    </div>
+</div>
+<div data-role="page" data-theme="a" id=debugpage data-add-back-btn=true data-back-btn-text=Menu>
+    <div data-role="header">
+        <h1>PERFORMANCE</h1>
+    </div>
+    <div data-role=content>
         <div data-role="collapsible">
             <h1>Performance</h1>
 
@@ -164,25 +145,26 @@
     <div data-role="content">
         <p> Darworms is a territory capture game played by one to four Darworms.</p>
 
-        <p> Darworms are creatures that crawl about on a hex grid. Each Darworm learns which direction to go for
-            each of the possible configurations of the six spokes exiting the grid point it can encounter. The
-            Darworm is either trained by a preset set of instructions, or trained by you by asking you which
-            direction to go in every time it encounters a pattern of spokes it hasn't seen before.</p>
+        <p> Darworms are creatures that crawl about on a hex grid eating the grid lines. Darworms exit a grid point by eating one of the six
+            grid lines exiting the point.  If all six grid lines are eaten the Darworm starves to death.
+            Darworms each contain a program instructing it which direction to go for each of the 64 possible grid
+            line patterns (eaten or not) it can encounter.  You train, or program, your Darworm by playing games.
+            Each time your Darworm sees a new pattern of grid lines it stops and asks your which direction to go.
+            It remembers this and adds it to its program.
+            The next time it sees the same pattern of grid lines it will go in that same direction again without stopping to ask you which way to go.
+            Soon your Darworm will take off on its own.  It may take several games to completely train (program) your Darworm.
 
-        <p> The Darworm that captures the sixth and last spoke in any grid point captures that gridpoint.</p>
+        <p> The Darworm that eats the sixth and last spoke in any grid point captures that grid point. You get one point for each grid point you capture. </p>
 
-        <p> You can generate a Darworm with a preset randomly chosen direction for each grid point spoke
-            configuration or train a new Darworm yourself. It may take many games to completely train a Darworm
-            since it may not see all possible grip point spokes configurations for many games.</p>
+        <p> You can generate a Darworm with a preset randomly chosen program or train a new Darworm yourself. You can play the same Darworm in successive games.</p>
 
         <p> Copyright 1983, 2013 by David S. Maynard</p>
 
         <p> Based on the 1983 Electron Arts Game "Worms?" By David S. Maynard</p>
 
-        <p> Inspired by Martin Gardner's 1971 column "patterson's Worms" in Scientific American</p>
+        <p> Inspired by Martin Gardner's 1971 column "Patterson's Worms" in Scientific American</p>
 
     </div>
 </div>
-<!-- end jqm page -->
 </body>
 </html>

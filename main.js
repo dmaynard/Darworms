@@ -211,7 +211,7 @@ darworms.main = (function() {
     }
     var init = function () {
         // This may be needed when we actually build a phoneGap app
-        // in this case delay initialization untill we get the deviceready event
+        // in this case delay initialization until we get the deviceready event
         document.addEventListener("deviceready", deviceInfo, true);
         setTypes();
         canvas = document.getElementById("wcanvas");
@@ -220,14 +220,26 @@ darworms.main = (function() {
         $('#wcanvas').bind('tap', wormEventHandler);
 
         darworms.dwsettings.scoreCanvas = document.getElementById("scorecanvas");
-        darworms.gameModule.init();  // needed to init local data the gameModule closure
+        darworms.gameModule.init();  // needed to init local data in the gameModule closure
         //  These values are needed by both mainModule and gameModule
         //  so for now we keep them as globals
-        //  Perhaps the time routins should all be moved into the gameModule closure
+        //  Perhaps the time routines should all be moved into the gameModule closure
         // and we can make some or all of these private to the gameModule closure
         darworms.theGame = null;
         darworms.startgame(false);
-
+        //  The following code is designed to remove the toolbar on mobile Safari
+        if( !window.location.hash && window.addEventListener ){
+            window.addEventListener( "load",function() {
+                setTimeout(function(){
+                    window.scrollTo(0, 0);
+                }, 100);
+            });
+            window.addEventListener( "orientationchange",function() {
+                setTimeout(function(){
+                    window.scrollTo(0, 0);
+                }, 100);
+            });
+        }
     }
 
     return {

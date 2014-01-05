@@ -123,6 +123,7 @@ window.addEventListener("load", function() {
         },{
             complete : function() {
                 console.log(" stage 1 loading finished");
+                // This is where the game is initialized
                 darworms.main.init();
             }
         }

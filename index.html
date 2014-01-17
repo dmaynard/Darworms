@@ -4,7 +4,13 @@
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>DARWORMS </title>
+    <!--
+    <link rel="stylesheet" href="themes/darworms-themes.css.min.css" />
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css"/>
+    -->
+    <link rel="stylesheet" href="themes/darworms-themes.css.min.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile.structure-1.3.2.min.css" />
+
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
     <script src="scripts/modernizr.js"></script>
@@ -82,7 +88,7 @@
                     </div>
                 </li>
                 <li>
-                    <div id="p4button" class="playerbutton4" data-role=button onclick="darworms.main.player4();">None
+                    <div  id="p4button"class="playerbutton4"  data-role=button onclick="darworms.main.player4()"> None
                     </div>
                 </li>
             </ul>
@@ -91,7 +97,7 @@
     <div id="scorecanvascontainer">
         <canvas id="scorecanvas" width="300" height="20"></canvas>
     </div>
-    <div data-role=footer data-theme="b" >
+    <div data-role=footer data-theme="b">
         <div data-role=navbar>
             <ul>
                 <li><a id="startpause" data-role=button onclick=darworms.startgame()>Start Game</a></li>
@@ -138,6 +144,30 @@
         </div>
     </div>
 </div>
+
+<div data-role="page" data-overlay-theme="b" data-theme="d" data-add-back-btn="true"  data-back-btn-text="back" id="selectdarwormpage">
+    <div data-role="header">
+        <h1>Select Darworm</h1>
+    </div>
+    <div data-role="content">
+        <form>
+            <fieldset data-role="controlgroup" id="radiobuttons">
+                <legend>Choose Darworm type for next game:</legend>
+                <input type="radio" name="radio-choice" id="radio-choice-1" value="none" >
+                <label for="radio-choice-1">None</label>
+
+                <input type="radio" name="radio-choice" id="radio-choice-2" value="random">
+                <label for="radio-choice-2">Random</label>
+
+                <input type="radio" name="radio-choice" id="radio-choice-3" value="same">
+                <label for="radio-choice-3">Same</label>
+
+                <input type="radio" name="radio-choice" id="radio-choice-4" value="new">
+                <label for="radio-choice-4">New</label>
+            </fieldset>
+        </form>
+    </div>
+</div>
 <div data-role="page" data-theme="a" id=aboutpage data-add-back-btn=true data-back-btn-text=Menu>
     <div data-role="header">
         <h1>ABOUT</h1>
@@ -145,18 +175,23 @@
     <div data-role="content">
         <p> Darworms is a territory capture game played by one to four Darworms.</p>
 
-        <p> Darworms are creatures that crawl about on a hex grid eating the grid lines. Darworms exit a grid point by eating one of the six
-            grid lines exiting the point.  If all six grid lines are eaten the Darworm starves to death.
+        <p> Darworms are creatures that crawl about on a hex grid eating the grid lines. Darworms exit a grid point by
+            eating one of the six
+            grid lines exiting the point. If all six grid lines are eaten the Darworm starves to death.
             Darworms each contain a program instructing it which direction to go for each of the 64 possible grid
-            line patterns (eaten or not) it can encounter.  You train, or program, your Darworm by playing games.
+            line patterns (eaten or not) it can encounter. You train, or program, your Darworm by playing games.
             Each time your Darworm sees a new pattern of grid lines it stops and asks your which direction to go.
             It remembers this and adds it to its program.
-            The next time it sees the same pattern of grid lines it will go in that same direction again without stopping to ask you which way to go.
-            Soon your Darworm will take off on its own.  It may take several games to completely train (program) your Darworm.
+            The next time it sees the same pattern of grid lines it will go in that same direction again without
+            stopping to ask you which way to go.
+            Soon your Darworm will take off on its own. It may take several games to completely train (program) your
+            Darworm.
 
-        <p> The Darworm that eats the sixth and last spoke in any grid point captures that grid point. You get one point for each grid point you capture. </p>
+        <p> The Darworm that eats the sixth and last spoke in any grid point captures that grid point. You get one point
+            for each grid point you capture. </p>
 
-        <p> You can generate a Darworm with a preset randomly chosen program or train a new Darworm yourself. You can play the same Darworm in successive games.</p>
+        <p> You can generate a Darworm with a preset randomly chosen program or train a new Darworm yourself. You can
+            play the same Darworm in successive games.</p>
 
         <p> Copyright 1983, 2013 by David S. Maynard</p>
 

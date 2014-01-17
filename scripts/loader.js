@@ -32,6 +32,7 @@ var darworms = {
         gWidth: 16,
         gHeight: 16,
         vgridsize :  1.0,
+        selectedDarworm: 0,
         scoreCanvas : undefined,
         controls : {
             KEY_UP : "moveUp",
@@ -124,7 +125,19 @@ window.addEventListener("load", function() {
             complete : function() {
                 console.log(" stage 1 loading finished");
                 // This is where the game is initialized
+                //$(document).on('pageinit', function() {
+                //    console.log("pageinit");
+               //     alert("pageinit");
+
+                //});
+               // $(document).on('pagebeforeshow', function() {
+                //    console.log("pagebeforeshow");
+                 //   alert("pagebeforeshow");
+               // });
+                $('#selectdarwormpage').on('pagebeforeshow', darworms.main.setupRadioButtons);
+                $('#selectdarwormpage').on('pagehide', darworms.main.setSelectedDarwormType);
                 darworms.main.init();
+
             }
         }
     ]);

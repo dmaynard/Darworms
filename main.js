@@ -54,38 +54,91 @@ darworms.main = (function() {
             gWorms[i].wType = players[i];
         }
     };
-
-    var player1 = function() {
-        players[0] = players[0] + 1;
-        if (players[0] >= typeNames.length) {
-            players[0] = 0;
+    var removeOldClass = function ( oldIndex) {
+        switch (oldIndex) {
+            case 0:
+                $("#selectdarwormpage").removeClass("ui-body-d")
+                break;
+            case 1:
+                $("#selectdarwormpage").removeClass("ui-body-e")
+                break;
+            case 2:
+                $("#selectdarwormpage").removeClass("ui-body-f")
+                break;
+            case 3:
+                $("#selectdarwormpage").removeClass("ui-body-g")
+                break;
         }
-        setTypes();
+    }
+    var player1 = function() {
+        removeOldClass (darworms.selectedDarworm);
+        darworms.selectedDarworm = 0;
+        $("#selectdarwormpage").addClass("ui-body-d");
+        $.mobile.changePage("#selectdarwormpage" );
     };
 
     var player2 = function() {
-        players[1] = players[1] + 1;
-        if (players[1] >= typeNames.length) {
-            players[1] = 0;
-        }
-        setTypes();
+        removeOldClass (darworms.selectedDarworm);
+        darworms.selectedDarworm = 1;
+        $("#selectdarwormpage").addClass("ui-body-e");
+        $.mobile.changePage("#selectdarwormpage" );
     };
 
     var player3 = function() {
-        players[2] = players[2] + 1;
-        if (players[2] >= typeNames.length) {
-            players[2] = 0;
-        }
-        setTypes();
+        removeOldClass (darworms.selectedDarworm);
+        darworms.selectedDarworm = 2;
+        $("#selectdarwormpage").addClass("ui-body-f");
+        $.mobile.changePage("#selectdarwormpage" );
     };
 
     var player4 = function() {
-        players[3] = players[3] + 1;
-        if (players[3] >= typeNames.length) {
-            players[3] = 0;
+        removeOldClass (darworms.selectedDarworm);
+        darworms.selectedDarworm = 3;
+        $("#selectdarwormpage").addClass("ui-body-g");
+        $.mobile.changePage("#selectdarwormpage" );
+    };
+
+    var setupRadioButtons = function() {
+        var darwormType = players[darworms.selectedDarworm];
+        switch (darwormType) {
+            case 0:
+                $('#radio-choice-1').prop( "checked", true ).checkboxradio( "refresh" );
+                break;
+            case 1:
+                $( "#radio-choice-2" ).prop( "checked", true ).checkboxradio( "refresh" );
+                break;
+            case 2:
+                $('#radio-choice-3').prop( "checked", true ).checkboxradio( "refresh" );
+                break;
+            case 3:
+                $('#radio-choice-4').prop( "checked", true ).checkboxradio( "refresh" );
+                break;
+        }
+        $('input[name=radio-choice]').checkboxradio("refresh");
+        var selectedType  = $('input[name=radio-choice]:checked').val();
+    }
+
+    var setSelectedDarwormType = function () {
+        var selectedType  = $('input[name=radio-choice]:checked').val();
+        switch (selectedType)  {
+        case "none":
+            players[darworms.selectedDarworm] = 0;
+            break;
+        case "random":
+            players[darworms.selectedDarworm] = 1;
+            break;
+        case "same":
+            players[darworms.selectedDarworm] = 2;
+            break;
+        case "new":
+            players[darworms.selectedDarworm] = 3;
+            break
+
+        default:
+            alert("unknown type");
         }
         setTypes();
-    };
+    }
 
 
 
@@ -244,6 +297,8 @@ darworms.main = (function() {
 
     return {
         init : init,
+        setSelectedDarwormType : setSelectedDarwormType,
+        setupRadioButtons: setupRadioButtons,
         player1 : player1,
         player2 : player2,
         player3 : player3,

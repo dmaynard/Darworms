@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="themes/darworms-themes.css.min.css" />
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css"/>
     -->
-    <link rel="stylesheet" href="themes/darworms-themes.css.min.css" />
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile.structure-1.3.2.min.css" />
+    <link rel="stylesheet" href="themes/darworm-theme.min.css"/>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile.structure-1.3.2.min.css"/>
 
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
@@ -60,10 +60,10 @@
         <h1>DARWORMS</h1>
     </div>
     <div data-role="content">
-        <a href=#playpage data-role=button> Play </a>
-        <a href=#settingspage data-role=button> Settings </a>
-        <a href=#debugpage data-role=button> Peformance </a>
-        <a href=#aboutpage data-role=button> About </a>
+        <a href=#playpage data-role=button data-transition="slideup"> Play </a>
+        <a href=#settingspage data-role=button data-transition="fade"> Settings </a>
+        <a href=#debugpage data-role=button data-transition="fade"> Peformance </a>
+        <a href=#aboutpage data-role=button data-transition="fade"> About </a>
     </div>
 </div>
 <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true>
@@ -88,7 +88,7 @@
                     </div>
                 </li>
                 <li>
-                    <div  id="p4button"class="playerbutton4"  data-role=button onclick="darworms.main.player4()"> None
+                    <div id="p4button" class="playerbutton4" data-role=button onclick="darworms.main.player4()"> None
                     </div>
                 </li>
             </ul>
@@ -145,29 +145,103 @@
     </div>
 </div>
 
-<div data-role="page" data-overlay-theme="b" data-theme="d" data-add-back-btn="true"  data-back-btn-text="back" id="selectdarwormpage">
+<div data-role="page" data-theme="c" data-add-back-btn="true" data-back-btn-text="back"  data-darworm="selector" id="red-darworm-page">
     <div data-role="header">
         <h1>Select Darworm</h1>
     </div>
     <div data-role="content">
         <form>
-            <fieldset data-role="controlgroup" id="radiobuttons">
+            <fieldset data-role="controlgroup" id="red-radiobuttons">
                 <legend>Choose Darworm type for next game:</legend>
-                <input type="radio" name="radio-choice" id="radio-choice-1" value="none" >
-                <label for="radio-choice-1">None</label>
+                <input type="radio" name="red-radio-choice" id="red-radio-choice-1" value="none">
+                <label for="red-radio-choice-1">None</label>
 
-                <input type="radio" name="radio-choice" id="radio-choice-2" value="random">
-                <label for="radio-choice-2">Random</label>
+                <input type="radio" name="red-radio-choice" id="red-radio-choice-2" value="random">
+                <label for="red-radio-choice-2">Random</label>
 
-                <input type="radio" name="radio-choice" id="radio-choice-3" value="same">
-                <label for="radio-choice-3">Same</label>
+                <input type="radio" name="red-radio-choice" id="red-radio-choice-3" value="same">
+                <label for="red-radio-choice-3">Same</label>
 
-                <input type="radio" name="radio-choice" id="radio-choice-4" value="new">
-                <label for="radio-choice-4">New</label>
+                <input type="radio" name="red-radio-choice" id="red-radio-choice-4" value="new">
+                <label for="red-radio-choice-4">New</label>
             </fieldset>
         </form>
     </div>
 </div>
+
+<div data-role="page" data-theme="d" data-add-back-btn="true" data-back-btn-text="back" data-darworm="selector"  id="green-darworm-page">
+    <div data-role="header">
+        <h1>Select Darworm</h1>
+    </div>
+    <div data-role="content">
+        <form>
+            <fieldset data-role="controlgroup" id="green-radiobuttons">
+                <legend>Choose Darworm type for next game:</legend>
+                <input type="radio" name="green-radio-choice" id="green-radio-choice-1" value="none">
+                <label for="green-radio-choice-1">None</label>
+
+                <input type="radio" name="green-radio-choice" id="green-radio-choice-2" value="random">
+                <label for="green-radio-choice-2">Random</label>
+
+                <input type="radio" name="green-radio-choice" id="green-radio-choice-3" value="same">
+                <label for="green-radio-choice-3">Same</label>
+
+                <input type="radio" name="green-radio-choice" id="green-radio-choice-4" value="new">
+                <label for="green-radio-choice-4">New</label>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<div data-role="page" data-theme="e" data-add-back-btn="true" data-back-btn-text="back" data-darworm="selector" id="blue-darworm-page">
+    <div data-role="header">
+        <h1>Select Darworm</h1>
+    </div>
+    <div data-role="content">
+        <form>
+            <fieldset data-role="controlgroup" id="blue-radiobuttons">
+                <legend>Choose Darworm type for next game:</legend>
+                <input type="radio" name="blue-radio-choice" id="blue-radio-choice-1" value="none">
+                <label for="blue-radio-choice-1">None</label>
+
+                <input type="radio" name="blue-radio-choice" id="blue-radio-choice-2" value="random">
+                <label for="blue-radio-choice-2">Random</label>
+
+                <input type="radio" name="blue-radio-choice" id="blue-radio-choice-3" value="same">
+                <label for="blue-radio-choice-3">Same</label>
+
+                <input type="radio" name="blue-radio-choice" id="blue-radio-choice-4" value="new">
+                <label for="blue-radio-choice-4">New</label>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<div data-role="page" data-theme="f" data-add-back-btn="true" data-back-btn-text="back" data-darworm="selector" id="yellow-darworm-page">
+    <div data-role="header">
+        <h1>Select Darworm</h1>
+    </div>
+    <div data-role="content">
+        <form>
+            <fieldset data-role="controlgroup" id="yellow-radiobuttons">
+                <legend>Choose Darworm type for next game:</legend>
+                <input type="radio" name="yellow-radio-choice" id="yellow-radio-choice-1" value="none">
+                <label for="yellow-radio-choice-1">None</label>
+
+                <input type="radio" name="yellow-radio-choice" id="yellow-radio-choice-2" value="random">
+                <label for="yellow-radio-choice-2">Random</label>
+
+                <input type="radio" name="yellow-radio-choice" id="yellow-radio-choice-3" value="same">
+                <label for="yellow-radio-choice-3">Same</label>
+
+                <input type="radio" name="yellow-radio-choice" id="yellow-radio-choice-4" value="new">
+                <label for="yellow-radio-choice-4">New</label>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
 <div data-role="page" data-theme="a" id=aboutpage data-add-back-btn=true data-back-btn-text=Menu>
     <div data-role="header">
         <h1>ABOUT</h1>

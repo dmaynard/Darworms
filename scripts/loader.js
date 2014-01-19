@@ -134,8 +134,8 @@ window.addEventListener("load", function() {
                 //    console.log("pagebeforeshow");
                  //   alert("pagebeforeshow");
                // });
-                $('#selectdarwormpage').on('pagebeforeshow', darworms.main.setupRadioButtons);
-                $('#selectdarwormpage').on('pagehide', darworms.main.setSelectedDarwormType);
+                $("[data-darworm='selector']").on('pagebeforeshow', darworms.main.setupRadioButtons);
+                $("[data-darworm='selector']").on('pagehide', darworms.main.setSelectedDarwormType);
                 darworms.main.init();
 
             }

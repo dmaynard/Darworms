@@ -37,6 +37,7 @@ darworms.main = (function() {
 
     darworms.outMask = [1, 2, 4, 8, 16, 32];
     darworms.inMask =  [8, 16, 32, 1, 2, 4];
+    darworms.colorNames = ['red', 'green', 'blue', 'yellow'];
 
     darworms.inDir =   [3, 4, 5, 0, 1, 2];
 
@@ -54,72 +55,54 @@ darworms.main = (function() {
             gWorms[i].wType = players[i];
         }
     };
-    var removeOldClass = function ( oldIndex) {
-        switch (oldIndex) {
-            case 0:
-                $("#selectdarwormpage").removeClass("ui-body-d")
-                break;
-            case 1:
-                $("#selectdarwormpage").removeClass("ui-body-e")
-                break;
-            case 2:
-                $("#selectdarwormpage").removeClass("ui-body-f")
-                break;
-            case 3:
-                $("#selectdarwormpage").removeClass("ui-body-g")
-                break;
-        }
-    }
+
     var player1 = function() {
-        removeOldClass (darworms.selectedDarworm);
         darworms.selectedDarworm = 0;
-        $("#selectdarwormpage").addClass("ui-body-d");
-        $.mobile.changePage("#selectdarwormpage" );
+        $.mobile.changePage("#red-darworm-page");
     };
 
     var player2 = function() {
-        removeOldClass (darworms.selectedDarworm);
         darworms.selectedDarworm = 1;
-        $("#selectdarwormpage").addClass("ui-body-e");
-        $.mobile.changePage("#selectdarwormpage" );
+        $.mobile.changePage("#green-darworm-page");
     };
 
     var player3 = function() {
-        removeOldClass (darworms.selectedDarworm);
         darworms.selectedDarworm = 2;
-        $("#selectdarwormpage").addClass("ui-body-f");
-        $.mobile.changePage("#selectdarwormpage" );
+        $.mobile.changePage("#blue-darworm-page");
     };
 
     var player4 = function() {
-        removeOldClass (darworms.selectedDarworm);
         darworms.selectedDarworm = 3;
-        $("#selectdarwormpage").addClass("ui-body-g");
-        $.mobile.changePage("#selectdarwormpage" );
+        $.mobile.changePage("#yellow-darworm-page");
     };
 
     var setupRadioButtons = function() {
         var darwormType = players[darworms.selectedDarworm];
+        var color = darworms.colorNames[darworms.selectedDarworm];
         switch (darwormType) {
             case 0:
-                $('#radio-choice-1').prop( "checked", true ).checkboxradio( "refresh" );
+                $('#' + color + '-radio-choice-1').prop( "checked", true ).checkboxradio( "refresh" );
                 break;
             case 1:
-                $( "#radio-choice-2" ).prop( "checked", true ).checkboxradio( "refresh" );
+                $( '#' + color + '-radio-choice-2').prop( "checked", true ).checkboxradio( "refresh" );
                 break;
             case 2:
-                $('#radio-choice-3').prop( "checked", true ).checkboxradio( "refresh" );
+                $( '#' + color + '-radio-choice-3').prop( "checked", true ).checkboxradio( "refresh" );
                 break;
             case 3:
-                $('#radio-choice-4').prop( "checked", true ).checkboxradio( "refresh" );
+                $('#' + color + '-radio-choice-4').prop( "checked", true ).checkboxradio( "refresh" );
                 break;
         }
-        $('input[name=radio-choice]').checkboxradio("refresh");
-        var selectedType  = $('input[name=radio-choice]:checked').val();
+        var selectinput = 'input[name=' + color + '-radio-choice]';
+        $(selectinput).checkboxradio("refresh");
+       // $('input[name=green-radio-choice]').checkboxradio("refresh");
+        var selectedType  = $(selectinput + ':checked').val();
     }
 
     var setSelectedDarwormType = function () {
-        var selectedType  = $('input[name=radio-choice]:checked').val();
+        var color = darworms.colorNames[darworms.selectedDarworm];
+        var selectinput = 'input[name=' + color + '-radio-choice]';
+        var selectedType  = $(selectinput + ':checked').val();
         switch (selectedType)  {
         case "none":
             players[darworms.selectedDarworm] = 0;

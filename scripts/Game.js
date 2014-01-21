@@ -100,7 +100,7 @@ darworms.gameModule = (function() {
         wGraphics.save();
         this.gsetTranslate(point);
 
-        wGraphics.fillStyle =  "rgb(222,222,222)";
+        wGraphics.fillStyle =  "rgb(245,245,245)";
         wGraphics.beginPath();
         wGraphics.rect(-0.5, -0.5, 1.0, 1.0);
         wGraphics.closePath();

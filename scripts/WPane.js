@@ -39,7 +39,8 @@ function WPane ( grid, size, center, canvas) {
 }
 WPane.prototype.clear = function() {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-    this.ctx.fillStyle =  "rgba(222,222,222, 1.0)";
+    // background for user selct direction screen
+    this.ctx.fillStyle =  "rgba(245,245,245,1.0)";
     this.ctx.beginPath();
     this.ctx.rect(0, 0, this.pWidth, this.pHeight);
     this.ctx.closePath();

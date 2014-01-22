@@ -117,14 +117,30 @@
         <h1>SETTINGS</h1>
     </div>
     <div data-role=content>
+        <form>
+            <fieldset data-role="controlgroup" id="geometry-radiobuttons">
+                <legend>At edge of grid Darworms will:</legend>
+                <input type="radio" name="geometry-radio-choice" id="geometry-radio-torus" checked = "checked" value="torus">
+                <label for="geometry-radio-torus">Wrap around (Torus)</label>
+
+                <input type="radio" name="geometry-radio-choice" id="geometry-radio-falloff" value="falloff">
+                <label for="geometry-radio-falloff">Fall off and die </label>
+
+                <input type="radio" name="geometry-radio-choice" id="geometry-radio-reflect" value="reflect">
+                <label for="geometry-radio-reflect">Reflect back into grid </label>
+
+
+            </fieldset>
+        </form>
+         <div data-role="fieldcontain">
+            <label for="gridsize">Grid Size:</label>
+            <input type="range" name="gridsize" id="gridsize" value="18" step="2" min="4" max="64"/>
+        </div>
         <div data-role="fieldcontain">
             <label for="fps">Frames/Sec:</label>
             <input type="range" name="fps" id="fps" value="30" min="1" max="60"/>
         </div>
-        <div data-role="fieldcontain">
-            <label for="gridsize">Grid Size:</label>
-            <input type="range" name="gridsize" id="gridsize" value="18" step="2" min="4" max="64"/>
-        </div>
+
     </div>
 </div>
 <div data-role="page" data-theme="a" id=debugpage data-add-back-btn=true data-back-btn-text=Menu>

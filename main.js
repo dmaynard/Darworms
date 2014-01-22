@@ -123,6 +123,29 @@ darworms.main = (function() {
         setTypes();
     }
 
+    var setupGridGeometry = function() {
+        var gridGeometry = darworms.dwsettings.gridGeometry;
+
+        switch (gridGeometry) {
+            case 'torus':
+                $('#geometry-radio-torus').prop( "checked", true ).checkboxradio( "refresh" );
+                break;
+            case 'falloff':
+                $('#geometry-radio-falloff').prop( "checked", true ).checkboxradio( "refresh" );
+                break;
+            case 'reflect':
+                $('#geometry-radio-reflect').prop( "checked", true ).checkboxradio( "refresh" );
+                break;
+            default:
+                alert(" unknown grid geometry requested: " + gridGeometry);
+
+        }
+    }
+
+    var setGridGeometry = function () {
+        var selectedGeometry  = $('input[name=geometry-radio-choice]:checked').val();
+        darworms.dwsettings.gridGeometry = selectedGeometry;
+    }
 
 
 
@@ -282,6 +305,8 @@ darworms.main = (function() {
         init : init,
         setSelectedDarwormType : setSelectedDarwormType,
         setupRadioButtons: setupRadioButtons,
+        setGridGeometry: setGridGeometry,
+        setupGridGeometry: setupGridGeometry,
         player1 : player1,
         player2 : player2,
         player3 : player3,

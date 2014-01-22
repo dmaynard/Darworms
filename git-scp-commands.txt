@@ -3,6 +3,7 @@ git commit
 scp -r -P 12960 ~/projects/SumoWorms/www/*.* dmaynard@bitbltstudios.com:/var/www/darworms/
 scp -r -P 12960 ~/projects/SumoWorms/www/scripts/*.* dmaynard@bitbltstudios.com:/var/www/darworms/scripts
 scp -r -P 12960 ~/projects/SumoWorms/www/themes/*.* dmaynard@bitbltstudios.com:/var/www/darworms/themes
+scp -r -P 12960 ~/projects/SumoWorms/www/images/*.* dmaynard@bitbltstudios.com:/var/www/darworms/images
 
 
 git push

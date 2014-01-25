@@ -40,12 +40,28 @@ darworms.gridModule = (function() {
         }
         if (darworms.dwsettings.gridGeometry == 'reflect') {
             for (var i = 0; i < this.width; i = i + 1) {
-                this.setValueAt(new Point(i,0), darworms.outMask[4] | darworms.outMask[5]); // block up
-                this.setValueAt(new Point(i,this.height -1), darworms.outMask[1] | darworms.outMask[2]); // block down
+                var topPoint = new Point(i,0);
+                var botPoint = new Point(i, this.height-1);
+
+                this.setValueAt(topPoint,  this.valueAt(topPoint) | darworms.outMask[4] | darworms.outMask[5]); // block up
+                this.setSpokeAt(topPoint,4,0);
+                this.setSpokeAt(topPoint,5,0);
+                this.setValueAt(botPoint, darworms.outMask[1] | darworms.outMask[2]); // block down
+                this.setSpokeAt(botPoint,1,0);
+                this.setSpokeAt(botPoint,2,0);
             }
             for (var i = 0; i < this.height; i = i + 1) {
-                this.setValueAt(new Point(0,i), darworms.outMask[2] | darworms.outMask[3] | darworms.outMask[4]); // block left
-                this.setValueAt(new Point(this.width-1,i), darworms.outMask[5] | darworms.outMask[0] | darworms.outMask[1]); //block right
+                var leftPoint = new Point(0,i);
+                var rightPoint = new Point(this.width-1, i);
+
+                this.setValueAt(leftPoint,  this.valueAt(leftPoint) |darworms.outMask[2] | darworms.outMask[3] | darworms.outMask[4]); // block left
+                this.setSpokeAt(leftPoint,2,0);
+                this.setSpokeAt(leftPoint,3,0);
+                this.setSpokeAt(leftPoint,4,0);
+                this.setValueAt(rightPoint, this.valueAt(rightPoint) | darworms.outMask[5] | darworms.outMask[0] | darworms.outMask[1]); //block right
+                this.setSpokeAt(rightPoint,5,0);
+                this.setSpokeAt(rightPoint,0,0);
+                this.setSpokeAt(rightPoint,0,1);
             }
         }
     };

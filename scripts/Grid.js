@@ -38,6 +38,16 @@ darworms.gridModule = (function() {
             this.cells[i] = 0;
             this.colors[i] = 0;
         }
+        if (darworms.dwsettings.gridGeometry == 'reflect') {
+            for (var i = 0; i < this.width; i = i + 1) {
+                this.setValueAt(new Point(i,0), darworms.outMask[4] | darworms.outMask[5]); // block up
+                this.setValueAt(new Point(i,this.height -1), darworms.outMask[1] | darworms.outMask[2]); // block down
+            }
+            for (var i = 0; i < this.height; i = i + 1) {
+                this.setValueAt(new Point(0,i), darworms.outMask[2] | darworms.outMask[3] | darworms.outMask[4]); // block left
+                this.setValueAt(new Point(this.width-1,i), darworms.outMask[5] | darworms.outMask[0] | darworms.outMask[1]); //block right
+            }
+        }
     };
     Grid.prototype.valueAt = function(point) {
         return this.cells[point.y * this.width + point.x];
@@ -68,10 +78,10 @@ darworms.gridModule = (function() {
             point.x < this.width && point.y < this.height;
     };
     Grid.prototype.move = function(from, to, dir, colorIndex) {
-        if ( (this.valueAt(to)  & darworms.inMask[dir])  !== 0) {
+        if ( (this.inVectorsAt(to)  & darworms.inMask[dir])  !== 0) {
             alert(" Attempted to eat eaten spoke at " + to.format());
             console.log ("  (" + to.x  + "," + to.y + ") dir: " + dir + " value: " );
-            console.log( "Attempted to eat eaten spoke at " + to.format() + " dir " + dir  +" value: 0x" + value.toString(16));
+            console.log( "Attempted to eat eaten spoke at " + to.format() + " dir " + dir  +" value: 0x" + this.valueAt(to).toString(16));
         }
         this.setValueAt(to, this.valueAt(to) | darworms.inMask[dir] | (darworms.inMask[dir] << 16));
         this.setValueAt(from, this.valueAt(from) | darworms.outMask[dir] | (darworms.outMask[dir] << 8));
@@ -99,6 +109,10 @@ darworms.gridModule = (function() {
         } else {
             nP = nP.add(oddRowVec[dir]);
         }
+        if( (darworms.dwsettings.gridGeometry == 'falloff' && ((nP.x < 0) || (nP.x > this.width-1) || (nP.y < 0) || (nP.y > this.height-1)))) {
+            // console.log ("  (" + nP.x  + "," + nP.y + ") returning noWhere");
+            return darworms.dwsettings.noWhere;
+        }
         if (nP.x < 0)  {
             nP.x = this.width - 1;
         }
@@ -107,11 +121,9 @@ darworms.gridModule = (function() {
         }
         if (nP.y < 0)  {
             nP.y = this.height -1;
-            // nP.x = (this.width-1 ) - nP.x;
         }
         if (nP.y > this.height-1)  {
             nP.y = 0;
-            // nP.x = (this.width-1 ) - nP.x;
         }
         // console.log ("    next from: (" + point.format()  + " dir " + dir + " next:  " + nP.format());
         return nP;

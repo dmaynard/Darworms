@@ -325,22 +325,24 @@ darworms.gameModule = (function() {
                 this.dirtyCells.push(active.pos);
                 // console.log (" Move Direction = " + direction);
                 var next = this.grid.next(active.pos,direction);
+                if (next.isEqualTo(darworms.dwsettings.noWhere)) { // fell of edge of world
+                    active.state = wormStates.dead;
+                } else {
+                    active.score = active.score + this.grid.move(active.pos,next,direction,active.colorIndex);
+                    this.numMoves = this.numMoves + 1;
+                    active.nMoves = active.nMoves + 1;
+                    // console.log("    Worm " + active.colorIndex + "  just made move " + active.nMoves + " game turn " + this.numTurns + " From " + this.grid.formatStateAt(active.pos) + " direction  " + direction);
+                    active.pos = next;
 
+                    this.dirtyCells.push(next);
 
-                active.score = active.score + this.grid.move(active.pos,next,direction,active.colorIndex);
-                this.numMoves = this.numMoves + 1;
-                active.nMoves = active.nMoves + 1;
-                // console.log("    Worm " + active.colorIndex + "  just made move " + active.nMoves + " game turn " + this.numTurns + " From " + this.grid.formatStateAt(active.pos) + " direction  " + direction);
-                active.pos = next;
+                    // console.log(" active.score [" +  i + "] ="  + active.score);
 
-                this.dirtyCells.push(next);
-
-                // console.log(" active.score [" +  i + "] ="  + active.score);
-
-                //console.log("     From Value is " +  this.grid.hexValueAt(active.pos)  );
-                //console.log (" Next Point = " + next.format());
-                //console.log(" Set To State to " +  this.grid.stateAt(active.pos)  );
-                //console.log("     To Value is " +  this.grid.hexValueAt(active.pos)  );
+                    //console.log("     From Value is " +  this.grid.hexValueAt(active.pos)  );
+                    //console.log (" Next Point = " + next.format());
+                    //console.log(" Set To State to " +  this.grid.stateAt(active.pos)  );
+                    //console.log("     To Value is " +  this.grid.hexValueAt(active.pos)  );
+                }
 
             }
             if ( active.state !== wormStates.dead ) {

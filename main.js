@@ -286,6 +286,7 @@ darworms.main = (function() {
         // and we can make some or all of these private to the gameModule closure
         darworms.theGame = null;
         darworms.startgame(false);
+        darworms.dwsettings.noWhere = new Point(-1,-1);
         //  The following code is designed to remove the toolbar on mobile Safari
         if( !window.location.hash && window.addEventListener ){
             window.addEventListener( "load",function() {

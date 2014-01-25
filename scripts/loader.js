@@ -11,6 +11,8 @@ var darworms = {
     dwsettings:{
         vgridsize:1.0,
 
+        noWhere: undefined,
+
         scoreCanvas:undefined,
         gridGeometry: "torus",
 

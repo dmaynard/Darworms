@@ -106,7 +106,7 @@ Worm.prototype.place = function(aState, aGame) {
 Worm.prototype.dump = function() {
     this.log();
     for (var i = 0; i < 64; i = i + 1) {
-        console.log (" dna" + i + " = " + compassPts[this.dna[i]]);
+        console.log (" dna" + i + " = " + darworms.compassPts[this.dna[i]]);
         var spokes = [];
         for (var spoke = 0; spoke < 6; spoke = spoke + 1) {
             if ((i & darworms.outMask[spoke]) !== 0 ) {

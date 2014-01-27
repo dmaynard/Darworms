@@ -43,25 +43,45 @@ darworms.gridModule = (function() {
                 var topPoint = new Point(i,0);
                 var botPoint = new Point(i, this.height-1);
 
-                this.setValueAt(topPoint,  this.valueAt(topPoint) | darworms.outMask[4] | darworms.outMask[5]); // block up
+                this.setValueAt(topPoint, this.valueAt(topPoint) | darworms.outMask[4] | darworms.outMask[5]); // block up
+                this.setValueAt(topPoint, this.valueAt(topPoint) | ((this.valueAt(topPoint) & 0x3F) << 8));  // set outvec
                 this.setSpokeAt(topPoint,4,0);
                 this.setSpokeAt(topPoint,5,0);
-                this.setValueAt(botPoint, darworms.outMask[1] | darworms.outMask[2]); // block down
+                this.setSpokeAt(topPoint, 6, 0);
+                this.setValueAt(botPoint, this.valueAt(botPoint) | darworms.outMask[1] | darworms.outMask[2]); // block down
+                this.setValueAt(botPoint, this.valueAt(botPoint) | ((this.valueAt(botPoint)& 0x3F) << 8));  // set outvecs
                 this.setSpokeAt(botPoint,1,0);
                 this.setSpokeAt(botPoint,2,0);
-            }
-            for (var i = 0; i < this.height; i = i + 1) {
-                var leftPoint = new Point(0,i);
-                var rightPoint = new Point(this.width-1, i);
+                this.setSpokeAt(botPoint,6,0);
 
-                this.setValueAt(leftPoint,  this.valueAt(leftPoint) |darworms.outMask[2] | darworms.outMask[3] | darworms.outMask[4]); // block left
-                this.setSpokeAt(leftPoint,2,0);
-                this.setSpokeAt(leftPoint,3,0);
-                this.setSpokeAt(leftPoint,4,0);
-                this.setValueAt(rightPoint, this.valueAt(rightPoint) | darworms.outMask[5] | darworms.outMask[0] | darworms.outMask[1]); //block right
-                this.setSpokeAt(rightPoint,5,0);
-                this.setSpokeAt(rightPoint,0,0);
-                this.setSpokeAt(rightPoint,0,1);
+            }
+            for (var j = 0; j < this.height; j = j + 1) {
+                var leftPoint = new Point(0,j);
+                var rightPoint = new Point(this.width-1, j);
+
+                if ( (j & 1) == 0 ) { // even rows shifted left 1/2 cell
+                    this.setValueAt(leftPoint,  this.valueAt(leftPoint) |darworms.outMask[2] | darworms.outMask[3] | darworms.outMask[4]); // block left
+                    this.setValueAt(leftPoint, this.valueAt(leftPoint) | ((this.valueAt(leftPoint) & 0x3F) << 8));  // set outvecs
+                    this.setSpokeAt(leftPoint,2,0);
+                    this.setSpokeAt(leftPoint,3,0);
+                    this.setSpokeAt(leftPoint,4,0);
+                    this.setSpokeAt(leftPoint,6,0);
+                    this.setValueAt(rightPoint, this.valueAt(rightPoint) |  darworms.outMask[0]); //block right
+                    this.setValueAt(rightPoint, this.valueAt(rightPoint) | ((this.valueAt(rightPoint) & 0x3F) << 8)); // set outvecs
+                    this.setSpokeAt(rightPoint,0,0);
+                    this.setSpokeAt(rightPoint,6,0);
+                } else  {  // odd rows shifted right on cell
+                    this.setValueAt(leftPoint,  this.valueAt(leftPoint) | darworms.outMask[3]); // block left
+                    this.setValueAt(leftPoint, this.valueAt(leftPoint) | ((this.valueAt(leftPoint) & 0x3F) << 8));  // set outvecs
+                    this.setSpokeAt(leftPoint,3,0);
+                    this.setSpokeAt(leftPoint,6,0);
+                    this.setValueAt(rightPoint, this.valueAt(rightPoint) | darworms.outMask[5] | darworms.outMask[0] | darworms.outMask[1]); //block right
+                    this.setValueAt(rightPoint, this.valueAt(rightPoint) | ((this.valueAt(rightPoint) & 0x3F) << 8)); // set outvecs
+                    this.setSpokeAt(rightPoint,5,0);
+                    this.setSpokeAt(rightPoint,0,0);
+                    this.setSpokeAt(rightPoint,1,0);
+                    this.setSpokeAt(rightPoint,6,0);
+                }
             }
         }
     };
@@ -153,12 +173,23 @@ darworms.gridModule = (function() {
         }
     };
     Grid.prototype.logValueAt = function(point) {
-        console.log("[ " + point.x + "," + point.y + "] val = 0x"+ this.valueAt(point).toString(16) + " outVectors = 0x",
-            this.outVectorsAt(point).toString(16) + " inVectors = 0x" +  this.inVectorsAt(point).toString(16));
+        console.log("[ " + point.x + "," + point.y + "] val = 0x"+ this.hexValueAt(point) +
+            this.dirList(this.hexValueAt(point)) + " outVectors = 0x"
+             + this.outVectorsAt(point).toString(16) + this.dirList(this.outVectorsAt(point)) +
+            " inVectors = 0x" +  this.inVectorsAt(point).toString(16));
     };
     Grid.prototype.formatStateAt = function(point) {
         return " x " + point.x + " y " + point.y + " state 0x"+ this.stateAt(point).toString(16);
     };
+    Grid.prototype.dirList = function(state) {
+        var list = " directions " ;
+        for ( var dir = 0 ; dir <6; dir = dir + 1) {
+            if (((state & darworms.outMask[dir]) !== 0) ) {
+                list = list + " " + darworms.compassPts[dir];
+            }
+        }
+        return list;
+    }
     return {
         Grid : Grid
     };

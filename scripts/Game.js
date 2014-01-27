@@ -97,6 +97,9 @@ darworms.gameModule = (function() {
     };
     /*  TODO  move all drawing from game to wPanes  */
     Game.prototype.drawCell = function( point) {
+        if (point.isEqualTo(new Point (this.grid.width-1, this.grid.height/2))) {
+            console.log(this.grid.formatStateAt(point));
+        }
         wGraphics.save();
         this.gsetTranslate(point);
 

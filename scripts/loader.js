@@ -1,4 +1,12 @@
 var darworms = {
+    compassPts: [ "e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
+    gameStates: {"over": 0, "running" : 1, "waiting": 2, "paused": 3},
+    gameStateNames: ["over", "running", "waiting", "paused"],
+
+    outMask: [1, 2, 4, 8, 16, 32],
+    inMask:  [8, 16, 32, 1, 2, 4],
+    colorNames: ['red', 'green', 'blue', 'yellow'],
+    inDir:   [3, 4, 5, 0, 1, 2],
     screens:{},
     graphics:{
         timer:undefined,
@@ -15,8 +23,9 @@ var darworms = {
 
         scoreCanvas:undefined,
         gridGeometry: "torus",
+        compassPts: [ "e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"],
 
-        codons:{ "e":0, "se":1, "sw":2, "w":3, "nw":4, "ne":5, "unSet":6, "isTrapped":7},
+        codons:{ "e":0, "ne":1, "nw":2, "w":3, "sw":4, "se":5, "unSet":6, "isTrapped":7},
         colorTable:["000000", "#881C0A", "#1C880A", "#1C0A88",
             "#AAAA00", "#448833", "#443388", "#338844",
             "#FF1C0A", "#1CFF0A", "#1C0AFF", "#0AFF1C",

@@ -27,19 +27,12 @@ darworms.main = (function() {
      //    new Point(-0.375,0), new Point(-0.25,-0.375), new Point(  0.25,-0.375)];
     /* Worm  Constants */
 
-    compassPts = [ "e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"];
+    compassPts = [ "e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"];
     wormStates = {"dead": 0, "moving" : 1, "paused": 2, "sleeping": 3};
     wormStateNames = ["dead", "moving", "paused", "sleeping"];
     initialWormStates = [3, 2, 2, 2];
 
-    darworms.gameStates = {"over": 0, "running" : 1, "waiting": 2, "paused": 3};
-    darworms.gameStateNames = ["over", "running", "waiting", "paused"];
 
-    darworms.outMask = [1, 2, 4, 8, 16, 32];
-    darworms.inMask =  [8, 16, 32, 1, 2, 4];
-    darworms.colorNames = ['red', 'green', 'blue', 'yellow'];
-
-    darworms.inDir =   [3, 4, 5, 0, 1, 2];
 
     var setTypes = function () {
         // document.getElementById("p1button").innerHTML = typeNames[players[0]];

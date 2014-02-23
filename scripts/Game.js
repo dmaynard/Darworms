@@ -13,6 +13,7 @@
 darworms.gameModule = (function() {
 
     var gameStates = {"over": 0, "running" : 1, "waiting": 2, "paused": 3};
+    var gameCanvas;
     var wGraphics;
     var nextToMove;
     var focusPoint;
@@ -22,14 +23,17 @@ darworms.gameModule = (function() {
     var cellsInZoomPane = new Point(7,7);
 
 
-    function Game(gridWidth, gridHeight, canvas, context) {
+    function Game(gridWidth, gridHeight) {
+
+
+        darworms.main.wCanvas.width = darworms.screenSize.x;
+        darworms.main.wCanvas.height = darworms.main.wCanvas.width;
+
 
         this.gameState = darworms.gameStates.over;
         this.margin = 10;
         this.grid = new darworms.gridModule.Grid(gridWidth, gridHeight);
-        this.canvas = canvas;
-
-
+        this.canvas = gameCanvas;
 
         this.frameTimes = [];
         this.startFrameTimes = [];
@@ -38,11 +42,12 @@ darworms.gameModule = (function() {
         this.numMoves = 0;
         cellsInZoomPane = new Point(7,7);
 
+
         this.zoomPane = new WPane(this.grid, cellsInZoomPane , new Point( gridWidth >> 1, gridHeight >>1) , document.getElementById("wcanvas"))
-        this.scale = new Point((this.canvas.width - (2*this.margin))/gridWidth, (this.canvas.height- (2*this.margin))/gridHeight);
+        this.scale = new Point((gameCanvas.width - (2*this.margin))/gridWidth, (gameCanvas.height- (2*this.margin))/gridHeight);
         this.origin = new Point( gridWidth >> 1, gridHeight >>1);
         focusPoint = this.origin;
-        console.log( "newGame  scalex "  + (this.canvas.width - (2*this.margin))/gridWidth);
+        console.log( "newGame  scalex "  + (gameCanvas.width - (2*this.margin))/gridWidth);
         // context.scale(this.scale.x, this.scale.y);
         this.worms = [];
         this.needsRedraw = true;
@@ -55,7 +60,7 @@ darworms.gameModule = (function() {
         Game.prototype.log = function() {
         };
         console.log( " Game grid size  " + new Point(this.grid.width,this.grid.height).format());
-        console.log( " Game Canvas size  " + new Point(this.canvas.width,this.canvas.height).format());
+        console.log( " Game Canvas size  " + new Point(gameCanvas.width,gameCanvas.height).format());
         console.log( " Game scale " + this.scale.format());
         for (var i = 0; i < this.worms.length; i = i + 1) {
             console.log (" Game worm" + i + " :  " + this.worms[i].state + " at "  + this.worms[i].pos.format() + " value:" + this.grid.hexValueAt( this.worms[i].pos));
@@ -97,9 +102,9 @@ darworms.gameModule = (function() {
     };
     /*  TODO  move all drawing from game to wPanes  */
     Game.prototype.drawCell = function( point) {
-        if (point.isEqualTo(new Point (this.grid.width-1, this.grid.height/2))) {
-            console.log(this.grid.formatStateAt(point));
-        }
+       // if (point.isEqualTo(new Point (this.grid.width-1, this.grid.height/2))) {
+       //     console.log(this.grid.formatStateAt(point));
+       // }
         wGraphics.save();
         this.gsetTranslate(point);
 
@@ -160,7 +165,7 @@ darworms.gameModule = (function() {
         //  A rectangle 2.0 x 2.0
         darworms.theGame.drawZoom();
         wGraphics.save();
-    //    console.log( "drawSelectCell  canvas "  + this.canvas.width + " height "  + this.canvas.height);
+    //    console.log( "drawSelectCell  canvas "  + gameCanvas.width + " height "  + gameCanvas.height);
     //    console.log( "drawSelectCell  grid "  + this.grid.width + " height "  + this.grid.height);
 
         var hoffset = - this.zoomPane.scale.x/4;
@@ -172,8 +177,8 @@ darworms.gameModule = (function() {
         //  sconsole.log( "drawSelectCell  hoffset "  + hoffset + " scale.x = " + this.zoomPane.scale.x);
         // wGraphics.scale(this.grid.width/2, this.grid.height/2);
         // wGraphics.translate(1.0, 1.0);
-        wGraphics.setTransform((this.canvas.width-(2.0*this.margin))/2, 0,0, (this.canvas.height-(2.0*this.margin))/2,
-            (this.canvas.width/2) + hoffset , (this.canvas.height)/2 );
+        wGraphics.setTransform((gameCanvas.width-(2.0*this.margin))/2, 0,0, (gameCanvas.height-(2.0*this.margin))/2,
+            (gameCanvas.width/2) + hoffset , (gameCanvas.height)/2 );
         // console.log( "drawSelectCell  scalex "  + this.grid.width/2 );
         /* wGraphics.fillStyle =  "rgba(622,222,222,0.8)";
          wGraphics.beginPath();
@@ -196,7 +201,7 @@ darworms.gameModule = (function() {
                 // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + focusPoint.format());
                 // wGraphics.strokeStyle  = "rgba(0,0,0,0.2)";
                 wGraphics.strokeStyle  = outSpokeColor;
-                wGraphics.lineWidth = 8/this.canvas.width;
+                wGraphics.lineWidth = 8/gameCanvas.width;
                 wGraphics.lineCap = 'round';
                 wGraphics.beginPath();
                 wGraphics.moveTo(0,0);
@@ -206,7 +211,7 @@ darworms.gameModule = (function() {
             } else {
 
                 wGraphics.strokeStyle  = darworms.dwsettings.alphaColorTable[focusWorm.colorIndex];
-                wGraphics.lineWidth = 8/this.canvas.width;
+                wGraphics.lineWidth = 8/gameCanvas.width;
                 // wGraphics.moveTo(this.targetPts[i].x, this.targetPts[i].y);
                 wGraphics.beginPath();
                 wGraphics.arc(this.xPts[i] * .75, this.yPts[i]* .75,  (0.250 / 64) * (darworms.graphics.animFrame & 0x3F), 0, Math.PI*2, false);
@@ -243,7 +248,7 @@ darworms.gameModule = (function() {
 
     // Use the identity matrix while clearing the canvas
         wGraphics.setTransform(1, 0, 0, 1, 0, 0);
-        wGraphics.clearRect(0, 0, this.canvas.width, this. canvas.height);
+        wGraphics.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
 
     // Restore the transform
         wGraphics.restore();
@@ -533,7 +538,7 @@ darworms.gameModule = (function() {
 
     function init () {
 
-
+        gameCanvas = darworms.main.wCanvas;
         wGraphics = darworms.main.wGraphics;
         nextToMove = 0;
         scoreCanvas = document.getElementById("scorecanvas");
@@ -542,6 +547,7 @@ darworms.gameModule = (function() {
         scorectx.shadowColor = "rgb(190, 190, 190)";
         scorectx.shadowOffsetX = 3;
         scorectx.shadowOffsetY = 3;
+
 
 
     }

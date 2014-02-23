@@ -22,6 +22,18 @@
     <script src="scripts/loader.js"></script>
 
     <style type=text/css>
+        .ui-content .canvas-container {
+            width: 100%;
+            height: 70%;
+        }
+        .ui-content .wcanvasclass {
+            width: 100%;
+            height: 70%;
+        }
+        .ui-content .scorecanvasclass {
+            width: 100%;
+            height: 5%;
+        }
 
         .ui-page .ui-content  .ui-btn.playerbutton1 .ui-btn-inner {
             color: red;
@@ -73,9 +85,11 @@
 </div>
 <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true>
     <div data-role="content">
-        <div id="canvascontainer">
-            <canvas id="wcanvas" width="300" height="300"></canvas>
+        <div id="canvascontainer" class="canvas-container">
+            <canvas id="wcanvas"  class="wcanvasclass" width="300" height="300"></canvas>
+            <canvas id="scorecanvas" class="scorecanvasclass" width="300" height="20"></canvas>
         </div>
+
         <!-- div data-role="controlgroup" data-type="horizontal" -->
         <div data-role=navbar>
             <ul>
@@ -98,9 +112,6 @@
                 </li>
             </ul>
         </div>
-    </div>
-    <div id="scorecanvascontainer">
-        <canvas id="scorecanvas" width="300" height="20"></canvas>
     </div>
     <div data-role=footer data-theme="b">
         <div data-role=navbar>

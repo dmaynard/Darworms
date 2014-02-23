@@ -20,8 +20,9 @@ darworms.main = (function() {
 
     var players = [1, 0, 0, 0];
     var typeNames = [" None ", "Random", " Same ", " New  " ];
-    var canvas;
+
     var wGraphics;
+    var wCanvas;
 
      // var targetPts = [ new Point( 0.375,0), new Point( 0.25, 0.375), new Point( -0.25, 0.375),
      //    new Point(-0.375,0), new Point(-0.25,-0.375), new Point(  0.25,-0.375)];
@@ -173,28 +174,43 @@ darworms.main = (function() {
 
 
     var wormEventHandler = function(event){
-      touchX = event.pageX;
-      touchY = event.pageY;
-       // console.log ( " Tap Event at x: " + touchX + " y: " + touchY);
-      if (darworms.theGame.gameState === darworms.gameStates.waiting) {
+      var touchX = event.pageX;
+      var touchY = event.pageY;
+      var cWidth = $('#wcanvas').width();
+      var cHeight = $('#wcanvas').height();
+      // console.log ( " Tap Event at x: " + touchX + " y: " + touchY );
+      // console.log (" wcanvas css   width " + $('#wcanvas').width() + " css   height "  + $('#wcanvas').height()  );
+      // console.log (" wcanvas coord width " + darworms.main.wCanvas.width + " coord height "  + darworms.main.wCanvas.height  );
+        if (darworms.theGame.gameState === darworms.gameStates.waiting) {
         // TODO  - 50 is because canvas appears at y = 50 and touchY is screen relative
         // or is this because of the JetBrains Debug banner at the top ?
-        if ( darworms.gameModule.doZoomOut(new Point((touchX/darworms.theGame.canvas.width)*2.0 - 1.0, ((touchY)/darworms.theGame.canvas.height)*2.0 - 1.0) )) {
+        if ( darworms.gameModule.doZoomOut(new Point((touchX/cWidth)*2.0 - 1.0, ((touchY)/cHeight)*2.0 - 1.0) )) {
             console.log(" do zoomout here");
         } else {
-            darworms.gameModule.selectDirection( new Point((touchX/darworms.theGame.canvas.width)*2.0 - 1.0, ((touchY)/darworms.theGame.canvas.height)*2.0 - 1.0));
+            darworms.gameModule.selectDirection( new Point((touchX/cWidth)*2.0 - 1.0, ((touchY)/cHeight)*2.0 - 1.0));
+           // console.log ( new Point (
+           //     (touchX/cWidth)*2.0 - 1.0,
+           //     (touchY/cHeight)*2.0 - 1.0).format()
+           // );
         }
       }
     };
+
     darworms.startgame = function(startNow) {
         var  heightSlider = Math.floor($("#gridsize").val());
-        if (darworms.theGame === undefined || darworms.theGame === null || darworms.theGame.grid.height != heightSlider ) {
-            console.log(" theGame size has changed ");
+        var curScreen = new Point(window.innerWidth,window.innerWidth);
+        if (darworms.theGame === undefined || darworms.theGame === null || darworms.theGame.grid.height != heightSlider
+            ||  !( darworms.screenSize.isEqualTo(curScreen) )){
+            console.log(" theGame size has changed Screen is" + curScreen.format() + " grid = " + heightSlider + " x "
+            + heightSlider);
             if ((heightSlider & 1) !== 0) {
                 // height must be an even number because of toroid shape
                 heightSlider = heightSlider + 1;
             }
-            darworms.theGame = new darworms.gameModule.Game(heightSlider, heightSlider, canvas, darworms.main.wGraphics);
+            darworms.main.wCanvas.width = window.innerWidth;
+            darworms.main.wCanvas.height = window.innerWidth; // make it square
+            darworms.screenSize = curScreen;
+            darworms.theGame = new darworms.gameModule.Game(heightSlider, heightSlider);
         }
         if (darworms.theGame.gameState === darworms.gameStates.over) {
             darworms.theGame.clear();
@@ -266,9 +282,14 @@ darworms.main = (function() {
         // in this case delay initialization until we get the deviceready event
         document.addEventListener("deviceready", deviceInfo, true);
         setTypes();
-        canvas = document.getElementById("wcanvas");
-        darworms.main.wGraphics = canvas.getContext("2d");
-        console.log ( " init wGraphics " + darworms.main.wGraphics);
+
+        darworms.screenSize = new Point( window.innerWidth, window.innerWidth);
+        // window.onresize = doReSize;
+        // doReSize();
+
+        darworms.main.wCanvas = document.getElementById("wcanvas");
+        darworms.main.wGraphics = darworms.main.wCanvas.getContext("2d");
+        // console.log ( " init wGraphics " + darworms.main.wGraphics);
         $('#wcanvas').bind('tap', wormEventHandler);
 
         darworms.dwsettings.scoreCanvas = document.getElementById("scorecanvas");
@@ -280,6 +301,7 @@ darworms.main = (function() {
         darworms.theGame = null;
         darworms.startgame(false);
         darworms.dwsettings.noWhere = new Point(-1,-1);
+
         //  The following code is designed to remove the toolbar on mobile Safari
         if( !window.location.hash && window.addEventListener ){
             window.addEventListener( "load",function() {

@@ -7,7 +7,8 @@ var darworms = {
     inMask:  [8, 16, 32, 1, 2, 4],
     colorNames: ['red', 'green', 'blue', 'yellow'],
     inDir:   [3, 4, 5, 0, 1, 2],
-    screenSize: [0,0],
+    wCanvasPixelDim: [0,0],
+    playPageIitialized: false,
     screens:{},
     graphics:{
         timer:undefined,
@@ -19,6 +20,7 @@ var darworms = {
     selectedDarworm:0,
     dwsettings:{
         vgridsize:1.0,
+        initialGridSize: 18,
 
         noWhere: undefined,
 
@@ -121,8 +123,9 @@ window.addEventListener("load", function () {
                 $("[data-darworm='selector']").on('pagehide', darworms.main.setSelectedDarwormType);
                 $("#settingspage").on('pagebeforeshow', darworms.main.setupGridGeometry);
                 $("#settingspage").on('pagehide', darworms.main.setGridGeometry);
-                darworms.screenSize = new Point(window.innerWidth,window.innerWidth);
-                console.log("Initial Screen Size " + darworms.screenSize.format());
+                $("#playpage").on('pageshow', darworms.main.initPlayPage);
+                darworms.wCanvasPixelDim = new Point();
+                console.log("Initial Screen Size " + darworms.wCanvasPixelDim.format());
                 darworms.main.init();
 
             }

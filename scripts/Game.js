@@ -26,7 +26,7 @@ darworms.gameModule = (function() {
     function Game(gridWidth, gridHeight) {
 
 
-        darworms.main.wCanvas.width = darworms.screenSize.x;
+        darworms.main.wCanvas.width = darworms.wCanvasPixelDim.x;
         darworms.main.wCanvas.height = darworms.main.wCanvas.width;
 
 

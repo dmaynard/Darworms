@@ -198,18 +198,21 @@ darworms.main = (function() {
 
     darworms.startgame = function(startNow) {
         var  heightSlider = Math.floor($("#gridsize").val());
-        var curScreen = new Point(window.innerWidth,window.innerWidth);
+        var curScreen = new Point($('#wcanvas').width(), $('#wcanvas').height());
         if (darworms.theGame === undefined || darworms.theGame === null || darworms.theGame.grid.height != heightSlider
-            ||  !( darworms.screenSize.isEqualTo(curScreen) )){
+            ||  !( darworms.wCanvasPixelDim.isEqualTo(curScreen))){
             console.log(" theGame size has changed Screen is" + curScreen.format() + " grid = " + heightSlider + " x "
             + heightSlider);
             if ((heightSlider & 1) !== 0) {
                 // height must be an even number because of toroid shape
                 heightSlider = heightSlider + 1;
             }
-            darworms.main.wCanvas.width = window.innerWidth;
-            darworms.main.wCanvas.height = window.innerWidth; // make it square
-            darworms.screenSize = curScreen;
+            darworms.main.wCanvas.width = $('#wcanvas').width();
+            darworms.main.wCanvas.height = $('#wcanvas').height(); // make it square
+            darworms.wCanvasPixelDim = curScreen;
+            alert( " wCanvas " + darworms.main.wCanvas.width + " x " + darworms.main.wCanvas.height
+                + " css " + $('#wcanvas').width() + " x " + $('#wcanvas').height()
+                + " window " + window.innerWidth + " x "  + window.innerHeight);
             darworms.theGame = new darworms.gameModule.Game(heightSlider, heightSlider);
         }
         if (darworms.theGame.gameState === darworms.gameStates.over) {
@@ -277,13 +280,28 @@ darworms.main = (function() {
         darworms.theGame.needsRedraw = true;
 
     }
+    var resizeCanvas = function () {
+        var xc =  $('#wcanvas');
+        xc.css( {
+            width: window.innerWidth-4,
+            height: window.innerHeight-150
+        });
+
+    }
+    var initPlayPage = function () {
+        if (!darworms.playpageInitialized) {
+            darworms.startgame(false);
+            darworms.playpageInitialized = true;
+            resizeCanvas();
+        }
+    }
     var init = function () {
         // This may be needed when we actually build a phoneGap app
         // in this case delay initialization until we get the deviceready event
         document.addEventListener("deviceready", deviceInfo, true);
         setTypes();
 
-        darworms.screenSize = new Point( window.innerWidth, window.innerWidth);
+        darworms.wCanvasPixelDim = new Point( 1, 1);
         // window.onresize = doReSize;
         // doReSize();
 
@@ -298,8 +316,8 @@ darworms.main = (function() {
         //  so for now we keep them as globals
         //  Perhaps the time routines should all be moved into the gameModule closure
         // and we can make some or all of these private to the gameModule closure
-        darworms.theGame = null;
-        darworms.startgame(false);
+        // darworms.theGame = new darworms.gameModule.Game ( darworms.dwsettings.initialGridSize, darworms.dwsettings.initialGridSize);
+        // darworms.startgame(false);
         darworms.dwsettings.noWhere = new Point(-1,-1);
 
         //  The following code is designed to remove the toolbar on mobile Safari
@@ -315,6 +333,10 @@ darworms.main = (function() {
                 }, 100);
             });
         }
+        $(window).bind('resize orientationchange pageshow', function (event) {
+            window.scrollTo(1, 0);
+            resizeCanvas();
+        });
     }
 
     return {
@@ -323,6 +345,7 @@ darworms.main = (function() {
         setupRadioButtons: setupRadioButtons,
         setGridGeometry: setGridGeometry,
         setupGridGeometry: setupGridGeometry,
+        initPlayPage: initPlayPage,
         player1 : player1,
         player2 : player2,
         player3 : player3,

@@ -210,9 +210,11 @@ darworms.main = (function() {
             darworms.main.wCanvas.width = $('#wcanvas').width();
             darworms.main.wCanvas.height = $('#wcanvas').height(); // make it square
             darworms.wCanvasPixelDim = curScreen;
-            alert( " wCanvas " + darworms.main.wCanvas.width + " x " + darworms.main.wCanvas.height
-                + " css " + $('#wcanvas').width() + " x " + $('#wcanvas').height()
-                + " window " + window.innerWidth + " x "  + window.innerHeight);
+            if ($('#debug').slider().val() === "1") {
+                alert( " wCanvas " + darworms.main.wCanvas.width + " x " + darworms.main.wCanvas.height
+                    + " css " + $('#wcanvas').width() + " x " + $('#wcanvas').height()
+                    + " window " + window.innerWidth + " x "  + window.innerHeight);
+            }
             darworms.theGame = new darworms.gameModule.Game(heightSlider, heightSlider);
         }
         if (darworms.theGame.gameState === darworms.gameStates.over) {
@@ -282,10 +284,16 @@ darworms.main = (function() {
     }
     var resizeCanvas = function () {
         var xc =  $('#wcanvas');
+        var w = $(window).width();
+        var h = $(window).height();
         xc.css( {
-            width: window.innerWidth-4,
-            height: window.innerHeight-150
+            width: w-20,
+            height: h-130
         });
+        console.log(" debug " + $('#debug').slider().val());
+        if ($('#debug').slider().val() === "1") {
+            alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val());
+        }
 
     }
     var initPlayPage = function () {
@@ -333,7 +341,7 @@ darworms.main = (function() {
                 }, 100);
             });
         }
-        $(window).bind('resize orientationchange pageshow', function (event) {
+        $(window).bind('resize orientationchange', function (event) {
             window.scrollTo(1, 0);
             resizeCanvas();
         });

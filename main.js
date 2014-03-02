@@ -139,6 +139,7 @@ darworms.main = (function() {
     var setGridGeometry = function () {
         var selectedGeometry  = $('input[name=geometry-radio-choice]:checked').val();
         darworms.dwsettings.gridGeometry = selectedGeometry;
+        darworms.dwsettings.backGroundTheme = $('#backg').slider().val()
     }
 
 
@@ -210,7 +211,7 @@ darworms.main = (function() {
             darworms.main.wCanvas.width = $('#wcanvas').width();
             darworms.main.wCanvas.height = $('#wcanvas').height(); // make it square
             darworms.wCanvasPixelDim = curScreen;
-            if ($('#debug').slider().val() === "1") {
+            if ($('#debug').slider().val() === 1) {
                 alert( " wCanvas " + darworms.main.wCanvas.width + " x " + darworms.main.wCanvas.height
                     + " css " + $('#wcanvas').width() + " x " + $('#wcanvas').height()
                     + " window " + window.innerWidth + " x "  + window.innerHeight);

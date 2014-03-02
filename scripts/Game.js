@@ -40,7 +40,7 @@ darworms.gameModule = (function() {
         this.dirtyCells = [];
         this.numTurns = 0;
         this.numMoves = 0;
-        cellsInZoomPane = new Point(7,7);
+        cellsInZoomPane = new Point(9,9);
 
 
         this.zoomPane = new WPane(this.grid, cellsInZoomPane , new Point( gridWidth >> 1, gridHeight >>1) , document.getElementById("wcanvas"))
@@ -107,12 +107,8 @@ darworms.gameModule = (function() {
        // }
         wGraphics.save();
         this.gsetTranslate(point);
-
-        wGraphics.fillStyle =  "rgb(245,245,245)";
-        wGraphics.beginPath();
-        wGraphics.rect(-0.5, -0.5, 1.0, 1.0);
-        wGraphics.closePath();
-        wGraphics.fill();
+        wGraphics.fillStyle =  darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme];
+        wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
         var owner = this.grid.spokeAt( point, 7);
         if (owner > 0 ) {
             wGraphics.strokeStyle = darworms.dwsettings.colorTable[owner & 0xF];
@@ -122,7 +118,9 @@ darworms.gameModule = (function() {
             wGraphics.closePath();
             wGraphics.stroke();
         } else {
-            wGraphics.fillStyle =  darworms.dwsettings.colorTable[this.grid.spokeAt(point,6) & 0xF];
+            // wGraphics.fillStyle =  darworms.dwsettings.colorTable[this.grid.spokeAt(point,6) & 0xF];
+            wGraphics.fillStyle =  darworms.dwsettings.cellBackground[1-darworms.dwsettings.backGroundTheme];
+            wGraphics.lineWidth = 1.0;
             wGraphics.beginPath();
             wGraphics.arc(0, 0, 0.1, 0, Math.PI*2, true);
             wGraphics.closePath();
@@ -138,7 +136,7 @@ darworms.gameModule = (function() {
                 var outSpokeColor = darworms.dwsettings.colorTable[this.grid.spokeAt(point, i)];
                 // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
                 wGraphics.strokeStyle  = outSpokeColor;
-                wGraphics.lineWidth =   1.0/this.scale.x ;
+                wGraphics.lineWidth =   3.0/this.scale.x ;
                 wGraphics.lineCap = 'round';
                 wGraphics.beginPath();
                 wGraphics.moveTo(0,0);
@@ -148,7 +146,7 @@ darworms.gameModule = (function() {
             }
             if ((invec & darworms.outMask[i]) !== 0) {
                 wGraphics.strokeStyle  = darworms.dwsettings.colorTable[this.grid.spokeAt(point, i)];
-                wGraphics.lineWidth = 1.0/this.scale.x;
+                wGraphics.lineWidth = 3.0/this.scale.x;
                 wGraphics.lineCap = 'round';
                 wGraphics.beginPath();
                 wGraphics.moveTo(this.xPts[i], this.yPts[i]);
@@ -249,6 +247,8 @@ darworms.gameModule = (function() {
     // Use the identity matrix while clearing the canvas
         wGraphics.setTransform(1, 0, 0, 1, 0, 0);
         wGraphics.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        wGraphics.fillStyle =  darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme];
+        wGraphics.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
 
     // Restore the transform
         wGraphics.restore();

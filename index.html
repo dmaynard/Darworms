@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>DARWORMS </title>
@@ -152,6 +152,16 @@
             <label for="fps">Frames/Sec:</label>
             <input type="range" name="fps" id="fps" value="30" min="1" max="60"/>
         </div>
+        <div>
+            <form id="background" name="background" align="left">
+                <label for="backg">Background:</label>
+                <select name="backg" id="backg" data-role="slider" data-mini='true'>
+                    <option value=0>Light</option>
+                    <option value=1>Dark</option>
+                </select>
+
+            </form>
+        </div>
 
     </div>
 </div>
@@ -176,16 +186,15 @@
             </div>
         </div>
         <div>
-
             <form id="newevent1info" name="newevent1info" align="left">
                 <label for="debug">Debug:</label>
                 <select name="debug" id="debug" data-role="slider" data-mini='true'>
                     <option value="0">Off</option>
-                    <option value="1">On</option>
+                    <option value=1>On</option>
                 </select>
 
             </form>
-            </div>
+        </div>
     </div>
 </div>
 

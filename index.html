@@ -72,7 +72,7 @@
     </style>
 </head>
 
-<body>
+<body id="myPages">
 <div data-role="page" data-theme="b" id=menupage>
     <div data-role="header">
         <h1>DARWORMS</h1>
@@ -87,7 +87,7 @@
 <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true>
     <div data-role="content">
         <div id="canvascontainer" class="canvas-container">
-            <canvas id="wcanvas"  class="wcanvasclass" width="300" height="300"></canvas>
+            <canvas id="wcanvas"  class="wcanvasclass" width="320" height="356"></canvas>
             <canvas id="scorecanvas" class="scorecanvasclass" width="300" height="20"></canvas>
         </div>
 
@@ -198,9 +198,11 @@
     </div>
 </div>
 
-<div data-role="page" data-theme="c" data-add-back-btn="true" data-back-btn-text="back"  data-darworm="selector" id="red-darworm-page">
+<div data-role="page" data-theme="c"   data-darworm="selector" id="red-darworm-page" data-selecteddarworm=0 >
     <div data-role="header">
+        <a href="#playpage" >Back</a>
         <h1>Select Darworm</h1>
+        <a href="#green-darworm-page" onclick="darworms.main.player2();">Next</a>
     </div>
     <div data-role="content">
         <form>
@@ -222,9 +224,11 @@
     </div>
 </div>
 
-<div data-role="page" data-theme="d" data-add-back-btn="true" data-back-btn-text="back" data-darworm="selector"  id="green-darworm-page">
+<div data-role="page" data-theme="d"  data-darworm="selector"  id="green-darworm-page" data-selecteddarworm=1>
     <div data-role="header">
+        <a href="#playpage" >Back</a>
         <h1>Select Darworm</h1>
+        <a href="#blue-darworm-page" >Next</a>
     </div>
     <div data-role="content">
         <form>
@@ -246,9 +250,11 @@
     </div>
 </div>
 
-<div data-role="page" data-theme="e" data-add-back-btn="true" data-back-btn-text="back" data-darworm="selector" id="blue-darworm-page">
+<div data-role="page" data-theme="e" data-darworm="selector" id="blue-darworm-page" data-selecteddarworm=2>
     <div data-role="header">
+        <a href="#playpage" >Back</a>
         <h1>Select Darworm</h1>
+        <a href="#yellow-darworm-page" >Next</a>
     </div>
     <div data-role="content">
         <form>
@@ -270,9 +276,11 @@
     </div>
 </div>
 
-<div data-role="page" data-theme="f" data-add-back-btn="true" data-back-btn-text="back" data-darworm="selector" id="yellow-darworm-page">
+<div data-role="page" data-theme="f"  data-darworm="selector" id="yellow-darworm-page" data-selecteddarworm=3>
     <div data-role="header">
+        <a href="#playpage" >Back</a>
         <h1>Select Darworm</h1>
+        <a href="#red-darworm-page" >Next</a>
     </div>
     <div data-role="content">
         <form>

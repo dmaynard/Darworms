@@ -121,7 +121,7 @@ window.addEventListener("load", function () {
                 //    console.log("pagebeforeshow");
                 //   alert("pagebeforeshow");
                 // });
-                $("[data-darworm='selector']").on('pagebeforeshow', darworms.main.setupRadioButtons);
+                $("[data-darworm='selector']").on('pageshow', darworms.main.setupRadioButtons);
                 $("[data-darworm='selector']").on('pagehide', darworms.main.setSelectedDarwormType);
                 $("#settingspage").on('pagebeforeshow', darworms.main.setupGridGeometry);
                 $("#settingspage").on('pagehide', darworms.main.setGridGeometry);

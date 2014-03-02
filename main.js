@@ -51,26 +51,23 @@ darworms.main = (function() {
     };
 
     var player1 = function() {
-        darworms.selectedDarworm = 0;
         $.mobile.changePage("#red-darworm-page");
     };
 
     var player2 = function() {
-        darworms.selectedDarworm = 1;
         $.mobile.changePage("#green-darworm-page");
     };
 
     var player3 = function() {
-        darworms.selectedDarworm = 2;
         $.mobile.changePage("#blue-darworm-page");
     };
 
     var player4 = function() {
-        darworms.selectedDarworm = 3;
         $.mobile.changePage("#yellow-darworm-page");
     };
 
     var setupRadioButtons = function() {
+        darworms.selectedDarworm = $.mobile.activePage.attr( "data-selecteddarworm" );
         var darwormType = players[darworms.selectedDarworm];
         var color = darworms.colorNames[darworms.selectedDarworm];
         switch (darwormType) {

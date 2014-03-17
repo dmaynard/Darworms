@@ -42,6 +42,11 @@ darworms.main = (function() {
         $("#p2button .ui-btn-text").text(typeNames[players[1]]);
         $("#p3button .ui-btn-text").text(typeNames[players[2]]);
         $("#p4button .ui-btn-text").text(typeNames[players[3]]);
+        $("#landp1button .ui-btn-text").text(typeNames[players[0]]);
+        $("#landp2button .ui-btn-text").text(typeNames[players[1]]);
+        $("#landp3button .ui-btn-text").text(typeNames[players[2]]);
+        $("#landp4button .ui-btn-text").text(typeNames[players[3]]);
+
         // document.getElementById("p2button").innerHTML = typeNames[players[1]];
         // document.getElementById("p3button").innerHTML = typeNames[players[2]];
         // document.getElementById("p4button").innerHTML = typeNames[players[3]];
@@ -282,12 +287,28 @@ darworms.main = (function() {
     }
     var resizeCanvas = function () {
         var xc =  $('#wcanvas');
+        var sc =  $('#scorecanvas')
         var w = $(window).width();
         var h = $(window).height();
-        xc.css( {
-            width: w-20,
-            height: h-130
-        });
+        if ( w < darworms.minTwoColumnWidth) {
+            xc.css( {
+                width: w-20,
+                height: h-130
+            });
+            sc.css( {
+                width: w-20
+            });
+        } else {
+            xc.css( {
+                width: darworms.leftColumnWidth,
+                height: h-100
+            });
+            sc.css( {
+                width: darworms.leftColumnWidth,
+
+            });
+        }
+
         console.log(" debug " + $('#debug').slider().val());
         if ($('#debug').slider().val() === "1") {
             alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val());

@@ -9,6 +9,8 @@ var darworms = {
     inDir:   [3, 4, 5, 0, 1, 2],
     wCanvasPixelDim: [0,0],
     playPageIitialized: false,
+    minTwoColumnWidth: 800,
+    leftColumnWidth: 500,
     screens:{},
     graphics:{
         timer:undefined,
@@ -30,7 +32,7 @@ var darworms = {
 
         codons:{ "e":0, "ne":1, "nw":2, "w":3, "sw":4, "se":5, "unSet":6, "isTrapped":7},
         colorTable:["#000000", "#FF0000", "#00FF00", "#0000FF",
-            "#FFFF00", "#448833", "#443388", "#338844",
+            "#E0E000", "#448833", "#443388", "#338844",
             "#FF1C0A", "#1CFF0A", "#1C0AFF", "#0AFF1C",
             "#884433", "#448833", "#443388", "#338844"],
         alphaColorTable:["rgba(  0,   0,   0, 0.2)",
@@ -39,8 +41,8 @@ var darworms = {
             "#FF1C0A80", "#1CFF0A80", "#1C0AFF80", "#0AFF1C80",
             "#88443380", "#44883380", "#44338880", "#33884480"],
         backGroundTheme: 0,
-        gridBackground:  ["#F5F5F5","#0A0A0A"],
-        cellBackground:  ["#F5F5F5","#0A0A0A"]
+        gridBackground:  ["#F5F5F5","#0F0F0F"],
+        cellBackground:  ["#F5F5F5","#0F0F0F"]
 
     },
     images:{}

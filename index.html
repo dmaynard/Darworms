@@ -22,20 +22,7 @@
     <script src="scripts/loader.js"></script>
 
     <style type=text/css>
-       <!--
-       .ui-content .canvas-container {
-            width: 100%;
-            height: 70%;
-        }
-        .ui-content .wcanvasclass {
-            width: 100%;
-            height: 70%;
-        }
-        .ui-content .scorecanvasclass {
-            width: 100%;
-            height: 5%;
-        }
-      -->
+
         .ui-page .ui-content  .ui-btn.playerbutton1 .ui-btn-inner {
             color: red;
             background: #8c8c8c;
@@ -68,8 +55,42 @@
             padding-top: 4px;
         }
 
+       @media all and (min-width: 800px) {
+           #canvascontainer {
+               width: 500px;
+               height: 60%;
+               float: left;
+           }
+           #navcontainer {
+               display: none;
+           }
+           #landnavcontainer {
+               width: 30%;
+               height: 80%;
+               float: left;
+               display: block;
+               padding-top: 10px;
+               padding-bottom: 10px;
 
+           }
+       }
+        @media all and (max-width: 799px) {
+            #canvascontainer {
+                width: 100%;
+                float: left;
+            }
+            #landnavcontainer {
+                display: none;
+            }
+            #navcontainer {
+                display: block;
+            }
+
+        }
     </style>
+
+
+
 </head>
 
 <body id="myPages">
@@ -92,7 +113,7 @@
         </div>
 
         <!-- div data-role="controlgroup" data-type="horizontal" -->
-        <div data-role=navbar>
+        <div id="navcontainer" class='nav-container' data-role=navbar >
             <ul>
                 <li>
                     <div id="p1button" class="playerbutton1" data-role=button onclick="darworms.main.player1();">
@@ -113,7 +134,29 @@
                 </li>
             </ul>
         </div>
+        <div id="landnavcontainer"  >
+            <ul>
+                <li>
+                    <div id="landp1button" class="playerbutton1" data-role=button onclick="darworms.main.player1();">
+                        Random
+                    </div>
+                </li>
+                <li>
+                    <div id="landp2button" class="playerbutton2" data-role=button onclick="darworms.main.player2();">None
+                    </div>
+                </li>
+                <li>
+                    <div id="landp3button" class="playerbutton3" data-role=button onclick="darworms.main.player3();">None
+                    </div>
+                </li>
+                <li>
+                    <div id="landp4button" class="playerbutton4" data-role=button onclick="darworms.main.player4()"> None
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
+
     <div data-role=footer data-theme="b">
         <div data-role=navbar>
             <ul>

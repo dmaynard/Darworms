@@ -9,8 +9,8 @@ var darworms = {
     inDir:   [3, 4, 5, 0, 1, 2],
     wCanvasPixelDim: [0,0],
     playPageIitialized: false,
-    minTwoColumnWidth: 800,
-    leftColumnWidth: 500,
+    minTwoColumnWidth: 480,
+    leftColumnWidth: 300,
     screens:{},
     graphics:{
         timer:undefined,

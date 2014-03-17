@@ -304,7 +304,7 @@ darworms.main = (function() {
                 height: h-100
             });
             sc.css( {
-                width: darworms.leftColumnWidth,
+                width: darworms.leftColumnWidth
 
             });
         }

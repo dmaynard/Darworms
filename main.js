@@ -292,24 +292,22 @@ darworms.main = (function() {
         var h = $(window).height();
         if ( w < darworms.minTwoColumnWidth) {
             xc.css( {
-                width: w-20,
-                height: h-130
+                width: w-20 + 'px',
+                height: h-130 + 'px'
             });
             sc.css( {
                 width: w-20
             });
         } else {
             xc.css( {
-                width: darworms.leftColumnWidth,
-                height: h-100
+                width: darworms.leftColumnWidth + 'px',
+                height: h-110 + 'px'
             });
             sc.css( {
-                width: darworms.leftColumnWidth
+                width: darworms.leftColumnWidth + 'px'
 
             });
         }
-
-        console.log(" debug " + $('#debug').slider().val());
         if ($('#debug').slider().val() === "1") {
             alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val());
         }

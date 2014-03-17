@@ -309,7 +309,7 @@ darworms.main = (function() {
             });
         }
         if ($('#debug').slider().val() === "1") {
-            alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val());
+            alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val() + "arg " + darworms.leftColumnWidth + 'px');
         }
 
     }

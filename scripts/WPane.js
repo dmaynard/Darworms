@@ -40,7 +40,8 @@ function WPane ( grid, size, center, canvas) {
 WPane.prototype.clear = function() {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     // background for user selct direction screen
-    this.ctx.fillStyle =  "rgba(245,245,245,1.0)";
+    this.ctx.fillStyle =  darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme];
+
     this.ctx.beginPath();
     this.ctx.rect(0, 0, this.pWidth, this.pHeight);
     this.ctx.closePath();
@@ -157,7 +158,7 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
         this.ctx.closePath();
         this.ctx.stroke();
     } else {
-        this.ctx.fillStyle = darworms.dwsettings.colorTable[this.grid.spokeAt(gPoint,6) & 0xF];
+        this.ctx.fillStyle = darworms.dwsettings.cellBackground[1-darworms.dwsettings.backGroundTheme];
         this.ctx.lineWidth = 1.0/this.scale.x;
         this.ctx.beginPath();
         this.ctx.arc(0, 0, 0.1, 0, Math.PI*2, true);

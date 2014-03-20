@@ -181,9 +181,9 @@ darworms.main = (function() {
       var touchY = event.pageY;
       var cWidth = $('#wcanvas').width();
       var cHeight = $('#wcanvas').height();
-      // console.log ( " Tap Event at x: " + touchX + " y: " + touchY );
-      // console.log (" wcanvas css   width " + $('#wcanvas').width() + " css   height "  + $('#wcanvas').height()  );
-      // console.log (" wcanvas coord width " + darworms.main.wCanvas.width + " coord height "  + darworms.main.wCanvas.height  );
+      console.log ( " Tap Event at x: " + touchX + " y: " + touchY );
+      console.log (" wcanvas css   width " + $('#wcanvas').width() + " css   height "  + $('#wcanvas').height()  );
+      console.log (" wcanvas coord width " + darworms.main.wCanvas.width + " coord height "  + darworms.main.wCanvas.height  );
         if (darworms.theGame.gameState === darworms.gameStates.waiting) {
         // TODO  - 50 is because canvas appears at y = 50 and touchY is screen relative
         // or is this because of the JetBrains Debug banner at the top ?
@@ -287,31 +287,33 @@ darworms.main = (function() {
     }
     var resizeCanvas = function () {
         var xc =  $('#wcanvas');
-        var sc =  $('#scorecanvas')
+        var sc =  $('#scorecanvas');
+        var nc = $('#navcontainer');
         var w = $(window).width();
         var h = $(window).height();
-        if ( w < darworms.minTwoColumnWidth) {
-            xc.css( {
-                width: w-20 + 'px',
-                height: h-130 + 'px'
-            });
+        xc.css( {
+            width: w-20 + 'px',
+            height: h-130 + 'px'
+        });
+        sc.css( {
+            width: w-20 + 'px',
+            height: 20 + 'px'
+        });
+        if (h < 400) {
             sc.css( {
-                width: w-20
+                height: 20 + 'px',
+
             });
         } else {
-            xc.css( {
-                width: darworms.leftColumnWidth + 'px',
-                height: h-110 + 'px'
-            });
             sc.css( {
-                width: darworms.leftColumnWidth + 'px'
+                height: 30 + 'px',
 
             });
+
         }
         if ($('#debug').slider().val() === "1") {
-            alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val() + "arg " + darworms.leftColumnWidth + 'px');
+            alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val() + "arg " + nw);
         }
-
     }
     var initPlayPage = function () {
         if (!darworms.playpageInitialized) {

@@ -181,8 +181,8 @@ darworms.main = (function() {
       var touchY = event.pageY;
       var cWidth = $('#wcanvas').width();
       var cHeight = $('#wcanvas').height();
-      // console.log ( " Tap Event at x: " + touchX + " y: " + touchY );
-      // console.log (" wcanvas css   width " + $('#wcanvas').width() + " css   height "  + $('#wcanvas').height()  );
+      console.log ( " Tap Event at x: " + touchX + " y: " + touchY );
+      console.log (" wcanvas css   width " + $('#wcanvas').width() + " css   height "  + $('#wcanvas').height()  );
       // console.log (" wcanvas coord width " + darworms.main.wCanvas.width + " coord height "  + darworms.main.wCanvas.height  );
         if (darworms.theGame.gameState === darworms.gameStates.waiting) {
         // TODO  - 50 is because canvas appears at y = 50 and touchY is screen relative
@@ -290,7 +290,7 @@ darworms.main = (function() {
         var sc =  $('#scorecanvas')
         var w = $(window).width();
         var h = $(window).height();
-        if ( w < darworms.minTwoColumnWidth) {
+        if ( h  > 400) {
             xc.css( {
                 width: w-20 + 'px',
                 height: h-130 + 'px'
@@ -300,11 +300,11 @@ darworms.main = (function() {
             });
         } else {
             xc.css( {
-                width: darworms.leftColumnWidth + 'px',
+                width: w-140 + 'px',
                 height: h-110 + 'px'
             });
             sc.css( {
-                width: darworms.leftColumnWidth + 'px'
+                width: w-140 + 'px'
 
             });
         }
@@ -334,6 +334,9 @@ darworms.main = (function() {
         darworms.main.wGraphics = darworms.main.wCanvas.getContext("2d");
         // console.log ( " init wGraphics " + darworms.main.wGraphics);
         $('#wcanvas').bind('tap', wormEventHandler);
+
+
+        darworms.wCanvasRef = $('#wcanvas');
 
         darworms.dwsettings.scoreCanvas = document.getElementById("scorecanvas");
         darworms.gameModule.init();  // needed to init local data in the gameModule closure
@@ -371,6 +374,7 @@ darworms.main = (function() {
         setGridGeometry: setGridGeometry,
         setupGridGeometry: setupGridGeometry,
         initPlayPage: initPlayPage,
+        wormEventHandler: wormEventHandler,
         player1 : player1,
         player2 : player2,
         player3 : player3,

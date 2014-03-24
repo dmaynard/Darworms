@@ -303,9 +303,9 @@ darworms.main = (function() {
 
             });
         } else {
-
+           var nw =  Math.floor(w * .75);
             xc.css( {
-                width: w-180 + 'px',
+                width: nw + 'px',
                 height: h-110 + 'px'
             });
             sc.css( {

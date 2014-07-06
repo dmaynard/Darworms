@@ -141,7 +141,9 @@ darworms.main = (function() {
     var setGridGeometry = function () {
         var selectedGeometry  = $('input[name=geometry-radio-choice]:checked').val();
         darworms.dwsettings.gridGeometry = selectedGeometry;
-        darworms.dwsettings.backGroundTheme = $('#backg').slider().val()
+        darworms.dwsettings.backGroundTheme = $('#backg').slider().val();
+        darworms.dwsettings.doAnimations = $('#doanim').slider().val();
+        console.log(" darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
     }
 
 
@@ -151,7 +153,11 @@ darworms.main = (function() {
 
     /* The following code is called from the game timer */
 
-    /* This should be wrapped in an anonymous function closure */
+    /* This sh.right {
+     float: right;
+     width: 300px;
+     background-color: #b0e0e6;
+     }ould be wrapped in an anonymous function closure */
 
 
     var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused),  new Worm(3, wormStates.paused), new Worm(4, wormStates.paused)];
@@ -236,32 +242,59 @@ darworms.main = (function() {
         }
 
         if (startNow === false) return;
-        if (darworms.theGame.gameState === darworms.gameStates.running) {
-            // This is now a pause game button
-            clearInterval(darworms.graphics.timer);
-            // document.getElementById("startpause").innerHTML = "Resume Game";
-            $("#startpause .ui-btn-text").text("Resume Game");
-            darworms.theGame.gameState = darworms.gameStates.paused;
-            return;
-        }
-        if (darworms.theGame.gameState === darworms.gameStates.paused) {
-            // This is now a pause game button
-            // document.getElementById("startpause").innerHTML = "Pause Game";
-            $("#startpause .ui-btn-text").text("Pause");
+        console.log (" in startgame darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
+        if ( darworms.dwsettings.doAnimations === "true") {
+            if (darworms.theGame.gameState === darworms.gameStates.running) {
+                // This is now a pause game button
+                clearInterval(darworms.graphics.timer);
+                // document.getElementById("startpause").innerHTML = "Resume Game";
+                $("#startpause .ui-btn-text").text("Resume Game");
+                darworms.theGame.gameState = darworms.gameStates.paused;
+                return;
+            }
+            if (darworms.theGame.gameState === darworms.gameStates.paused) {
+                // This is now a start game button
+                // document.getElementById("startpause").innerHTML = "Pause Game";
+                $("#startpause .ui-btn-text").text("Pause");
+                darworms.theGame.gameState = darworms.gameStates.running;
+                darworms.graphics.timer = setInterval(updateGameState,1000/$("#fps").val());
+                return;
+            }
+            if (darworms.theGame.gameState === darworms.gameStates.over) {
+                // This is now a start game button
+                // alert("About to Start Game.");
+                darworms.theGame.gameState = darworms.gameStates.running;
+                console.log(" setInterval: " +  1000/$("#fps").val());
+                // document.getElementById("startpause").innerHTML = "Pause Game";
+                $("#startpause .ui-btn-text").text("Pause Game");
+                initTheGame(true);
+                darworms.theGame.log();
+                darworms.graphics.timer = setInterval(updateGameState,1000/$("#fps").val());
+            }
+        } else  {
+            // run game loop inline and draw after game is over
+            $("#startpause .ui-btn-text").text("Running");
             darworms.theGame.gameState = darworms.gameStates.running;
-            darworms.graphics.timer = setInterval(updateGameState,1000/$("#fps").val());
-            return;
-        }
-        if (darworms.theGame.gameState === darworms.gameStates.over) {
-            // This is now a start game button
-            // alert("About to Start Game.");
-            darworms.theGame.gameState = darworms.gameStates.running;
-            console.log(" setInterval: " +  1000/$("#fps").val());
-            // document.getElementById("startpause").innerHTML = "Pause Game";
-            $("#startpause .ui-btn-text").text("Pause Game");
-            initTheGame(true);
-            darworms.theGame.log();
-            darworms.graphics.timer = setInterval(updateGameState,1000/$("#fps").val());
+            darworms.theGame.clearCanvas();
+            darworms.theGame.drawCells();
+            while (darworms.theGame.gameState != darworms.gameStates.over ) {
+                if (darworms.theGame.makeMove(false) === false) {
+                    darworms.theGame.elapsedTime = darworms.theGame.elapsedTime  + new Date().getTime();
+                    console.log(" Game Over");
+                    clearInterval(darworms.graphics.timer);
+                    // document.getElementById("startpause").innerHTML = "Start Game";
+                    $("#startpause .ui-btn-text").text("Start Game");
+                    darworms.theGame.showTimes();
+                    darworms.theGame.gameState = darworms.gameStates.over;
+                    // theGame.clearCanvas();
+                    // alert("Game Over ");
+                    // wGraphics.restore();
+                }
+            }
+            darworms.theGame.drawCells();
+            darworms.gameModule.updateScores();
+            $("#startpause .ui-btn-text").text("Start Game");
+
         }
 
     };

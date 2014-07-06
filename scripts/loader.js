@@ -42,6 +42,7 @@ var darworms = {
             "#FF1C0A80", "#1CFF0A80", "#1C0AFF80", "#0AFF1C80",
             "#88443380", "#44883380", "#44338880", "#33884480"],
         backGroundTheme: 0,
+        doAnimations: "true",
         gridBackground:  ["#F5F5F5","#0F0F0F"],
         cellBackground:  ["#F5F5F5","#0F0F0F"]
 

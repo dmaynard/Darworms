@@ -54,10 +54,24 @@
             padding-bottom: 4px;
             padding-top: 4px;
         }
-
+        .right {
+            float: right;
+            width: 100px;
+        }
         #scorecanvas {
             display: block;
         }
+        #background {
+            display: inline-block;
+
+        }
+
+        #animate {
+            display: inline-block;
+            align: right;
+
+        }
+
 
         @media all and (max-height: 400px) {
             #canvascontainer {
@@ -68,7 +82,7 @@
             #navcontainer {
                 display: none;
             }
-            #landnavcontainer {
+             #landnavcontainer {
                 width: 30%;
                 height: 80%;
                 float: right;
@@ -221,8 +235,16 @@
                 </select>
 
             </form>
-        </div>
 
+            <form id="animate" name="animate" class="right">
+                <label for="doanim">Show Moves:</label>
+                <select name="doanim" id="doanim" data-role="slider" data-mini='true' align="right">
+                    <option value=true>Yes</option>
+                    <option value=false>No</option>
+                </select>
+
+            </form>
+        </div>
     </div>
 </div>
 <div data-role="page" data-theme="a" id=debugpage data-add-back-btn=true data-back-btn-text=Menu>

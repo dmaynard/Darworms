@@ -293,7 +293,7 @@ darworms.gameModule = (function() {
         this.zoomPane.setCenter(focusPoint, cellsInZoomPane);
         this.zoomPane.drawCells();
     }
-    Game.prototype.makeMove = function( ) {
+    Game.prototype.makeMove = function( graphicsOn ) {
         var nAlive = 0;
         if (this.gameState === darworms.gameStates.waiting) {
             return;
@@ -330,7 +330,9 @@ darworms.gameModule = (function() {
                     this.zoomPane.canvasIsDirty = true;
                     return(true);
                 }
-                this.dirtyCells.push(active.pos);
+                if ( graphicsOn ) {
+                    this.dirtyCells.push(active.pos);
+                }
                 // console.log (" Move Direction = " + direction);
                 var next = this.grid.next(active.pos,direction);
                 if (next.isEqualTo(darworms.dwsettings.noWhere)) { // fell of edge of world
@@ -342,7 +344,9 @@ darworms.gameModule = (function() {
                     // console.log("    Worm " + active.colorIndex + "  just made move " + active.nMoves + " game turn " + this.numTurns + " From " + this.grid.formatStateAt(active.pos) + " direction  " + direction);
                     active.pos = next;
 
-                    this.dirtyCells.push(next);
+                    if( graphicsOn ) {
+                        this.dirtyCells.push(next);
+                    }
 
                     // console.log(" active.score [" +  i + "] ="  + active.score);
 
@@ -466,7 +470,7 @@ darworms.gameModule = (function() {
 
         }
         if (darworms.theGame.gameState != darworms.gameStates.over ) {
-            if (darworms.theGame.makeMove() === false) {
+            if (darworms.theGame.makeMove(true) === false) {
                 darworms.theGame.elapsedTime = darworms.theGame.elapsedTime  + new Date().getTime();
                 console.log(" Game Over");
                 clearInterval(darworms.graphics.timer);
@@ -504,6 +508,7 @@ darworms.gameModule = (function() {
         }
         if ((minDist < 0.5)  && (select >= 0)) {
             focusWorm.dna[focusValue & 0x3F] = select;
+            focusWorm.numChoices += 1;
             darworms.theGame.gameState = darworms.gameStates.running;
             darworms.theGame.clearCanvas();
             darworms.theGame.drawCells();
@@ -556,7 +561,8 @@ darworms.gameModule = (function() {
         init: init,
         makeMoves: makeMoves,
         selectDirection: selectDirection,
-        doZoomOut: doZoomOut
+        doZoomOut: doZoomOut,
+        updateScores: updateScores
     };
 
 })();/* end of Game */

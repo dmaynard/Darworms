@@ -13,14 +13,17 @@ function Worm(colorIndex, state) {
     this.nMoves = 0;
     this.score = 0;
     this.prevScore = 0;
+    this.numChoices = 0;
 
     for (var i = 0; i < 64; i = i + 1) {
         this.dna[i] =darworms.dwsettings.codons.unSet;
     }
     this.dna[63] = darworms.dwsettings.codons.isTrapped;
+    this.numChoices = 1;
     // set all the forced moves
     for (var j = 0; j < 6 ; j = j+ 1) {
         this.dna[ 0x3F ^ (1<<j)] = j;
+        this.numChoices += 1;
     }
     this.randomize();
 }
@@ -36,9 +39,11 @@ Worm.prototype.init = function( wType) {
             this.dna[i] = darworms.dwsettings.codons.unSet;
         }
         this.dna[63] = darworms.dwsettings.codons.isTrapped;
+        this.numChoices = 1;
         // set all the forced moves
         for (var j = 0; j < 6 ; j = j+ 1) {
             this.dna[ 0x3F ^ (1<<j)] = j;
+            this.numChoices += 1;
         }
         this.randomize();  // sleeping
     }
@@ -50,9 +55,11 @@ Worm.prototype.init = function( wType) {
             this.dna[k] = darworms.dwsettings.codons.unSet;
         }
         this.dna[63] = darworms.dwsettings.codons.isTrapped;
+        this.numChoices = 1;
         // set all the forced moves
         for (var n = 0; n < 6 ; n = n+ 1) {
             this.dna[ 0x3F ^ (1<<n)] = n;
+            this.numChoices += 1;
         }
         this.state = 2;  // paused
     }
@@ -81,6 +88,7 @@ Worm.prototype.randomize = function() {
                 //console.log( " dir = " + dir +  " i=" + i + " outMask[dir] = " + outMask[dir] + "& = " + (i & outMask[dir]));
                 if ((i & darworms.outMask[dir]) === 0) {
                     this.dna[i] = dir;
+                    this.numChoices += 1;
                     // console.log(" Setting dir 0x" + i.toString(16) + " to " + compassPts[dir]);
                     break;
                 }
@@ -101,7 +109,7 @@ Worm.prototype.place = function(aState, aGame) {
     this.nMoves = 0;
     this.score = 0;
     this.state = aState;
-    console.log(" placing worm   i = " + this.colorIndex + " state " + aState);
+    console.log(" placing worm   i = " + this.colorIndex + " state " + aState + " " + this.numChoices + " of 64 possible moves defined");
 };
 Worm.prototype.dump = function() {
     this.log();

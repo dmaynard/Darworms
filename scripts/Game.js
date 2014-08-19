@@ -56,9 +56,9 @@ darworms.gameModule = (function() {
 
         this.xPts = [ 1.0, 0.5, -0.5, -1.0, -0.5, 0.5];
         this.yPts = [ 0.0,  1.0,  1.0,  0.0,  -1.0, -1.0];
-
+    }
         Game.prototype.log = function() {
-        };
+
         console.log( " Game grid size  " + new Point(this.grid.width,this.grid.height).format());
         console.log( " Game Canvas size  " + new Point(gameCanvas.width,gameCanvas.height).format());
         console.log( " Game scale " + this.scale.format());
@@ -320,7 +320,7 @@ darworms.gameModule = (function() {
                 if (direction === darworms.dwsettings.codons.unSet) {
                     this.gameState = darworms.gameStates.waiting;
                     // console.log(this.grid.formatStateAt(active.pos));
-                    // console.log ( " setting gamestate to gameStates.waiting " +  this.gameState);
+                    console.log ( " setting gamestate to gameStates.waiting " +  this.gameState);
                     focusPoint = active.pos;
                     focusWorm = active;
                     focusValue = currentState;

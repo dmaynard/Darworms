@@ -160,20 +160,21 @@ darworms.main = (function () {
 
     var updateGameState = function () {
         // This is the game loop
+        // Called from tumer (should be the requestAnimation timer)
         // We either make one round of moves
         // or if we are waiting for user input
         // and we draw the direction selection screen
         //
         // console.log(" updateGameState: gameState " +  gameStateNames[theGame.gameState]);
-        console.log("R");
+        // console.log("R");
         darworms.graphics.animFrame = darworms.graphics.animFrame + 1;
         if (darworms.theGame.gameState === darworms.gameStates.running) {
-            console.log("R");
+            // console.log("R");
             if (darworms.dwsettings.doAnimations) darworms.gameModule.makeMoves();
 
         }
         if (darworms.theGame.gameState === darworms.gameStates.waiting) {
-            console.log("w");
+            // console.log("w");
             darworms.theGame.drawSelectCell();
         }
 
@@ -268,10 +269,10 @@ darworms.main = (function () {
             $("#startpause .ui-btn-text").text("Pause Game");
             initTheGame(true);
             darworms.theGame.log();
-            darworms.graphics.timer = setInterval(updateGameState, 1000 / $("#fps").val());
         }
         if (darworms.dwsettings.doAnimations == "false") {
             // run game loop inline and draw after game is over
+            console.log('darworms.dwsettings.doAnimations == "false"')
             darworms.theGame.gameState = darworms.gameStates.running;
             darworms.theGame.clearCanvas();
             darworms.theGame.drawCells();

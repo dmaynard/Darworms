@@ -160,7 +160,7 @@ darworms.main = (function () {
 
     var updateGameState = function () {
         // This is the game loop
-        // Called from tumer (should be the requestAnimation timer)
+        // Called from timer (should be the requestAnimation timer)
         // We either make one round of moves
         // or if we are waiting for user input
         // and we draw the direction selection screen
@@ -256,14 +256,16 @@ darworms.main = (function () {
             // document.getElementById("startpause").innerHTML = "Pause Game";
             $("#startpause .ui-btn-text").text("Pause");
             darworms.theGame.gameState = darworms.gameStates.running;
-            darworms.graphics.timer = setInterval(updateGameState, 1000 / $("#fps").val());
+            // darworms.graphics.timer = setInterval(updateGameState, 1000 / $("#fps").val());
+            // startGameLoop( $("#fps").val());
             return;
         }
         if (darworms.theGame.gameState === darworms.gameStates.over) {
             // This is now a start game button
             // alert("About to Start Game.");
             darworms.theGame.gameState = darworms.gameStates.running;
-            darworms.graphics.timer = setInterval(updateGameState, 1000 / $("#fps").val());
+            // darworms.graphics.timer = setInterval(updateGameState, 1000 / $("#fps").val());
+            startGameLoop($("#fps").val());
             console.log(" setInterval: " + 1000 / $("#fps").val());
             // document.getElementById("startpause").innerHTML = "Pause Game";
             $("#startpause .ui-btn-text").text("Pause Game");
@@ -300,6 +302,69 @@ darworms.main = (function () {
         }
 
     };
+
+    var startGameLoop = function(frameRate) {
+        darworms.graphics.fps = frameRate;
+        darworms.graphics.frameInterval =  1000 / frameRate;
+        darworms.graphics.iufps = 30;
+        darworms.graphics.uiInterval =  1000 / frameRate;
+
+        darworms.graphics.rawFrameCount = 0;
+        darworms.graphics.drawFrameCount = 0;
+        darworms.graphics.rawFrameCount = 0;
+        darworms.graphics.uiFrameCount = 0;
+        darworms.graphics.then = Date.now();
+
+        darworms.graphics.uiThen = Date.now();
+        darworms.graphics.startTime = darworms.graphics.then;
+        darworms.graphics.uiInterval =  1000 / darworms.graphics.uifps;
+        doGameLoop();
+    };
+
+    var doGameLoop = function() {
+        // This is the game loop
+        // Called from requestAnimationFrame
+        // We either make one round of moves
+        // or if we are waiting for user input
+        // and we draw the direction selection screen
+        //
+
+        darworms.graphics.rawFrameCount++;
+        if(darworms.theGame.gameState == darworms.gameStates.over) {
+            return;
+        }
+        requestAnimationFrame(doGameLoop);
+        //   makes game moves or select a new direction for a worm
+        //  update graphics
+        darworms.graphics.animFrame = darworms.graphics.animFrame + 1;
+        if (darworms.theGame.gameState === darworms.gameStates.running) {
+            darworms.graphics.now = Date.now();
+            if (darworms.dwsettings.doAnimations) {
+                darworms.graphics.elapsed = darworms.graphics.now - darworms.graphics.then;
+                if (darworms.graphics.elapsed > darworms.graphics.frameInterval) {
+                    darworms.gameModule.makeMoves();
+                    darworms.graphics.then = darworms.graphics.now -
+                                             (darworms.graphics.elapsed % darworms.graphics.frameInterval)
+                }
+
+            }
+
+        }
+        if (darworms.theGame.gameState === darworms.gameStates.waiting) {
+            darworms.graphics.now = Date.now();
+            darworms.graphics.uiElapsed = darworms.graphics.now - darworms.graphics.uiThen;
+            if (darworms.graphics.uiElapsed > darworms.graphics.uiInterval) {
+                darworms.theGame.drawSelectCell();
+                darworms.graphics.uiThen = darworms.graphics.now -
+                (darworms.graphics.uiElapsed % darworms.graphics.uiInterval)
+            }
+        }
+
+        if ( darworms.graphics.rawFrameCount %  60 == 0) {
+            console.log("Date.now() " + Date.now());
+        }
+    }
+
     var preventBehavior = function (e) {
         e.preventDefault();
     };

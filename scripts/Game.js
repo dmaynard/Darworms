@@ -542,7 +542,7 @@ darworms.gameModule = (function() {
     }
 
     function init () {
-
+        // used to initialize variable in this module's closure
         gameCanvas = darworms.main.wCanvas;
         wGraphics = darworms.main.wGraphics;
         nextToMove = 0;
@@ -557,6 +557,7 @@ darworms.gameModule = (function() {
 
     }
     return {
+        // these are the public methods for gameModule
         Game : Game,
         init: init,
         makeMoves: makeMoves,

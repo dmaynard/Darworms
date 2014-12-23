@@ -17,8 +17,22 @@ var darworms = {
         timer:undefined,
         scorectx:undefined,
         animFrame:0,
+        rawFrameCount: 0,
+        drawFrameCount: 0,
+        uiFrameCount: 0,
         xPts:[ 0.5, 0.25, -0.25, -0.5, -0.25, 0.25],
-        yPts:[ 0.0, 0.5, 0.5, 0.0, -0.5, -0.5]
+        yPts:[ 0.0, 0.5, 0.5, 0.0, -0.5, -0.5],
+        fps: 30,
+        frameInterval: 33.33333,
+        uifps: 30,
+        uiInterval: 33.33333,
+        startTime: 0,
+        now: 0,
+        then: 0,
+        uiThen: 0,
+        elapsed: 0,
+        uiElapsed: 0
+
     },
     selectedDarworm:0,
     dwsettings:{

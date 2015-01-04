@@ -1,7 +1,7 @@
 var darworms = {
     compassPts: [ "e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
-    gameStates: {"over": 0, "running" : 1, "waiting": 2, "paused": 3},
-    gameStateNames: ["over", "running", "waiting", "paused"],
+    gameStates: {"over": 0, "running" : 1, "waiting": 2, "paused": 3, "animToUI" : 4, "animFromUI": 5},
+    gameStateNames: ["over", "running", "waiting", "paused", "to_ui" , "from_ui"],
 
     outMask: [1, 2, 4, 8, 16, 32],
     inMask:  [8, 16, 32, 1, 2, 4],
@@ -46,8 +46,8 @@ var darworms = {
         compassPts: [ "e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"],
 
         codons:{ "e":0, "ne":1, "nw":2, "w":3, "sw":4, "se":5, "unSet":6, "isTrapped":7},
-        colorTable:["#000000", "#EE0000", "#00EE00", "#0000EE",
-            "#C0C000", "#448833", "#443388", "#338844",
+        colorTable:["#000000", "#EE0000", "#00EE00", "#0000FF",
+            "#D0D000", "#448833", "#443388", "#338844",
             "#FF1C0A", "#1CFF0A", "#1C0AFF", "#0AFF1C",
             "#884433", "#448833", "#443388", "#338844"],
         alphaColorTable:["rgba(  0,   0,   0, 0.2)",
@@ -57,8 +57,8 @@ var darworms = {
             "#88443380", "#44883380", "#44338880", "#33884480"],
         backGroundTheme: 0,
         doAnimations: "true",
-        gridBackground:  ["#F5F5F5","#0F0F0F"],
-        cellBackground:  ["#F5F5F5","#0F0F0F"]
+        gridBackground:  ["#F5F5F5","#404040"],
+        cellBackground:  ["#F5F5F5","#404040"]
 
     },
     images:{}

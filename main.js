@@ -226,7 +226,7 @@ darworms.main = (function () {
             darworms.theGame = new darworms.gameModule.Game(heightSlider, heightSlider);
         }
         if (darworms.theGame.gameState === darworms.gameStates.over) {
-            darworms.theGame.clear();
+            darworms.theGame.initGame();
 
             darworms.theGame.needsRedraw = true;
             darworms.theGame.drawCells();
@@ -350,6 +350,11 @@ darworms.main = (function () {
             }
 
         }
+        if (darworms.theGame.gameState === darworms.gameStates.animToUI
+            ||  darworms.theGame.gameState === darworms.gameStates.animFromUI) {
+            darworms.theGame.animIn(darworms.theGame.gameState);
+        }
+
         if (darworms.theGame.gameState === darworms.gameStates.waiting) {
             darworms.graphics.now = Date.now();
             darworms.graphics.uiElapsed = darworms.graphics.now - darworms.graphics.uiThen;
@@ -360,9 +365,9 @@ darworms.main = (function () {
             }
         }
 
-        if ( darworms.graphics.rawFrameCount %  60 == 0) {
-            console.log("Date.now() " + Date.now());
-        }
+        // if ( darworms.graphics.rawFrameCount %  60 == 0) {
+        //     console.log("Date.now() " + Date.now());
+        // }
     }
 
     var preventBehavior = function (e) {

@@ -36,6 +36,13 @@ function WPane ( grid, size, center, canvas) {
     this.offset.wrap(this.grid.width, this.grid.height);
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(this.scale.x, this.scale.y);
+    this.savedCanvas = document.createElement('canvas');
+    this.savedCtx = this.savedCanvas.getContext('2d');
+    this.savedCanvas.width = this.canvas.width;
+    this.savedCanvas.height = this.canvas.height;
+
+
+
 }
 WPane.prototype.clear = function() {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -47,6 +54,8 @@ WPane.prototype.clear = function() {
     this.ctx.closePath();
     this.ctx.fill();
 }
+
+
 WPane.prototype.setCenter = function ( center, size ) {
     // sets the scale, screen offset, and
     // centers the focused point on the canvas
@@ -73,9 +82,9 @@ WPane.prototype.setSize = function ( size ) {
 
     // console.log( " WPane.prototype.setCenter  center: "   + center.format() + " zoomSize: "  + size.format() );
     // If we are changing scale we have to invalidate the cached background image
-    if ( size.x != this.cWidth || size.y != this.cHeight) {
-        this.savedCtx = null;
-    };
+    //if ( size.x != this.cWidth || size.y != this.cHeight) {
+    //    this.savedCtx = null;
+    //};
     console.log( "     WPane.prototype.setSize  size: "   + size.format()  );
     this.cWidth = size.x;
     this.cHeight = size.y;
@@ -102,11 +111,6 @@ WPane.prototype.drawCells = function () {
         // TODO  this should is a backbuffer and should only be created once
         // or created every time the canvas changes size
         // it should not be created on every refresh of the selection screen
-        this.savedCanvas = document.createElement('canvas');
-
-        this.savedCanvas.width = this.canvas.width;
-        this.savedCanvas.height = this.canvas.height;
-        this.savedCtx = this.savedCanvas.getContext('2d');
         this.savedCtx.drawImage(this.canvas,0,0);
         this.canvasIsDirty = false;
         this.savedCtx.font = "bold 18px sans-serif";
@@ -118,6 +122,9 @@ WPane.prototype.drawCells = function () {
         this.savedCtx.fillText("+",this.savedCanvas.width/2, this.savedCanvas.height - 10);
 
     }  else { // use the saved canvas background for this size
+
+        // offset is wrong
+        // this overwrites the previous image instead of being transparent
         this.ctx.drawImage(this.savedCanvas,0,0);
     }
 };

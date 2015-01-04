@@ -40,7 +40,10 @@ darworms.gameModule = (function() {
         this.dirtyCells = [];
         this.numTurns = 0;
         this.numMoves = 0;
+        this.timeInDraw = 0;
         cellsInZoomPane = new Point(9,9);
+        // cellsInZoomPane = new Point(gridWidth, gridHeight);
+
 
 
         this.zoomPane = new WPane(this.grid, cellsInZoomPane , new Point( gridWidth >> 1, gridHeight >>1) , document.getElementById("wcanvas"))
@@ -56,8 +59,24 @@ darworms.gameModule = (function() {
 
         this.xPts = [ 1.0, 0.5, -0.5, -1.0, -0.5, 0.5];
         this.yPts = [ 0.0,  1.0,  1.0,  0.0,  -1.0, -1.0];
+
+        // variable for animating zoom in to selection UI
+        // create back buffer image  for current grid image
+
+
+        this.zoomFrame = 0;
+        this.startx = 0;
+        this.starty = 0;
+        this.endx = 0;
+        this.endy = 0;
+        this.startscale = 1.0;
+        this.endScale = 1.0;
+        // three second zoom animation
+        this.targetZoomFrames = 60;
+
     }
-        Game.prototype.log = function() {
+
+    Game.prototype.log = function() {
 
         console.log( " Game grid size  " + new Point(this.grid.width,this.grid.height).format());
         console.log( " Game Canvas size  " + new Point(gameCanvas.width,gameCanvas.height).format());
@@ -78,17 +97,8 @@ darworms.gameModule = (function() {
         });
 
     };
-    Game.prototype.setTranslate = function (point) {
-        if (( point.y & 1) === 0) {
-            wGraphics.translate(point.x + 0.5 + (this.margin/this.scale.x) , point.y + 0.5  + (this.margin/this.scale.y));
-            var scalex = point.x + 0.5 + (this.margin/this.scale.x);
-            var scaley = point.y + 0.5 + (this.margin/this.scale.y);
-            console.log(" setTranslate " + scalex  + " , " + scaley);
-        } else {
-            wGraphics.translate(point.x + 1.0 + (this.margin/this.scale.x) , point.y + 0.5 + (this.margin/this.scale.y));
-        }
-    };
-    Game.prototype.gsetTranslate = function (point) {
+
+    Game.prototype.getOffset = function (point) {
         var xoff;
         var yoff;
         if (( point.y & 1) === 0) {
@@ -98,14 +108,23 @@ darworms.gameModule = (function() {
 
         }
         yoff = (point.y + 0.5 + (this.margin/this.scale.y)) * this.scale.y;
-        wGraphics.setTransform(this.scale.x,0,0,this.scale.y,xoff,yoff);
+        return new Point(xoff, yoff);
+    }
+
+    Game.prototype.gsetTranslate = function (point) {
+        var cellOffset = this.getOffset(point);
+        wGraphics.setTransform(this.scale.x,0,0,this.scale.y,cellOffset.x,cellOffset.y);
+        // console.log( "Drawing cell " +  point.format() + " x= " + cellOffset.x + "  y= " + cellOffset.y);
     };
-    /*  TODO  move all drawing from game to wPanes  */
+    /*  TODO  move all drawing from game to wPanes
+     *   except that the Selection wants the cell centered
+     */
     Game.prototype.drawCell = function( point) {
        // if (point.isEqualTo(new Point (this.grid.width-1, this.grid.height/2))) {
        //     console.log(this.grid.formatStateAt(point));
        // }
-        wGraphics.save();
+        this.timeInDraw -= Date.now();
+        // wGraphics.save();
         this.gsetTranslate(point);
         wGraphics.fillStyle =  darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme];
         wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
@@ -155,7 +174,8 @@ darworms.gameModule = (function() {
                 wGraphics.closePath();
             }
         }
-        wGraphics.restore();
+        // wGraphics.restore();
+        this.timeInDraw += Date.now();
 
     };
     Game.prototype.drawSelectCell = function() {
@@ -173,17 +193,12 @@ darworms.gameModule = (function() {
             // console.log( "drawSelectCell  hoffset "  + hoffset);
         }
         //  sconsole.log( "drawSelectCell  hoffset "  + hoffset + " scale.x = " + this.zoomPane.scale.x);
-        // wGraphics.scale(this.grid.width/2, this.grid.height/2);
-        // wGraphics.translate(1.0, 1.0);
         wGraphics.setTransform((gameCanvas.width-(2.0*this.margin))/2, 0,0, (gameCanvas.height-(2.0*this.margin))/2,
             (gameCanvas.width/2) + hoffset , (gameCanvas.height)/2 );
-        // console.log( "drawSelectCell  scalex "  + this.grid.width/2 );
-        /* wGraphics.fillStyle =  "rgba(622,222,222,0.8)";
-         wGraphics.beginPath();
-         wGraphics.rect(-1.0, -1.0, 2.0, 2.0);
-         wGraphics.closePath();
-         wGraphics.fill();
-         */
+        if( (darworms.graphics.animFrame && 0xFF) == 0) {
+            console.log( " drawSelectCell  hoffset "  + hoffset);
+            console.log("  drawSelectCell pixel center is " + new Point( (gameCanvas.width/2) + hoffset , (gameCanvas.height)/2).format());
+        }
 
         var owner = this.grid.spokeAt( focusPoint, 7);
         wGraphics.fillStyle = "rgba(0,0,0,0.8)";
@@ -228,17 +243,21 @@ darworms.gameModule = (function() {
     };
 
     Game.prototype.drawCells = function () {
+        wGraphics.save();
         for (var col = 0; col < this.grid.width ; col = col + 1) {
             for (var row = 0; row < this.grid.height ; row = row + 1) {
                 this.drawCell(new Point(col,row));
             }
         }
+        wGraphics.restore();
     };
     Game.prototype.drawDirtyCells = function () {
         var pt;
+        // wGraphics.save();
         while ((pt = this.dirtyCells.pop()) !== undefined ) {
             this.drawCell(pt);
         }
+        // wGraphics.restore();
     };
     Game.prototype.clearCanvas = function() {
         // Store the current transformation matrix
@@ -254,12 +273,18 @@ darworms.gameModule = (function() {
         wGraphics.restore();
     //    wGraphics.clearRect(0,0,canvas.width,canvas.height);
     };
-    Game.prototype.clear = function() {
+
+
+    Game.prototype.initGame = function() {
         this.clearCanvas();
         this.grid.clear();
         this.elapsedTime = - new Date().getTime();
         this.frameTimes.length = 0;
         this.startFrameTimes.length = 0;
+        this.numMoves = 0;
+        this.numTurns = 0;
+        this.timeInDraw = 0;
+
     };
     Game.prototype.addWorm = function(w) {
         w.pos = this.origin;
@@ -318,9 +343,9 @@ darworms.gameModule = (function() {
             } else {
                 var direction = active.getMoveDir(currentState);
                 if (direction === darworms.dwsettings.codons.unSet) {
-                    this.gameState = darworms.gameStates.waiting;
+                    this.gameState = darworms.gameStates.animToUI;
                     // console.log(this.grid.formatStateAt(active.pos));
-                    console.log ( " setting gamestate to gameStates.waiting " +  this.gameState);
+                    console.log ( " setting gamestate to gameStates.animToUI " +  this.gameState);
                     focusPoint = active.pos;
                     focusWorm = active;
                     focusValue = currentState;
@@ -328,6 +353,8 @@ darworms.gameModule = (function() {
                     this.numMoves = this.numMoves + 1;
                     active.nMoves = active.nMoves + 1;
                     this.zoomPane.canvasIsDirty = true;
+                    this.drawDirtyCells();
+                    this.initPanZoom(active);
                     return(true);
                 }
                 if ( graphicsOn ) {
@@ -367,6 +394,7 @@ darworms.gameModule = (function() {
         this.numTurns = this.numTurns + 1;
         return ( nAlive > 0 || (nextToMove !== 0));
     };
+
     Game.prototype.showTimes = function() {
         var min = 100000000;
         var max = 0;
@@ -427,9 +455,84 @@ darworms.gameModule = (function() {
         document.getElementById('wormframemaxtime').innerHTML = max;
         document.getElementById('wormframeavetime').innerHTML = ave;
         document.getElementById('wormframepercenttime').innerHTML = percentDrawing;
+        document.getElementById('wormframetotaltime').innerHTML = this.timeInDraw/1000;
 
 
     };
+
+    Game.prototype.initPanZoom = function( activeWorm) {
+        //  save a copy of the current grid canvas
+        // to act as a backgroud for the selection UI
+
+        var coffset = this.getOffset(activeWorm.pos);
+
+        this.gridImage  = this.convertCanvasToImage(darworms.main.wCanvas);
+        this.zoomFrame = 0;
+        this.startx = 0;
+        this.starty = 0;
+        this.endx = (darworms.main.wCanvas.width / 2) -  coffset.x ;
+
+        var hoffset = - this.zoomPane.scale.x/4;
+
+        if((activeWorm.pos.y & 1) === 1  && (cellsInZoomPane.x > 1))  {
+            hoffset =   this.zoomPane.scale.x/4;
+            // console.log( "drawSelectCell  hoffset "  + hoffset);
+        }
+
+        this.endx = (darworms.main.wCanvas.width / 2) + hoffset -  coffset.x ;
+
+        this.endy = (gameCanvas.height)/2 -  coffset.y ;
+        this.startScale = 1.0;
+        this.endScale = 4.0;
+        // three second zoom animation
+        this.targetZoomFrames = 120;
+        console.log(" Worm pos =" + activeWorm.pos.format());
+        console.log( " end anim = " + new Point(this.endx,this.endy).format())
+    }
+
+    Game.prototype.animIn = function(gameStae ) {
+        if(darworms.theGame.gameState == darworms.gameStates.animToUI) {
+            this.zoomFrame++;
+        }
+        if(darworms.theGame.gameState == darworms.gameStates.animFromUI) {
+            this.zoomFrame--;
+            this.zoomFrame--;
+            this.zoomFrame--;
+            this.zoomFrame--;
+
+
+        }
+
+        if (this.zoomFrame >= this.targetZoomFrames) {
+            //  go to waiting for UI input state
+            this.gameState = darworms.gameStates.waiting;
+            console.log( "     animIn " + this.zoomFrame + "   xoffset=" +  xoffset +  "  yoffset = " + yoffset + " scale = " + scl);
+        }
+        if (this.zoomFrame <= 0 ) {
+            //  go to waiting for UI input state
+            this.gameState = darworms.gameStates.running;
+            console.log( "     animIn " + this.zoomFrame + "   xoffset=" +  xoffset +  "  yoffset = " + yoffset + " scale = " + scl);
+        }
+        var xoffset  = this.startx -  (this.endx-this.startx) * this.zoomFrame / this.targetZoomFrames;
+        var yoffset  = this.starty -  (this.endy-this.starty) * this.zoomFrame / this.targetZoomFrames;
+        var scl  = this.startScale +  (this.endScale-this.startScale) * this.zoomFrame / this.targetZoomFrames;
+        wGraphics.save();
+        this.clearCanvas();
+        wGraphics.setTransform(1, 0, 0, 1, 0, 0);
+        wGraphics.drawImage(this.gridImage, xoffset, yoffset, darworms.main.wCanvas.width, darworms.main.wCanvas.height,
+            0, 0, darworms.main.wCanvas.width, darworms.main.wCanvas.height);
+        wGraphics.restore();
+
+    }
+
+    // Converts canvas to an image
+    Game.prototype.convertCanvasToImage =  function (canvas) {
+        var image = new Image();
+        image.src = canvas.toDataURL("image/png");
+        return image;
+    }
+
+    // end of Module prototypes
 
     //  Called from Timer Loop
 
@@ -509,7 +612,8 @@ darworms.gameModule = (function() {
         if ((minDist < 0.5)  && (select >= 0)) {
             focusWorm.dna[focusValue & 0x3F] = select;
             focusWorm.numChoices += 1;
-            darworms.theGame.gameState = darworms.gameStates.running;
+            //  TODO setState to animFromUI
+            darworms.theGame.gameState = darworms.gameStates.animFromUI;
             darworms.theGame.clearCanvas();
             darworms.theGame.drawCells();
         }
@@ -540,6 +644,7 @@ darworms.gameModule = (function() {
         return false;
 
     }
+
 
     function init () {
         // used to initialize variable in this module's closure

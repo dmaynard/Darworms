@@ -344,7 +344,9 @@ darworms.gameModule = (function() {
                 var direction = active.getMoveDir(currentState);
                 if (direction === darworms.dwsettings.codons.unSet) {
                     this.gameState = darworms.gameStates.animToUI;
-                    // console.log(this.grid.formatStateAt(active.pos));
+                    this.gameState = darworms.graphics.enableTransitionStates ?
+                        darworms.gameStates.animToUI : darworms.gameStates.waiting ;
+// console.log(this.grid.formatStateAt(active.pos));
                     console.log ( " setting gamestate to gameStates.animToUI " +  this.gameState);
                     focusPoint = active.pos;
                     focusWorm = active;
@@ -613,7 +615,8 @@ darworms.gameModule = (function() {
             focusWorm.dna[focusValue & 0x3F] = select;
             focusWorm.numChoices += 1;
             //  TODO setState to animFromUI
-            darworms.theGame.gameState = darworms.gameStates.animFromUI;
+            darworms.theGame.gameState = darworms.graphics.enableTransitionStates ?
+                                         darworms.gameStates.animFromUI : darworms.gameStates.running ;
             darworms.theGame.clearCanvas();
             darworms.theGame.drawCells();
         }
@@ -621,8 +624,8 @@ darworms.gameModule = (function() {
     var doZoomOut = function ( tapPoint ) {
         if (tapPoint.dist(new Point(0, 1.0)) < 0.2 ) {
             if (cellsInZoomPane.x >= 5) {
-                cellsInZoomPane.x = cellsInZoomPane.x  - 2;
-                cellsInZoomPane.y = cellsInZoomPane.y - 2;
+                cellsInZoomPane.x = cellsInZoomPane.x  - 1;
+                cellsInZoomPane.y = cellsInZoomPane.y - 1;
             }
             console.log( "doZoomIN: returning true  wPane size ="  +  cellsInZoomPane.x );
             darworms.theGame.zoomPane.canvasIsDirty = true;
@@ -631,8 +634,9 @@ darworms.gameModule = (function() {
         }
         if (tapPoint.dist(new Point(0, -1.0)) < 0.2 ) {
             if (cellsInZoomPane.x < darworms.theGame.grid.width - 2) {
-                cellsInZoomPane.x = cellsInZoomPane.x + 2;
-                cellsInZoomPane.y = cellsInZoomPane.y + 2;
+                cellsInZoomPane.x = cellsInZoomPane.x + 1;
+                cellsInZoomPane.y = cellsInZoomPane.y + 1;
+                cellsInZoomPane.y = cellsInZoomPane.y + 1;
                 console.log( "doZoomOut: returning true  wPane size ="  +  cellsInZoomPane.x );
                 darworms.theGame.zoomPane.canvasIsDirty = true;
                 darworms.theGame.zoomPane.setSize(new Point(cellsInZoomPane.x,cellsInZoomPane.y))

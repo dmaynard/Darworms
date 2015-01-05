@@ -31,7 +31,8 @@ var darworms = {
         then: 0,
         uiThen: 0,
         elapsed: 0,
-        uiElapsed: 0
+        uiElapsed: 0,
+        enableTransitionStates: false
 
     },
     selectedDarworm:0,

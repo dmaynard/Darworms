@@ -59,7 +59,7 @@
             width: 100px;
         }
         #scorecanvas {
-            display: block;
+            display: inline-block;
         }
         #background {
             display: inline-block;
@@ -138,7 +138,7 @@
 <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true>
     <div data-role="content">
         <div id="canvascontainer" class="canvas-container">
-            <canvas id="wcanvas"  class="wcanvasclass" width="320" height="356"  ></canvas>
+            <canvas id="wcanvas"  class="wcanvasclass" width="320" height="336"  ></canvas>
             <canvas id="scorecanvas" class="scorecanvasclass" width="320" height="20"></canvas>
         </div>
 
@@ -187,7 +187,7 @@
         </div>
     </div>
 
-    <div data-role=footer data-theme="b">
+    <div data-role=footer data-theme="b" >
         <div id="menufooter" data-role=navbar>
             <ul>
                 <li><a id="startpause" data-role=button onclick=darworms.startgame()>Start Game</a></li>
@@ -269,11 +269,20 @@
             </div>
         </div>
         <div>
-            <form id="newevent1info" name="newevent1info" align="left">
+            <form id="newevent1info" name="newevent1info" >
                 <label for="debug">Debug:</label>
                 <select name="debug" id="debug" data-role="slider" data-mini='true'>
                     <option value="0">Off</option>
                     <option value=1>On</option>
+                </select>
+
+            </form>
+
+            <form id="animateui" name="animateui" align="left">
+                <label for="doanimui">UI Animation:</label>
+                <select name="doanimui" id="doanimui" data-role="slider" data-mini='true'>
+                    <option value=true>Yes</option>
+                    <option value=false>No</option>
                 </select>
 
             </form>

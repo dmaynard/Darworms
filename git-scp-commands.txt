@@ -4,6 +4,7 @@ scp -r -P 12960 ~/projects/SumoWorms/www/*.* dmaynard@bitbltstudios.com:/var/www
 scp -r -P 12960 ~/projects/SumoWorms/www/scripts/*.* dmaynard@bitbltstudios.com:/var/www/darworms/scripts
 scp -r -P 12960 ~/projects/SumoWorms/www/themes/*.* dmaynard@bitbltstudios.com:/var/www/darworms/themes
 scp -r -P 12960 ~/projects/SumoWorms/www/images/*.* dmaynard@bitbltstudios.com:/var/www/darworms/images
+scp -r -P 12960 ~/projects/SumoWorms/www/sounds/*.* dmaynard@bitbltstudios.com:/var/www/darworms/sounds
 
 
 git push

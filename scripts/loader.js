@@ -62,7 +62,10 @@ var darworms = {
         cellBackground:  ["#F5F5F5","#404040"]
 
     },
-    images:{}
+    images:{},
+    audioContext: undefined,
+    sampleGainNode: undefined,
+    audioSamples: {}
 };
 
 window.addEventListener("load", function () {
@@ -119,6 +122,7 @@ window.addEventListener("load", function () {
     Modernizr.load([
         {
             load:[
+                "scripts/AudioSample",
                 "scripts/Point.js",
                 "scripts/Grid.js",
                 "scripts/Worm.js",

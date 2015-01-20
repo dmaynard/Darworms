@@ -242,7 +242,7 @@ darworms.main = (function () {
 
         if (startNow === false) return;
         console.log(" NEW in startgame darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
-
+        darworms.audioSamples.b3.playSample();
         if (darworms.theGame.gameState === darworms.gameStates.running) {
             // This is now a pause game button
             // clearInterval(darworms.graphics.timer);
@@ -448,6 +448,21 @@ darworms.main = (function () {
 
         darworms.wCanvasRef = $('#wcanvas');
 
+        darworms.audioContext;
+
+         // Create Smart Audio Container
+        if (typeof AudioContext !== "undefined") {
+            darworms.audioContext = new AudioContext();
+        } else if (typeof webkitAudioContext !== "undefined") {
+            darworms.audioContext = new webkitAudioContext();
+        } else {
+            throw new Error('AudioContext not supported. :(');
+        }
+        darworms.sampleGainNode = darworms.audioContext.createGain(0.5);
+
+        //   loading AudioSample Files
+        darworms.audioSamples["b3"] = new AudioSample("b3", "sounds/a_kalimba_b3.wav");
+
         darworms.dwsettings.scoreCanvas = document.getElementById("scorecanvas");
         darworms.gameModule.init();  // needed to init local data in the gameModule closure
         //  These values are needed by both mainModule and gameModule
@@ -457,6 +472,7 @@ darworms.main = (function () {
         // darworms.theGame = new darworms.gameModule.Game ( darworms.dwsettings.initialGridSize, darworms.dwsettings.initialGridSize);
         // darworms.startgame(false);
         darworms.dwsettings.noWhere = new Point(-1, -1);
+
 
         //  The following code is designed to remove the toolbar on mobile Safari
         if (!window.location.hash && window.addEventListener) {

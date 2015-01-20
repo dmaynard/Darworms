@@ -13,21 +13,21 @@ function AudioSample(name, location) {
     xhr.onload = (function () {
         darworms.audioContext.decodeAudioData(xhr.response,
             (function(incomingBuffer) {
-                console.log( "on Load incoming Buffer");
-                console.log(" xhr " + xhr.status + "  " + xhr.statusText);
-                console.log(" incoming buffer = " + incomingBuffer );
-                console.log ( " this.name " + this.name);
+                // console.log( "on Load incoming Buffer");
+                // console.log(" xhr " + xhr.status + "  " + xhr.statusText);
+                // console.log(" incoming buffer = " + incomingBuffer );
+                // console.log ( " this.name " + this.name);
                 this.savedBuffer = incomingBuffer; // Save the buffer, we'll reuse it
             }
         ).bind(this));
     }).bind(this);
     xhr.send();
+    darworms.audioSamples.push(this);
 }
 
 AudioSample.prototype.playSample = function () {
     var source;
-    console.log(" playSample " + this.name + "  " + this.location + "  savedBuffer " + this.savedBuffer);
-
+    // console.log(" playSample " + this.name + "  " + this.location + "  savedBuffer " + this.savedBuffer);
     if (this.savedBuffer !== undefined) {
         source = darworms.audioContext.createBufferSource();
         source.buffer = this.savedBuffer;

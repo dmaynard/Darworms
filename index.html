@@ -202,7 +202,8 @@
         <a href="#menupage" >Menu</a>
         <h1>Settings</h1>
         <a href="#playpage" >Play</a>
-    </div>    <div data-role=content>
+    </div>
+    <div data-role=content>
         <form>
             <fieldset data-role="controlgroup" id="geometry-radiobuttons">
                 <legend>At edge of grid Darworms will:</legend>
@@ -226,26 +227,41 @@
             <label for="fps">Frames/Sec:</label>
             <input type="range" name="fps" id="fps" value="30" min="1" max="60"/>
         </div>
-        <div>
-            <form id="background" name="background" align="left">
+    </div>
+    <div data-role="controlgroup" data-type="horizontal">
+        <fieldset data-role="controlgroup" data-type="horizontal">
+            <form id="background" name="background">
                 <label for="backg">Background:</label>
                 <select name="backg" id="backg" data-role="slider" data-mini='true'>
                     <option value=0>Light</option>
                     <option value=1>Dark</option>
                 </select>
-
             </form>
-
+        </fieldset>
+    </div>
+    <div data-role="controlgroup" data-type="horizontal">
+        <fieldset data-role="controlgroup" data-type="horizontal">
+            <form id="doAudio" name="Audio" >
+                <label for="audioon">Audio:</label>
+                <select name="audioon" id="audioon" data-role="slider" data-mini='true'>
+                    <option value=1>On</option>
+                    <option value=0>Off</option>
+                </select>
+            </form>
+        </fieldset>
+    </div>
+    <div data-role="controlgroup" data-type="horizontal">
+        <fieldset data-role="controlgroup" data-type="horizontal">
             <form id="animate" name="animate" class="right">
-                <label for="doanim">Show Moves:</label>
-                <select name="doanim" id="doanim" data-role="slider" data-mini='true' align="right">
+              <label for="doanim">Show Moves:</label>
+                <select name="doanim" id="doanim" data-role="slider" data-mini='true'>
                     <option value=true>Yes</option>
                     <option value=false>No</option>
                 </select>
-
             </form>
-        </div>
-    </div>
+        </fieldset>
+     </div>
+
 </div>
 <div data-role="page" data-theme="a" id=debugpage data-add-back-btn=true data-back-btn-text=Menu>
     <div data-role="header">

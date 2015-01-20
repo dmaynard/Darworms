@@ -361,6 +361,9 @@ darworms.gameModule = (function() {
                 }
                 if ( graphicsOn ) {
                     this.dirtyCells.push(active.pos);
+                    if(darworms.doAudio == 1) {
+                        active.notes[direction].playSample();
+                    }
                 }
                 // console.log (" Move Direction = " + direction);
                 var next = this.grid.next(active.pos,direction);

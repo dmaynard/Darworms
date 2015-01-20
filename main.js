@@ -32,6 +32,7 @@ darworms.main = (function () {
     wormStates = {"dead":0, "moving":1, "paused":2, "sleeping":3};
     wormStateNames = ["dead", "moving", "paused", "sleeping"];
     initialWormStates = [3, 2, 2, 2];
+    var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused), new Worm(3, wormStates.paused), new Worm(4, wormStates.paused)];
 
 
     var setTypes = function () {
@@ -51,6 +52,7 @@ darworms.main = (function () {
         // document.getElementById("p4button").innerHTML = typeNames[players[3]];
         for (var i = 0; i < gWorms.length; i = i + 1) {
             gWorms[i].wType = players[i];
+            gWorms[i].setNotes(i);
         }
     };
 
@@ -142,7 +144,9 @@ darworms.main = (function () {
         darworms.dwsettings.gridGeometry = selectedGeometry;
         darworms.dwsettings.backGroundTheme = $('#backg').slider().val();
         darworms.dwsettings.doAnimations = $('#doanim').slider().val();
+        darworms.doAudio = $('#audioon').slider().val();
         console.log(" darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
+        console.log(" darworms.doAudio " + darworms.doAudio);
     }
 
 
@@ -155,7 +159,6 @@ darworms.main = (function () {
      }ould be wrapped in an anonymous function closure */
 
 
-    var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused), new Worm(3, wormStates.paused), new Worm(4, wormStates.paused)];
     // var localImage;
 
     var updateGameState = function () {
@@ -242,7 +245,6 @@ darworms.main = (function () {
 
         if (startNow === false) return;
         console.log(" NEW in startgame darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
-        darworms.audioSamples.b3.playSample();
         if (darworms.theGame.gameState === darworms.gameStates.running) {
             // This is now a pause game button
             // clearInterval(darworms.graphics.timer);
@@ -430,11 +432,44 @@ darworms.main = (function () {
             resizeCanvas();
         }
     }
+
+    var loadAudio = function() {
+        darworms.audioContext;
+
+        // Create Smart Audio Container
+        if (typeof AudioContext !== "undefined") {
+            darworms.audioContext = new AudioContext();
+        } else if (typeof webkitAudioContext !== "undefined") {
+            darworms.audioContext = new webkitAudioContext();
+        } else {
+            throw new Error('AudioContext not supported. :(');
+        }
+        darworms.sampleGainNode = darworms.audioContext.createGain(0.5);
+
+        //   loading AudioSample Files
+        new AudioSample("b3", "sounds/a_kalimba_b3.wav");
+        new AudioSample("c4", "sounds/b_kalimba_c4.wav");
+        new AudioSample("d4", "sounds/c_kalimba_d4.wav");
+        new AudioSample("e4", "sounds/d_kalimba_e4.wav");
+        new AudioSample("fsharp4", "sounds/e_kalimba_fsharp4.wav");
+        new AudioSample("g4", "sounds/f_kalimba_g4.wav");
+        new AudioSample("a4", "sounds/g_kalimba_a4.wav");
+        new AudioSample("b4", "sounds/h_kalimba_b4.wav");
+        new AudioSample("c5", "sounds/i_kalimba_c5.wav");
+        new AudioSample("b3", "sounds/j_kalimba_d5.wav");
+        new AudioSample("e5", "sounds/k_kalimba_e5.wav");
+        new AudioSample("fsharp5", "sounds/l_kalimba_fsharp5.wav");
+        new AudioSample("g5", "sounds/m_kalimba_g5.wav");
+        new AudioSample("a5", "sounds/n_kalimba_a5.wav");
+        new AudioSample("b5", "sounds/o_kalimba_b5.wav");
+        new AudioSample("c6", "sounds/p_kalimba_c6.wav");
+
+
+    }
     var init = function () {
         // This may be needed when we actually build a phoneGap app
         // in this case delay initialization until we get the deviceready event
         document.addEventListener("deviceready", deviceInfo, true);
-        setTypes();
 
         darworms.wCanvasPixelDim = new Point(1, 1);
         // window.onresize = doReSize;
@@ -448,20 +483,10 @@ darworms.main = (function () {
 
         darworms.wCanvasRef = $('#wcanvas');
 
-        darworms.audioContext;
+       loadAudio();
 
-         // Create Smart Audio Container
-        if (typeof AudioContext !== "undefined") {
-            darworms.audioContext = new AudioContext();
-        } else if (typeof webkitAudioContext !== "undefined") {
-            darworms.audioContext = new webkitAudioContext();
-        } else {
-            throw new Error('AudioContext not supported. :(');
-        }
-        darworms.sampleGainNode = darworms.audioContext.createGain(0.5);
+        setTypes();
 
-        //   loading AudioSample Files
-        darworms.audioSamples["b3"] = new AudioSample("b3", "sounds/a_kalimba_b3.wav");
 
         darworms.dwsettings.scoreCanvas = document.getElementById("scorecanvas");
         darworms.gameModule.init();  // needed to init local data in the gameModule closure

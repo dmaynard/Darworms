@@ -65,7 +65,8 @@ var darworms = {
     images:{},
     audioContext: undefined,
     sampleGainNode: undefined,
-    audioSamples: {}
+    doAudio: true,
+    audioSamples: []
 };
 
 window.addEventListener("load", function () {

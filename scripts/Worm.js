@@ -14,6 +14,12 @@ function Worm(colorIndex, state) {
     this.score = 0;
     this.prevScore = 0;
     this.numChoices = 0;
+    this.notes = [];
+
+   // for (var j = 0; j < 6 ; j = j+ 1) {
+   //     this.notes.push(darworms.audioSamples [  ((colorIndex-1) + (j * 2)) % darworms.audioSamples.length]);
+   //     this.numChoices += 1;
+   //  }
 
     for (var i = 0; i < 64; i = i + 1) {
         this.dna[i] =darworms.dwsettings.codons.unSet;
@@ -26,6 +32,14 @@ function Worm(colorIndex, state) {
         this.numChoices += 1;
     }
     this.randomize();
+}
+
+Worm.prototype.setNotes = function (index) {
+    for (var j = 0; j < 6 ; j = j+ 1) {
+        this.notes.push(darworms.audioSamples [  ((index) + (j * 2)) % darworms.audioSamples.length]);
+    }
+
+
 }
 Worm.prototype.init = function( wType) {
     this.nMoves = 0;

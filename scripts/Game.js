@@ -330,7 +330,7 @@ darworms.gameModule = (function() {
             if (active.state === wormStates.sleeping) {
                 continue;
             }
-            active.state = wormStates.moving;
+            // active.state = wormStates.moving;
             // console.log (" Game  Before Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
             // active.log();
             // console.log ( "   Grid value =  ");
@@ -338,6 +338,10 @@ darworms.gameModule = (function() {
             var currentState = this.grid.stateAt(active.pos);
             // console.log (" Current State = " + currentState);
             if (currentState == 0x3F) {
+                // last sample is death sound
+                if (active.state != wormStates.dead) {
+                    darworms.audioSamples[darworms.audioSamples.length-1].playSample();
+                }
                 active.state = wormStates.dead;
                 // console.log (" death of worm " + active.colorIndex + " Current State = " + currentState);
             } else {

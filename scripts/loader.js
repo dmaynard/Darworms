@@ -64,7 +64,8 @@ var darworms = {
     },
     images:{},
     audioContext: undefined,
-    sampleGainNode: undefined,
+    masterGainNode: undefined,
+    masterAudioVolume:  0.3,
     doAudio: true,
     audioSamples: []
 };

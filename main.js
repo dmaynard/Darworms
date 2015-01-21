@@ -147,6 +147,8 @@ darworms.main = (function () {
         darworms.doAudio = $('#audioon').slider().val();
         console.log(" darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
         console.log(" darworms.doAudio " + darworms.doAudio);
+        darworms.masterAudioVolume = $("#audiovol").val() / 100;
+        console.log(" darworms.masterAudioVolume " + darworms.masterAudioVolume);
     }
 
 
@@ -444,7 +446,7 @@ darworms.main = (function () {
         } else {
             throw new Error('AudioContext not supported. :(');
         }
-        darworms.sampleGainNode = darworms.audioContext.createGain(0.5);
+        darworms.masterGainNode = darworms.audioContext.createGain(0.5);
 
         //   loading AudioSample Files
         new AudioSample("b3", "sounds/a_kalimba_b3.wav");
@@ -463,6 +465,7 @@ darworms.main = (function () {
         new AudioSample("a5", "sounds/n_kalimba_a5.wav");
         new AudioSample("b5", "sounds/o_kalimba_b5.wav");
         new AudioSample("c6", "sounds/p_kalimba_c6.wav");
+        new AudioSample("death", "sounds/death.wav");
 
 
     }

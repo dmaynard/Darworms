@@ -31,8 +31,10 @@ AudioSample.prototype.playSample = function () {
     if (this.savedBuffer !== undefined) {
         source = darworms.audioContext.createBufferSource();
         source.buffer = this.savedBuffer;
-        source.connect(darworms.sampleGainNode);
-        source.connect(darworms.audioContext.destination);
+        darworms.masterGainNode.gain.value = darworms.masterAudioVolume;
+        source.connect(darworms.masterGainNode);
+        // console.log(" playSample " + this.name + " volume  " + darworms.masterGainNode.gain.value);
+        darworms.masterGainNode.connect(darworms.audioContext.destination);
         source.start(0); // Play sound immediately. Renamed source.start from source.noteOn
     }
 };

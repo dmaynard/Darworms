@@ -28,7 +28,7 @@ function AudioSample(name, location) {
 AudioSample.prototype.playSample = function () {
     var source;
     // console.log(" playSample " + this.name + "  " + this.location + "  savedBuffer " + this.savedBuffer);
-    if (this.savedBuffer !== undefined) {
+    if (darworms.audioContext !== undefined && this.savedBuffer !== undefined) {
         source = darworms.audioContext.createBufferSource();
         source.buffer = this.savedBuffer;
         darworms.masterGainNode.gain.value = darworms.masterAudioVolume;

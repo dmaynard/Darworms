@@ -340,7 +340,12 @@ darworms.gameModule = (function() {
             if (currentState == 0x3F) {
                 // last sample is death sound
                 if (active.state != wormStates.dead) {
-                    darworms.audioSamples[darworms.audioSamples.length-1].playSample();
+                    if(darworms.doAudio == 1) {
+                        if (darworms.audioSamples[darworms.audioSamples.length-1]) {
+                            darworms.audioSamples[darworms.audioSamples.length-1].playSample();
+                        }
+                    }
+
                 }
                 active.state = wormStates.dead;
                 // console.log (" death of worm " + active.colorIndex + " Current State = " + currentState);
@@ -366,7 +371,9 @@ darworms.gameModule = (function() {
                 if ( graphicsOn ) {
                     this.dirtyCells.push(active.pos);
                     if(darworms.doAudio == 1) {
-                        active.notes[direction].playSample();
+                        if ( active.notes[direction]) {
+                            active.notes[direction].playSample();
+                        }
                     }
                 }
                 // console.log (" Move Direction = " + direction);

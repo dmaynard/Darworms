@@ -444,28 +444,33 @@ darworms.main = (function () {
         } else if (typeof webkitAudioContext !== "undefined") {
             darworms.audioContext = new webkitAudioContext();
         } else {
-            throw new Error('AudioContext not supported. :(');
+            darworms.doAudio = false;
+            $('#doAudio').hide();
         }
-        darworms.masterGainNode = darworms.audioContext.createGain(0.5);
 
-        //   loading AudioSample Files
-        new AudioSample("b3", "sounds/a_kalimba_b3.wav");
-        new AudioSample("c4", "sounds/b_kalimba_c4.wav");
-        new AudioSample("d4", "sounds/c_kalimba_d4.wav");
-        new AudioSample("e4", "sounds/d_kalimba_e4.wav");
-        new AudioSample("fsharp4", "sounds/e_kalimba_fsharp4.wav");
-        new AudioSample("g4", "sounds/f_kalimba_g4.wav");
-        new AudioSample("a4", "sounds/g_kalimba_a4.wav");
-        new AudioSample("b4", "sounds/h_kalimba_b4.wav");
-        new AudioSample("c5", "sounds/i_kalimba_c5.wav");
-        new AudioSample("b3", "sounds/j_kalimba_d5.wav");
-        new AudioSample("e5", "sounds/k_kalimba_e5.wav");
-        new AudioSample("fsharp5", "sounds/l_kalimba_fsharp5.wav");
-        new AudioSample("g5", "sounds/m_kalimba_g5.wav");
-        new AudioSample("a5", "sounds/n_kalimba_a5.wav");
-        new AudioSample("b5", "sounds/o_kalimba_b5.wav");
-        new AudioSample("c6", "sounds/p_kalimba_c6.wav");
-        new AudioSample("death", "sounds/death.wav");
+        if (darworms.doAudio ) {
+            darworms.masterGainNode = darworms.audioContext.createGain(0.5);
+
+
+            //   loading AudioSample Files
+            new AudioSample("b3", "sounds/a_kalimba_b3.wav");
+            new AudioSample("c4", "sounds/b_kalimba_c4.wav");
+            new AudioSample("d4", "sounds/c_kalimba_d4.wav");
+            new AudioSample("e4", "sounds/d_kalimba_e4.wav");
+            new AudioSample("fsharp4", "sounds/e_kalimba_fsharp4.wav");
+            new AudioSample("g4", "sounds/f_kalimba_g4.wav");
+            new AudioSample("a4", "sounds/g_kalimba_a4.wav");
+            new AudioSample("b4", "sounds/h_kalimba_b4.wav");
+            new AudioSample("c5", "sounds/i_kalimba_c5.wav");
+            new AudioSample("b3", "sounds/j_kalimba_d5.wav");
+            new AudioSample("e5", "sounds/k_kalimba_e5.wav");
+            new AudioSample("fsharp5", "sounds/l_kalimba_fsharp5.wav");
+            new AudioSample("g5", "sounds/m_kalimba_g5.wav");
+            new AudioSample("a5", "sounds/n_kalimba_a5.wav");
+            new AudioSample("b5", "sounds/o_kalimba_b5.wav");
+            new AudioSample("c6", "sounds/p_kalimba_c6.wav");
+            new AudioSample("death", "sounds/death.wav");
+        }
 
 
     }

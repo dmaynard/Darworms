@@ -119,8 +119,17 @@ darworms.main = (function () {
         }
         setTypes();
     }
+    var showSettings = function () {
+        if( darworms.theGame && darworms.theGame.gameState == darworms.gameStates.paused) {
+            $('#geometryradios').hide();
+        } else {
+            $('#geometryradios').show();
+        }
 
+        console.log(" showSettings ");
+    }
     var setupGridGeometry = function () {
+        console.log(" pagebeforeshow setupGridGeometry ");
         var gridGeometry = darworms.dwsettings.gridGeometry;
 
         switch (gridGeometry) {
@@ -139,15 +148,23 @@ darworms.main = (function () {
         }
     }
 
-    var setGridGeometry = function () {
+    var applySettings = function () {
         var selectedGeometry = $('input[name=geometry-radio-choice]:checked').val();
         darworms.dwsettings.gridGeometry = selectedGeometry;
-        darworms.dwsettings.backGroundTheme = $('#backg').slider().val();
+
+        if ( darworms.dwsettings.backGroundTheme !==  $('#backg').slider().val()) {
+            darworms.dwsettings.backGroundTheme = $('#backg').slider().val();
+            darworms.theGame.clearCanvas();
+            darworms.theGame.drawCells();
+        }
         darworms.dwsettings.doAnimations = $('#doanim').slider().val();
         darworms.doAudio = $('#audioon').slider().val();
         console.log(" darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
         console.log(" darworms.doAudio " + darworms.doAudio);
         darworms.masterAudioVolume = $("#audiovol").val() / 100;
+        darworms.graphics.fps = $("#fps").val();
+        darworms.graphics.frameInterval =  1000 / darworms.graphics.fps;
+
         console.log(" darworms.masterAudioVolume " + darworms.masterAudioVolume);
     }
 
@@ -208,7 +225,17 @@ darworms.main = (function () {
             }
         }
     };
+    darworms.menuButton = function() {
+        console.log(" menuButton");
+        if(darworms.theGame.gameState == darworms.gameStates.running ) {
+            darworms.theGame.gameState = darworms.gameStates.paused;
+            $.mobile.changePage("#settingspage");
+            $("#startpause .ui-btn-text").text("Resume Game");
+        } else {
+            $.mobile.changePage("#menupage");
+        }
 
+    }
     darworms.startgame = function (startNow) {
         var heightSlider = Math.floor($("#gridsize").val());
         var curScreen = new Point($('#wcanvas').width(), $('#wcanvas').height());
@@ -449,7 +476,9 @@ darworms.main = (function () {
         }
 
         if (darworms.doAudio ) {
-            darworms.masterGainNode = darworms.audioContext.createGain(0.5);
+            if(darworms.audioContext.createGain !== undefined) {
+                darworms.masterGainNode = darworms.audioContext.createGain(0.5);
+            }
 
 
             //   loading AudioSample Files
@@ -530,7 +559,8 @@ darworms.main = (function () {
         init:init,
         setSelectedDarwormType:setSelectedDarwormType,
         setupRadioButtons:setupRadioButtons,
-        setGridGeometry:setGridGeometry,
+        applySettings:applySettings,
+        showSettings: showSettings,
         setupGridGeometry:setupGridGeometry,
         initPlayPage:initPlayPage,
         wormEventHandler:wormEventHandler,

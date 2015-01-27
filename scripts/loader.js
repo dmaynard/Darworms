@@ -124,7 +124,7 @@ window.addEventListener("load", function () {
     Modernizr.load([
         {
             load:[
-                "scripts/AudioSample",
+                "scripts/AudioSample.js",
                 "scripts/Point.js",
                 "scripts/Grid.js",
                 "scripts/Worm.js",
@@ -148,8 +148,9 @@ window.addEventListener("load", function () {
                 // });
                 $("[data-darworm='selector']").on('pageshow', darworms.main.setupRadioButtons);
                 $("[data-darworm='selector']").on('pagehide', darworms.main.setSelectedDarwormType);
+                $("#settingspage").on('pageshow', darworms.main.showSettings);
                 $("#settingspage").on('pagebeforeshow', darworms.main.setupGridGeometry);
-                $("#settingspage").on('pagehide', darworms.main.setGridGeometry);
+                $("#settingspage").on('pagehide', darworms.main.applySettings);
                 $("#playpage").on('pageshow', darworms.main.initPlayPage);
                 darworms.wCanvasPixelDim = new Point();
                 console.log("Initial Screen Size " + darworms.wCanvasPixelDim.format());

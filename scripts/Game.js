@@ -340,7 +340,7 @@ darworms.gameModule = (function() {
             if (currentState == 0x3F) {
                 // last sample is death sound
                 if (active.state != wormStates.dead) {
-                    if(darworms.doAudio == 1) {
+                    if(darworms.doAudio == 1 && darworms.dwsettings.doAnimations == "true") {
                         if (darworms.audioSamples[darworms.audioSamples.length-1]) {
                             darworms.audioSamples[darworms.audioSamples.length-1].playSample();
                         }
@@ -650,7 +650,7 @@ darworms.gameModule = (function() {
             if (cellsInZoomPane.x < darworms.theGame.grid.width - 2) {
                 cellsInZoomPane.x = cellsInZoomPane.x + 1;
                 cellsInZoomPane.y = cellsInZoomPane.y + 1;
-                cellsInZoomPane.y = cellsInZoomPane.y + 1;
+
                 console.log( "doZoomOut: returning true  wPane size ="  +  cellsInZoomPane.x );
                 darworms.theGame.zoomPane.canvasIsDirty = true;
                 darworms.theGame.zoomPane.setSize(new Point(cellsInZoomPane.x,cellsInZoomPane.y))
@@ -666,7 +666,10 @@ darworms.gameModule = (function() {
 
     function init () {
         // used to initialize variable in this module's closure
+        console.log(" darworms.main.wCanvas,width: " + darworms.main.wCanvas.width );
         gameCanvas = darworms.main.wCanvas;
+        console.log(" gameCanvas.width " + darworms.main.wCanvas.width );
+
         wGraphics = darworms.main.wGraphics;
         nextToMove = 0;
         scoreCanvas = document.getElementById("scorecanvas");

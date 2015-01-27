@@ -191,7 +191,7 @@
         <div id="menufooter" data-role=navbar>
             <ul>
                 <li><a id="startpause" data-role=button onclick=darworms.startgame()>Start Game</a></li>
-                <li><a href=#menupage>Menu</a></li>
+                <li><a id="menubutton" data-role=button onclick=darworms.menuButton()>Menu</a></li>
             </ul>
         </div>
     </div>
@@ -203,7 +203,7 @@
         <h1>Settings</h1>
         <a href="#playpage" >Play</a>
     </div>
-    <div data-role=content>
+    <div data-role=content id="geometryradios">
         <form>
             <fieldset data-role="controlgroup" id="geometry-radiobuttons">
                 <legend>At edge of grid Darworms will:</legend>
@@ -223,6 +223,8 @@
             <label for="gridsize">Grid Size:</label>
             <input type="range" name="gridsize" id="gridsize" value="18" step="2" min="4" max="64"/>
         </div>
+        </div>
+    <div data-role=content id="realtimesettings">
         <div data-role="fieldcontain">
             <label for="fps">Frames/Sec:</label>
             <input type="range" name="fps" id="fps" value="30" min="1" max="60"/>

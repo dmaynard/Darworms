@@ -146,6 +146,9 @@ window.addEventListener("load", function () {
                 //    console.log("pagebeforeshow");
                 //   alert("pagebeforeshow");
                 // });
+                window.onerror = function (msg, url, line ) {
+                    alert ( msg + " " + url + " " + line);
+                }
                 $("[data-darworm='selector']").on('pageshow', darworms.main.setupRadioButtons);
                 $("[data-darworm='selector']").on('pagehide', darworms.main.setSelectedDarwormType);
                 $("#settingspage").on('pageshow', darworms.main.showSettings);

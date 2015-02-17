@@ -3,13 +3,13 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
     <title>DARWORMS </title>
     <!--
     <link rel="stylesheet" href="themes/darworms-themes.css.min.css" />
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css"/>
     -->
-    <link rel="apple-touch-icon-precomposed" href="images/DarwormsIcon-57x57.png" />
+    <link rel="apple-touch-icon-precomposed" href="images/DarwormsIcon-57x57.png"/>
     <link rel="apple-touch-icon-precomposed" href="images/DarwormsIcon-72x72.png" sizes="72x72"/>
     <link rel="apple-touch-icon-precomposed" href="images/DarwormsIcon-114x114.png" sizes="114x114"/>
 
@@ -23,7 +23,7 @@
 
     <style type=text/css>
 
-        .ui-page .ui-content  .ui-btn.playerbutton1 .ui-btn-inner {
+        .ui-page .ui-content .ui-btn.playerbutton1 .ui-btn-inner {
             color: red;
             background: #8c8c8c;
             font-size: 0.8em;
@@ -31,7 +31,7 @@
             padding-top: 4px;
         }
 
-        .ui-page .ui-content  .ui-btn.playerbutton2 .ui-btn-inner {
+        .ui-page .ui-content .ui-btn.playerbutton2 .ui-btn-inner {
             color: green;
             background: #8c8c8c;
             font-size: 0.8em;
@@ -39,7 +39,7 @@
             padding-top: 4px;
         }
 
-        .ui-page .ui-content  .ui-btn.playerbutton3 .ui-btn-inner {
+        .ui-page .ui-content .ui-btn.playerbutton3 .ui-btn-inner {
             color: blue;
             background: #8c8c8c;
             font-size: 0.8em;
@@ -47,20 +47,23 @@
             padding-top: 4px;
         }
 
-        .ui-page .ui-content  .ui-btn.playerbutton4 .ui-btn-inner {
+        .ui-page .ui-content .ui-btn.playerbutton4 .ui-btn-inner {
             color: yellow;
             background: #8c8c8c;
             font-size: 0.8em;
             padding-bottom: 4px;
             padding-top: 4px;
         }
+
         .right {
             float: right;
             width: 100px;
         }
+
         #scorecanvas {
             display: inline-block;
         }
+
         #background {
             display: inline-block;
 
@@ -72,17 +75,18 @@
 
         }
 
-
         @media all and (max-height: 400px) {
             #canvascontainer {
                 width: 70%;
                 height: 80%;
                 float: left;
             }
+
             #navcontainer {
                 display: none;
             }
-             #landnavcontainer {
+
+            #landnavcontainer {
                 width: 30%;
                 height: 80%;
                 float: right;
@@ -91,6 +95,7 @@
                 padding-bottom: 20px;
 
             }
+
             #scorecanvas {
                 height: 20px;
                 width: 70%;
@@ -99,6 +104,7 @@
             }
 
         }
+
         @media all and (min-height: 399px) {
 
             #wcanvas {
@@ -111,6 +117,7 @@
                 display: none;
                 float: right;
             }
+
             #scorecanvas {
                 height: 30px;
             }
@@ -118,7 +125,6 @@
         }
 
     </style>
-
 
 
 </head>
@@ -138,12 +144,12 @@
 <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true>
     <div data-role="content">
         <div id="canvascontainer" class="canvas-container">
-            <canvas id="wcanvas"  class="wcanvasclass" width="320" height="336"  ></canvas>
+            <canvas id="wcanvas" class="wcanvasclass" width="320" height="336"></canvas>
             <canvas id="scorecanvas" class="scorecanvasclass" width="320" height="20"></canvas>
         </div>
 
         <!-- div data-role="controlgroup" data-type="horizontal" -->
-        <div id="navcontainer" class='nav-container' data-role=navbar >
+        <div id="navcontainer" class='nav-container' data-role=navbar>
             <ul>
                 <li>
                     <div id="p1button" class="playerbutton1" data-role=button onclick="darworms.main.player1();">
@@ -164,7 +170,7 @@
                 </li>
             </ul>
         </div>
-        <div id="landnavcontainer"  >
+        <div id="landnavcontainer">
             <ul>
                 <li>
                     <div id="landp1button" class="playerbutton1" data-role=button onclick="darworms.main.player1();">
@@ -172,22 +178,25 @@
                     </div>
                 </li>
                 <li>
-                    <div id="landp2button" class="playerbutton2" data-role=button onclick="darworms.main.player2();">None
+                    <div id="landp2button" class="playerbutton2" data-role=button onclick="darworms.main.player2();">
+                        None
                     </div>
                 </li>
                 <li>
-                    <div id="landp3button" class="playerbutton3" data-role=button onclick="darworms.main.player3();">None
+                    <div id="landp3button" class="playerbutton3" data-role=button onclick="darworms.main.player3();">
+                        None
                     </div>
                 </li>
                 <li>
-                    <div id="landp4button" class="playerbutton4" data-role=button onclick="darworms.main.player4()"> None
+                    <div id="landp4button" class="playerbutton4" data-role=button onclick="darworms.main.player4()">
+                        None
                     </div>
                 </li>
             </ul>
         </div>
     </div>
 
-    <div data-role=footer data-theme="b" >
+    <div data-role=footer data-theme="b">
         <div id="menufooter" data-role=navbar>
             <ul>
                 <li><a id="startpause" data-role=button onclick=darworms.startgame()>Start Game</a></li>
@@ -199,15 +208,17 @@
 </div>
 <div data-role="page" data-theme="a" id=settingspage data-add-back-btn=true data-back-btn-text=Menu>
     <div data-role="header">
-        <a href="#menupage" >Menu</a>
+        <a href="#menupage">Menu</a>
+
         <h1>Settings</h1>
-        <a href="#playpage" >Play</a>
+        <a href="#playpage">Play</a>
     </div>
     <div data-role=content id="geometryradios">
         <form>
             <fieldset data-role="controlgroup" id="geometry-radiobuttons">
                 <legend>At edge of grid Darworms will:</legend>
-                <input type="radio" name="geometry-radio-choice" id="geometry-radio-torus" checked = "checked" value="torus">
+                <input type="radio" name="geometry-radio-choice" id="geometry-radio-torus" checked="checked"
+                       value="torus">
                 <label for="geometry-radio-torus">Wrap around (Torus)</label>
 
                 <input type="radio" name="geometry-radio-choice" id="geometry-radio-falloff" value="falloff">
@@ -219,11 +230,11 @@
 
             </fieldset>
         </form>
-         <div data-role="fieldcontain">
+        <div data-role="fieldcontain">
             <label for="gridsize">Grid Size:</label>
-            <input type="range" name="gridsize" id="gridsize" value="18" step="2" min="4" max="64"/>
+            <input type="range" name="gridsize" id="gridsize" value="18" step="2" min="4" max="256"/>
         </div>
-        </div>
+    </div>
     <div data-role=content id="realtimesettings">
         <div data-role="fieldcontain">
             <label for="fps">Frames/Sec:</label>
@@ -247,7 +258,7 @@
     </div>
     <div data-role="controlgroup" data-type="horizontal">
         <fieldset data-role="controlgroup" data-type="horizontal">
-            <form id="doAudio" name="Audio" >
+            <form id="doAudio" name="Audio">
                 <label for="audioon">Audio:</label>
                 <select name="audioon" id="audioon" data-role="slider" data-mini='true'>
                     <option value=1>On</option>
@@ -259,14 +270,14 @@
     <div data-role="controlgroup" data-type="horizontal">
         <fieldset data-role="controlgroup" data-type="horizontal">
             <form id="animate" name="animate" class="right">
-              <label for="doanim">Show Moves:</label>
+                <label for="doanim">Show Moves:</label>
                 <select name="doanim" id="doanim" data-role="slider" data-mini='true'>
                     <option value=true>Yes</option>
                     <option value=false>No</option>
                 </select>
             </form>
         </fieldset>
-     </div>
+    </div>
 
 </div>
 <div data-role="page" data-theme="a" id=debugpage data-add-back-btn=true data-back-btn-text=Menu>
@@ -287,11 +298,11 @@
                 <br/>Average Interval: <b><span id="wormframeavetime">&nbsp;</span></b>
                 <br/>Target Interval: <b><span id="wormframetargettime">&nbsp;</span></b>
                 <br/>Percent Time in Draw: <b><span id="wormframepercenttime">&nbsp;</span></b>
-                <br/>  Total Time in Draw: <b><span id="wormframetotaltime">&nbsp;</span></b>
+                <br/> Total Time in Draw: <b><span id="wormframetotaltime">&nbsp;</span></b>
             </div>
         </div>
         <div>
-            <form id="newevent1info" name="newevent1info" >
+            <form id="newevent1info" name="newevent1info">
                 <label for="debug">Debug:</label>
                 <select name="debug" id="debug" data-role="slider" data-mini='true'>
                     <option value="0">Off</option>
@@ -312,9 +323,10 @@
     </div>
 </div>
 
-<div data-role="page" data-theme="c"   data-darworm="selector" id="red-darworm-page" data-selecteddarworm=0 >
+<div data-role="page" data-theme="c" data-darworm="selector" id="red-darworm-page" data-selecteddarworm=0>
     <div data-role="header">
-        <a href="#playpage" >Back</a>
+        <a href="#playpage">Back</a>
+
         <h1>Select Darworm</h1>
         <a href="#green-darworm-page" onclick="darworms.main.player2();">Next</a>
     </div>
@@ -338,11 +350,12 @@
     </div>
 </div>
 
-<div data-role="page" data-theme="d"  data-darworm="selector"  id="green-darworm-page" data-selecteddarworm=1>
+<div data-role="page" data-theme="d" data-darworm="selector" id="green-darworm-page" data-selecteddarworm=1>
     <div data-role="header">
-        <a href="#playpage" >Back</a>
+        <a href="#playpage">Back</a>
+
         <h1>Select Darworm</h1>
-        <a href="#blue-darworm-page" >Next</a>
+        <a href="#blue-darworm-page">Next</a>
     </div>
     <div data-role="content">
         <form>
@@ -366,9 +379,10 @@
 
 <div data-role="page" data-theme="e" data-darworm="selector" id="blue-darworm-page" data-selecteddarworm=2>
     <div data-role="header">
-        <a href="#playpage" >Back</a>
+        <a href="#playpage">Back</a>
+
         <h1>Select Darworm</h1>
-        <a href="#yellow-darworm-page" >Next</a>
+        <a href="#yellow-darworm-page">Next</a>
     </div>
     <div data-role="content">
         <form>
@@ -390,11 +404,12 @@
     </div>
 </div>
 
-<div data-role="page" data-theme="f"  data-darworm="selector" id="yellow-darworm-page" data-selecteddarworm=3>
+<div data-role="page" data-theme="f" data-darworm="selector" id="yellow-darworm-page" data-selecteddarworm=3>
     <div data-role="header">
-        <a href="#playpage" >Back</a>
+        <a href="#playpage">Back</a>
+
         <h1>Select Darworm</h1>
-        <a href="#red-darworm-page" >Next</a>
+        <a href="#red-darworm-page">Next</a>
     </div>
     <div data-role="content">
         <form>

@@ -86,7 +86,7 @@ Worm.prototype.getMoveDir = function (value) {
     return this.dna[value & 0x3F];
 };
 Worm.prototype.shouldDrawScore = function () {
-    if (this.score !== this.prevScore  || (this.nMoves < 2)) {
+    if (this.score !== this.prevScore  || (this.nMoves <= 2)) {
         this.prevScore = this.score;
         return true;
     }

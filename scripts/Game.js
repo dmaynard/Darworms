@@ -73,6 +73,7 @@ darworms.gameModule = (function() {
         this.endScale = 1.0;
         // three second zoom animation
         this.targetZoomFrames = 60;
+        this.bullseyeoffset = new Point(0,0);
 
     }
 
@@ -185,19 +186,26 @@ darworms.gameModule = (function() {
         wGraphics.save();
     //    console.log( "drawSelectCell  canvas "  + gameCanvas.width + " height "  + gameCanvas.height);
     //    console.log( "drawSelectCell  grid "  + this.grid.width + " height "  + this.grid.height);
-
+        //   setting this transform may not need to be done every anim frame
+        //  it only changes on zoom in or zoom out I think
         var hoffset = - this.zoomPane.scale.x/4;
-
+        var voffset = 0;
         if((focusPoint.y & 1) === 1  && (cellsInZoomPane.x > 1))  {
             hoffset =   this.zoomPane.scale.x/4;
             // console.log( "drawSelectCell  hoffset "  + hoffset);
         }
-        //  sconsole.log( "drawSelectCell  hoffset "  + hoffset + " scale.x = " + this.zoomPane.scale.x);
+        if ((this.zoomPane.cHeight & 1) != 1) {
+            hoffset += this.zoomPane.scale.x/2;
+            voffset += this.zoomPane.scale.y/2;
+        }
+        this.bullseyeoffset = new Point(hoffset,voffset);
+        // console.log( "drawSelectCell  hoffset "  + hoffset + " scale.x = " + this.zoomPane.scale.x);
         wGraphics.setTransform((gameCanvas.width-(2.0*this.margin))/2, 0,0, (gameCanvas.height-(2.0*this.margin))/2,
-            (gameCanvas.width/2) + hoffset , (gameCanvas.height)/2 );
-        if( (darworms.graphics.animFrame && 0xFF) == 0) {
+            (gameCanvas.width/2) + hoffset , (gameCanvas.height)/2 + voffset);
+        if( (darworms.graphics.animFrame % 0xFF) == 0) {
             console.log( " drawSelectCell  hoffset "  + hoffset);
-            console.log("  drawSelectCell pixel center is " + new Point( (gameCanvas.width/2) + hoffset , (gameCanvas.height)/2).format());
+            console.log( " drawSelectCell  voffset "  + voffset);
+            console.log("  drawSelectCell pixel center is " + new Point( (gameCanvas.width/2) + hoffset , (gameCanvas.height)/2 + voffset).format());
         }
 
         var owner = this.grid.spokeAt( focusPoint, 7);
@@ -617,15 +625,24 @@ darworms.gameModule = (function() {
         var select = -1;
         for (var i = 0; i < 6 ; i = i + 1) {
             if ((outvec & darworms.outMask[i]) === 0) {
-                dist = point.dist(new Point(darworms.theGame.xPts[i], darworms.theGame.yPts[i]));
+                target = new Point((darworms.theGame.xPts[i] * .75) * (gameCanvas.clientWidth/2) +
+                                     darworms.theGame.bullseyeoffset.x + (gameCanvas.clientWidth/2) + darworms.theGame.zoomPane.pMargin,
+
+                    ((darworms.theGame.yPts[i] * .75) * (gameCanvas.clientHeight)/2) +
+                                     darworms.theGame.bullseyeoffset.y + (gameCanvas.clientHeight)/2 + darworms.theGame.zoomPane.pMargin);
+
+                console.log (" direction: " + i + " target point " + target.format());
+                console.log( "Touch Point: " + point.format());
+                dist = target.dist(point);
+                //  Actual pixel coordinates
                 if (dist < minDist) {
                     minDist = dist;
                     select = i;
                 }
-                // console.log( "selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
+                console.log( "selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
             }
         }
-        if ((minDist < 0.5)  && (select >= 0)) {
+        if ((minDist < gameCanvas.clientWidth/8)  && (select >= 0)) {
             focusWorm.dna[focusValue & 0x3F] = select;
             focusWorm.numChoices += 1;
             //  TODO setState to animFromUI
@@ -637,7 +654,7 @@ darworms.gameModule = (function() {
     };
     var doZoomOut = function ( tapPoint ) {
         if (tapPoint.dist(new Point(0, 1.0)) < 0.2 ) {
-            if (cellsInZoomPane.x >= 5) {
+            if (cellsInZoomPane.x > 5) {
                 cellsInZoomPane.x = cellsInZoomPane.x  - 1;
                 cellsInZoomPane.y = cellsInZoomPane.y - 1;
             }
@@ -647,7 +664,7 @@ darworms.gameModule = (function() {
             return true;
         }
         if (tapPoint.dist(new Point(0, -1.0)) < 0.2 ) {
-            if (cellsInZoomPane.x < darworms.theGame.grid.width - 2) {
+            if (cellsInZoomPane.x < darworms.theGame.grid.width) {
                 cellsInZoomPane.x = cellsInZoomPane.x + 1;
                 cellsInZoomPane.y = cellsInZoomPane.y + 1;
 
@@ -655,9 +672,8 @@ darworms.gameModule = (function() {
                 darworms.theGame.zoomPane.canvasIsDirty = true;
                 darworms.theGame.zoomPane.setSize(new Point(cellsInZoomPane.x,cellsInZoomPane.y))
                 // theGame.drawZoom(theGame.zoomPane.focus, theGame.cellsInZoomPane);
-
-                return true;
             }
+            return true;
         }
         return false;
 

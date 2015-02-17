@@ -120,7 +120,7 @@ darworms.main = (function () {
         setTypes();
     }
     var showSettings = function () {
-        if( darworms.theGame && darworms.theGame.gameState == darworms.gameStates.paused) {
+        if( darworms.theGame && darworms.theGame.gameState !== darworms.gameStates.over) {
             $('#geometryradios').hide();
         } else {
             $('#geometryradios').show();
@@ -154,8 +154,10 @@ darworms.main = (function () {
 
         if ( darworms.dwsettings.backGroundTheme !==  $('#backg').slider().val()) {
             darworms.dwsettings.backGroundTheme = $('#backg').slider().val();
-            darworms.theGame.clearCanvas();
-            darworms.theGame.drawCells();
+            if (darworms.theGame ) {
+                darworms.theGame.clearCanvas();
+                darworms.theGame.drawCells();
+            }
         }
         darworms.dwsettings.doAnimations = $('#doanim').slider().val();
         darworms.doAudio = $('#audioon').slider().val();
@@ -212,16 +214,13 @@ darworms.main = (function () {
         console.log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
         // console.log (" wcanvas coord width " + darworms.main.wCanvas.width + " coord height "  + darworms.main.wCanvas.height  );
         if (darworms.theGame.gameState === darworms.gameStates.waiting) {
-            // TODO  - 50 is because canvas appears at y = 50 and touchY is screen relative
-            // or is this because of the JetBrains Debug banner at the top ?
+
             if (darworms.gameModule.doZoomOut(new Point((touchX / cWidth) * 2.0 - 1.0, ((touchY) / cHeight) * 2.0 - 1.0))) {
                 console.log(" do zoomout here");
             } else {
-                darworms.gameModule.selectDirection(new Point((touchX / cWidth) * 2.0 - 1.0, ((touchY) / cHeight) * 2.0 - 1.0));
-                // console.log ( new Point (
-                //     (touchX/cWidth)*2.0 - 1.0,
-                //     (touchY/cHeight)*2.0 - 1.0).format()
-                // );
+                console.log ( " touch event at "+  new Point(touchX, touchY).format);
+                darworms.gameModule.selectDirection(new Point(touchX , touchY ));
+
             }
         }
     };
@@ -232,9 +231,12 @@ darworms.main = (function () {
             $.mobile.changePage("#settingspage");
             $("#startpause .ui-btn-text").text("Resume Game");
         } else {
-            $.mobile.changePage("#menupage");
+            if(darworms.theGame.gameState == darworms.gameStates.waiting ) {
+                $.mobile.changePage("#settingspage");
+            } else {
+                $.mobile.changePage("#menupage");
+            }
         }
-
     }
     darworms.startgame = function (startNow) {
         var heightSlider = Math.floor($("#gridsize").val());

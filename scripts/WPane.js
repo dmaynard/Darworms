@@ -74,7 +74,7 @@ WPane.prototype.setCenter = function ( center, size ) {
         (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
     this.offset = new Point(center.x - Math.floor(this.cWidth /2), center.y - Math.floor(this.cHeight /2));
     this.offset.wrap(this.grid.width, this.grid.height);
-    // console.log( "         WPane.prototype.setCenter  offset after wroa : "   + this.offset.format()  );
+    // console.log( "         WPane.prototype.setCenter  offset after wrap : "   + this.offset.format()  );
 
 };
 WPane.prototype.setSize = function ( size ) {
@@ -91,7 +91,8 @@ WPane.prototype.setSize = function ( size ) {
 
     this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
         (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
-    console.log( "     WPane.prototype.setSize  scale.x: "   + this.scale.x  );
+    // console.log( "     WPane.prototype.setSize  scale.x: "   + this.scale.x  + " yscale " + this.scale.x);
+    // console.log(this.scale.format() );
 };
 WPane.prototype.drawCells = function () {
     this.clear();

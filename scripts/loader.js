@@ -32,7 +32,16 @@ var darworms = {
         uiThen: 0,
         elapsed: 0,
         uiElapsed: 0,
-        enableTransitionStates: false
+        enableTransitionStates: false,
+        vertex_x: [0.5, 0.5, 0, -0.5, -0.5, 0],
+        vertex_fudge: 0.12,
+        vertex_y: [0.3125, -0.3125, -0.6875, -0.3125, 0.3125, 0.6875],
+        hexSize: 1.0,
+        sqrt3: Math.sqrt(3),
+        // hexEdgeLength: 1.0/Math.sqrt(3.0)
+        hexEdgeLength: undefined
+
+
 
     },
     selectedDarworm:0,

@@ -162,13 +162,18 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
      */
     var owner = this.grid.spokeAt( gPoint, 7);
     if (owner > 0 ) {
-        this.ctx.strokeStyle = darworms.dwsettings.colorTable[owner & 0xF];
-        this.ctx.lineWidth = 1.0/this.scale.x;
+        this.ctx.fillStyle = darworms.dwsettings.colorTable[owner & 0xF];
+
         this.ctx.beginPath();
-        this.ctx.arc(0, 0, 0.2, 0, Math.PI*2, true);
-        this.ctx.closePath();
+        this.ctx.moveTo(darworms.graphics.vertex_x[0],darworms.graphics.vertex_y[0]);
+        for (var j = 1; j < 6 ; j = j + 1) {
+            this.ctx.lineTo(darworms.graphics.vertex_x[j], darworms.graphics.vertex_y[j]);
+        }
+        // this.ctx.moveTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
         this.ctx.stroke();
-    } else {
+        this.ctx.closePath();
+        this.ctx.fill();
+        this.ctx.stroke();    } else {
         this.ctx.fillStyle = darworms.dwsettings.cellBackground[1-darworms.dwsettings.backGroundTheme];
         this.ctx.lineWidth = 1.0/this.scale.x;
         this.ctx.beginPath();
@@ -177,6 +182,19 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
         this.ctx.fill();
 
     }
+
+    //  draw hex outline
+    this.ctx.strokeStyle = darworms.dwsettings.cellBackground[1-darworms.dwsettings.backGroundTheme];
+    this.ctx.beginPath();
+    this.ctx.moveTo(darworms.graphics.vertex_x[0],darworms.graphics.vertex_y[0]);
+    for (var j = 1; j < 6 ; j = j + 1) {
+        this.ctx.lineTo(darworms.graphics.vertex_x[j], darworms.graphics.vertex_y[j]);
+    }
+    this.ctx.lineTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
+    this.ctx.stroke();
+    this.ctx.closePath();
+
+
     var outvec = this.grid.outVectorsAt(gPoint);
     var invec = this.grid.inVectorsAt(gPoint);
     // console.log (" drawCell at" +  gPoint.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));

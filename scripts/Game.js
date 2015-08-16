@@ -47,7 +47,9 @@ darworms.gameModule = (function() {
 
 
         this.zoomPane = new WPane(this.grid, cellsInZoomPane , new Point( gridWidth >> 1, gridHeight >>1) , document.getElementById("wcanvas"))
-        this.scale = new Point((gameCanvas.width - (2*this.margin))/gridWidth, (gameCanvas.height- (2*this.margin))/gridHeight);
+       // this.scale = new Point((gameCanvas.width - (2*this.margin))/gridWidth, (gameCanvas.height- (2*this.margin))/gridHeight);
+        //TODO   fix this  *restore to above ?
+        this.scale = new Point((gameCanvas.width - (2*this.margin))/(gridWidth+0.5), (gameCanvas.height- (4*this.margin))/gridHeight);
         this.origin = new Point( gridWidth >> 1, gridHeight >>1);
         focusPoint = this.origin;
         console.log( "newGame  scalex "  + (gameCanvas.width - (2*this.margin))/gridWidth);
@@ -128,17 +130,28 @@ darworms.gameModule = (function() {
         // wGraphics.save();
         this.gsetTranslate(point);
         wGraphics.fillStyle =  darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme];
-        wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
+        // wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
         var owner = this.grid.spokeAt( point, 7);
+        wGraphics.lineWidth = 2.0/this.scale.x;
+
+
         if (owner > 0 ) {
             wGraphics.strokeStyle = darworms.dwsettings.colorTable[owner & 0xF];
-            wGraphics.lineWidth = 2.0/this.scale.x;
+            wGraphics.fillStyle = darworms.dwsettings.colorTable[owner & 0xF];
+
             wGraphics.beginPath();
-            wGraphics.arc(0, 0, 0.25, 0, Math.PI*2, true);
-            wGraphics.closePath();
+            wGraphics.moveTo(darworms.graphics.vertex_x[0],darworms.graphics.vertex_y[0]);
+            for (var j = 1; j < 6 ; j = j + 1) {
+                wGraphics.lineTo(darworms.graphics.vertex_x[j], darworms.graphics.vertex_y[j]);
+            }
+           // wGraphics.moveTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
             wGraphics.stroke();
+            wGraphics.closePath();
+            wGraphics.fill();
+            wGraphics.stroke();
+
         } else {
-            // wGraphics.fillStyle =  darworms.dwsettings.colorTable[this.grid.spokeAt(point,6) & 0xF];
+            wGraphics.fillStyle =  darworms.dwsettings.colorTable[this.grid.spokeAt(point,6) & 0xF];
             wGraphics.fillStyle =  darworms.dwsettings.cellBackground[1-darworms.dwsettings.backGroundTheme];
             wGraphics.lineWidth = 2.0/this.scale.x;
             wGraphics.beginPath();
@@ -146,7 +159,20 @@ darworms.gameModule = (function() {
             wGraphics.closePath();
             wGraphics.fill();
 
+
         }
+
+        //  draw hex outline
+        wGraphics.strokeStyle = darworms.dwsettings.cellBackground[1-darworms.dwsettings.backGroundTheme];
+        wGraphics.beginPath();
+        wGraphics.moveTo(darworms.graphics.vertex_x[0],darworms.graphics.vertex_y[0]);
+        for (var j = 1; j < 6 ; j = j + 1) {
+            wGraphics.lineTo(darworms.graphics.vertex_x[j], darworms.graphics.vertex_y[j]);
+        }
+        wGraphics.lineTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
+        wGraphics.stroke();
+        wGraphics.closePath();
+
         var outvec = this.grid.outVectorsAt(point);
         var invec = this.grid.inVectorsAt(point);
         // console.log (" drawCell at" +  point.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));

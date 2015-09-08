@@ -162,8 +162,7 @@ WPane.prototype.drawCell = function( wPoint,  gPoint) {
      */
     var owner = this.grid.spokeAt( gPoint, 7);
     if (owner > 0 ) {
-        this.ctx.fillStyle = darworms.dwsettings.colorTable[owner & 0xF];
-
+        this.ctx.fillStyle = darworms.dwsettings.alphaColorTable[owner & 0xF];
         this.ctx.beginPath();
         this.ctx.moveTo(darworms.graphics.vertex_x[0],darworms.graphics.vertex_y[0]);
         for (var j = 1; j < 6 ; j = j + 1) {

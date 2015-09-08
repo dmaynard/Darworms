@@ -137,8 +137,7 @@ darworms.gameModule = (function() {
 
         if (owner > 0 ) {
             wGraphics.strokeStyle = darworms.dwsettings.colorTable[owner & 0xF];
-            wGraphics.fillStyle = darworms.dwsettings.colorTable[owner & 0xF];
-
+            wGraphics.fillStyle = darworms.dwsettings.alphaColorTable[owner & 0xF];
             wGraphics.beginPath();
             wGraphics.moveTo(darworms.graphics.vertex_x[0],darworms.graphics.vertex_y[0]);
             for (var j = 1; j < 6 ; j = j + 1) {

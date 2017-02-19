@@ -147,7 +147,7 @@ darworms.gameModule = (function() {
             wGraphics.stroke();
             wGraphics.closePath();
             wGraphics.fill();
-            wGraphics.stroke();
+            // wGraphics.stroke();
 
         } else {
             wGraphics.fillStyle =  darworms.dwsettings.colorTable[this.grid.spokeAt(point,6) & 0xF];
@@ -163,6 +163,7 @@ darworms.gameModule = (function() {
 
         //  draw hex outline
         wGraphics.strokeStyle = darworms.dwsettings.cellBackground[1-darworms.dwsettings.backGroundTheme];
+        wGraphics.lineWidth =  1.0/this.scale.x;
         wGraphics.beginPath();
         wGraphics.moveTo(darworms.graphics.vertex_x[0],darworms.graphics.vertex_y[0]);
         for (var j = 1; j < 6 ; j = j + 1) {
@@ -413,6 +414,7 @@ darworms.gameModule = (function() {
                 var next = this.grid.next(active.pos,direction);
                 if (next.isEqualTo(darworms.dwsettings.noWhere)) { // fell of edge of world
                     active.state = wormStates.dead;
+                    active.died = true;
                 } else {
                     active.score = active.score + this.grid.move(active.pos,next,direction,active.colorIndex);
                     this.numMoves = this.numMoves + 1;
@@ -629,6 +631,7 @@ darworms.gameModule = (function() {
                 // document.getElementById("startpause").innerHTML = "Start Game";
                 $("#startpause .ui-btn-text").text("Start Game");
                 darworms.theGame.showTimes();
+                updateScores();
                 darworms.theGame.gameState = darworms.gameStates.over;
                 // theGame.clearCanvas();
                 // alert("Game Over ");
@@ -734,4 +737,3 @@ darworms.gameModule = (function() {
     };
 
 })();/* end of Game */
-

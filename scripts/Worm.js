@@ -14,6 +14,7 @@ function Worm(colorIndex, state) {
     this.score = 0;
     this.prevScore = 0;
     this.numChoices = 0;
+    this.died = false;
     this.notes = [];
 
    // for (var j = 0; j < 6 ; j = j+ 1) {
@@ -81,6 +82,7 @@ Worm.prototype.init = function( wType) {
 Worm.prototype.getMoveDir = function (value) {
     if (value === 0x3F)  {  // trapped
         this.state = wormStates.dead;
+        this.died = true;
         return 6;
     }
     return this.dna[value & 0x3F];
@@ -89,6 +91,10 @@ Worm.prototype.shouldDrawScore = function () {
     if (this.score !== this.prevScore  || (this.nMoves <= 2)) {
         this.prevScore = this.score;
         return true;
+    }
+    if (this.died) {
+      this.died = false; // one-shot
+      return true;
     }
     return false;
 };

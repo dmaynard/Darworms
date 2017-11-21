@@ -629,7 +629,7 @@ darworms.gameModule = (function() {
                 console.log(" Game Over");
                 clearInterval(darworms.graphics.timer);
                 // document.getElementById("startpause").innerHTML = "Start Game";
-                $("#startpause .ui-btn-text").text("Start Game");
+                $("#startpause").text("Start Game");
                 darworms.theGame.showTimes();
                 updateScores();
                 darworms.theGame.gameState = darworms.gameStates.over;

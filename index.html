@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon-precomposed" href="images/DarwormsIcon-72x72.png" sizes="72x72"/>
     <link rel="apple-touch-icon-precomposed" href="images/DarwormsIcon-114x114.png" sizes="114x114"/>
 
-    <link rel="stylesheet" href="themes/darworms-theme.min.css"/>
+    <link rel="stylesheet" href="themes/darworms-theme.css"/>
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css"/>
 
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
@@ -23,7 +23,7 @@
 
     <style type=text/css>
 
-        .ui-page .ui-content .ui-btn.playerbutton1 .ui-btn-inner {
+        .ui-page .ui-content .ui-block-a.playerbutton1 .ui-block-a {
             color: red;
             background: #8c8c8c;
             font-size: 0.8em;
@@ -59,6 +59,13 @@
             float: right;
             width: 100px;
         }
+        .ui-grayed-out {
+          opacity: 0.4;
+        }
+
+        .ui-opaque {
+          opacity: 1.0;
+        }
 
         #scorecanvas {
             display: inline-block;
@@ -78,7 +85,7 @@
         @media all and (max-height: 400px) {
             #canvascontainer {
                 width: 70%;
-                height: 80%;
+                height: 75%;
                 float: left;
             }
 
@@ -87,13 +94,12 @@
             }
 
             #landnavcontainer {
-                width: 30%;
-                height: 80%;
-                float: right;
+                height: 70%;
+                float: left;
                 display: block;
                 padding-top: 10px;
-                padding-bottom: 20px;
-
+                padding-left: 10px;
+                padding-bottom: 4px;
             }
 
             #scorecanvas {
@@ -109,13 +115,14 @@
 
             #wcanvas {
                 width: 100%;
-                height: 70%;
-                float: left;
+
+            }
+            #canvascontainer {
+
             }
 
             #landnavcontainer {
                 display: none;
-                float: right;
             }
 
             #scorecanvas {
@@ -144,60 +151,35 @@
 <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true>
     <div data-role="content">
         <div id="canvascontainer" class="canvas-container">
-            <canvas id="wcanvas" class="wcanvasclass" width="320" height="336"></canvas>
+            <canvas id="wcanvas" class="wcanvasclass" width="320" ></canvas>
             <canvas id="scorecanvas" class="scorecanvasclass" width="320" height="20"></canvas>
         </div>
 
         <!-- div data-role="controlgroup" data-type="horizontal" -->
-        <div id="navcontainer" class='nav-container' data-role=navbar>
+        <div id="navcontainer"  class="ui-grid-c" data-role=navbar >
             <ul>
-                <li>
-                    <div id="p1button" class="playerbutton1" data-role=button onclick="darworms.main.player1();">
-                        Random
-                    </div>
-                </li>
-                <li>
-                    <div id="p2button" class="playerbutton2" data-role=button onclick="darworms.main.player2();">None
-                    </div>
-                </li>
-                <li>
-                    <div id="p3button" class="playerbutton3" data-role=button onclick="darworms.main.player3();">None
-                    </div>
-                </li>
-                <li>
-                    <div id="p4button" class="playerbutton4" data-role=button onclick="darworms.main.player4()"> None
-                    </div>
-                </li>
+                <li> <a href="#red-darworm-page" id="p1button" data-theme="c"> Red  </a> </li>
+                <li> <a href="#green-darworm-page"  id="p2button" data-theme="d"> Green   </a> </li>
+                <li> <a href="#blue-darworm-page"  id="p3button" data-theme="e"> Blue  </a> </li>
+                <li> <a href="#yellow-darworm-page"  id="p4button" data-theme="f"> Yellow  </a> </li>
+
             </ul>
-        </div>
-        <div id="landnavcontainer">
+        </div >
+          <div id="landnavcontainer" >
+          <div data-role="controlgroup" >
             <ul>
-                <li>
-                    <div id="landp1button" class="playerbutton1" data-role=button onclick="darworms.main.player1();">
-                        Random
-                    </div>
-                </li>
-                <li>
-                    <div id="landp2button" class="playerbutton2" data-role=button onclick="darworms.main.player2();">
-                        None
-                    </div>
-                </li>
-                <li>
-                    <div id="landp3button" class="playerbutton3" data-role=button onclick="darworms.main.player3();">
-                        None
-                    </div>
-                </li>
-                <li>
-                    <div id="landp4button" class="playerbutton4" data-role=button onclick="darworms.main.player4()">
-                        None
-                    </div>
-                </li>
+                    <a href="#red-darworm-page" id="p1Lbutton" data-role= "button" data-theme="c"> Red  </a>
+                    <a href="#green-darworm-page"  id="p2Lbutton" data-role= "button" data-theme="d" width="100%"> Green  </a>
+                    <a href="#blue-darworm-page"  id="p3Lbutton" data-role= "button" data-theme="e"> Blue  </a>
+                    <a href="#yellow-darworm-page"  id="p4Lbutton" data-role= "button" data-theme="f"> Yellow  </a>
+
             </ul>
+          </div>
         </div>
     </div>
 
-    <div data-role=footer data-theme="b">
-        <div id="menufooter" data-role=navbar>
+    <div data-role=footer class="ui-bar" data-theme="b">
+        <div id="menufooter" data-role=navbar >
             <ul>
                 <li><a id="startpause" data-role=button onclick=darworms.startgame()>Start Game</a></li>
                 <li><a id="menubutton" data-role=button onclick=darworms.menuButton()>Menu</a></li>
@@ -328,7 +310,7 @@
         <a href="#playpage">Back</a>
 
         <h1>Select Darworm</h1>
-        <a href="#green-darworm-page" onclick="darworms.main.player2();">Next</a>
+        <a href="#green-darworm-page">Next</a>
     </div>
     <div data-role="content">
         <form>

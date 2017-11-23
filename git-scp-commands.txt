@@ -1,11 +1,10 @@
-git add main.js
-git commit
-scp -r -P 12960 ~/projects/SumoWorms/www/*.* dmaynard@bitbltstudios.com:/var/www/darworms/
-scp -r -P 12960 ~/projects/SumoWorms/www/scripts/*.* dmaynard@bitbltstudios.com:/var/www/darworms/scripts
-scp -r -P 12960 ~/projects/SumoWorms/www/themes/*.* dmaynard@bitbltstudios.com:/var/www/darworms/themes
-scp -r -P 12960 ~/projects/SumoWorms/www/themes/images/*.* dmaynard@bitbltstudios.com:/var/www/darworms/themes/images
-scp -r -P 12960 ~/projects/SumoWorms/www/images/*.* dmaynard@bitbltstudios.com:/var/www/darworms/images
-scp -r -P 12960 ~/projects/SumoWorms/www/sounds/*.* dmaynard@bitbltstudios.com:/var/www/darworms/sounds
+
+scp -r -P 12960 *.* dmaynard@bitbltstudios.com:/var/www/darworms/
+scp -r -P 12960 scripts/*.* dmaynard@bitbltstudios.com:/var/www/darworms/scripts
+scp -r -P 12960 themes/*.* dmaynard@bitbltstudios.com:/var/www/darworms/themes
+scp -r -P 12960 images/*.* dmaynard@bitbltstudios.com:/var/www/darworms/themes/images
+scp -r -P 12960 images/*.* dmaynard@bitbltstudios.com:/var/www/darworms/images
+scp -r -P 12960 sounds/*.* dmaynard@bitbltstudios.com:/var/www/darworms/sounds
 
 
 git push

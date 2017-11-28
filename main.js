@@ -118,14 +118,22 @@ darworms.main = (function() {
   var showSettings = function() {
     if (darworms.theGame && darworms.theGame.gameState !== darworms.gameStates.over) {
       $('#geometryradios').hide();
+      $('#abortgame').show();
     } else {
       $('#geometryradios').show();
+      $('#abortgame').hide();
     }
 
     console.log(" showSettings ");
   }
   var setupGridGeometry = function() {
     console.log(" pagebeforeshow setupGridGeometry ");
+    if (darworms.theGame && darworms.theGame.gameState !== darworms.gameStates.over) {
+      $('#geometryradios').hide();
+    } else {
+      $('#geometryradios').show();
+    }
+
     var gridGeometry = darworms.dwsettings.gridGeometry;
 
     switch (gridGeometry) {
@@ -222,7 +230,8 @@ darworms.main = (function() {
   };
   darworms.menuButton = function() {
     console.log(" menuButton");
-    if (darworms.theGame.gameState == darworms.gameStates.running) {
+    if ((darworms.theGame.gameState == darworms.gameStates.running) ||
+     (darworms.theGame.gameState == darworms.gameStates.paused)) {
       darworms.theGame.gameState = darworms.gameStates.paused;
       $.mobile.changePage("#settingspage");
       $("#startpause").text("Resume Game");
@@ -257,7 +266,7 @@ darworms.main = (function() {
     }
     if (darworms.theGame.gameState === darworms.gameStates.over) {
       darworms.theGame.initGame();
-
+      $("#startpause").text("Start Game");
       darworms.theGame.needsRedraw = true;
       darworms.theGame.drawCells();
       darworms.theGame.worms = gWorms;
@@ -272,7 +281,7 @@ darworms.main = (function() {
         worm.place(initialWormStates[playerTypes[i]], darworms.theGame);
       })
     }
-
+      darworms.gameModule.updateScores();
     if (startNow === false) return;
     console.log(" NEW in startgame darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
     if (darworms.theGame.gameState === darworms.gameStates.running) {
@@ -401,6 +410,29 @@ darworms.main = (function() {
     // if ( darworms.graphics.rawFrameCount %  60 == 0) {
     //     console.log("Date.now() " + Date.now());
     // }
+  }
+
+  darworms.abortgame = function () {
+    console.log("Abort Game called");
+    $.mobile.changePage('#abortdialog','pop',true,true);
+    // $("#lnkDialog").click();
+
+  }
+
+  darworms.yesabortgame = function () {
+    console.log("Abort Game called");
+    $.mobile.changePage('#playpage');
+    darworms.theGame.gameState = darworms.gameStates.over;
+    darworms.startgame(false);;
+    // $("#lnkDialog").click();
+
+  }
+
+  darworms.noabortgame = function () {
+    console.log("Abort Game called");
+    $.mobile.changePage('#settingspage');
+    // $("#lnkDialog").click();
+
   }
 
   var preventBehavior = function(e) {
@@ -586,7 +618,7 @@ darworms.main = (function() {
     setupGridGeometry: setupGridGeometry,
     initPlayPage: initPlayPage,
     wormEventHandler: wormEventHandler,
-  
+
   };
 
 })();

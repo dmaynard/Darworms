@@ -109,7 +109,7 @@ WPane.prototype.drawCells = function () {
             gPos.x = gPos.x + 1;
             if (gPos.x >= this.grid.width ) {gPos.x = 0;}
         }
-        // TODO  this should is a backbuffer and should only be created once
+        // TODO  this should be a backbuffer and should only be created once
         // or created every time the canvas changes size
         // it should not be created on every refresh of the selection screen
         this.savedCtx.drawImage(this.canvas,0,0);

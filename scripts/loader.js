@@ -48,6 +48,8 @@ var darworms = {
     dwsettings:{
         vgridsize:1.0,
         initialGridSize: 18,
+        doAudio: true,
+        selectionUI: 0,
 
         noWhere: undefined,
 
@@ -75,7 +77,6 @@ var darworms = {
     audioContext: undefined,
     masterGainNode: undefined,
     masterAudioVolume:  0.3,
-    doAudio: true,
     audioSamples: []
 };
 

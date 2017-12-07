@@ -164,9 +164,10 @@ darworms.main = (function() {
       }
     }
     darworms.dwsettings.doAnimations = $('#doanim').slider().val();
-    darworms.doAudio = $('#audioon').slider().val();
+    darworms.dwsettings.doAudio = $('#audioon').slider().val();
+    darworms.dwsettings.selectionUI = $('#selectionUI').slider().val();
     console.log(" darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
-    console.log(" darworms.doAudio " + darworms.doAudio);
+    console.log(" darworms.dwsettings.doAudio " + darworms.doAudio);
     darworms.masterAudioVolume = $("#audiovol").val() / 100;
     darworms.graphics.fps = $("#fps").val();
     darworms.graphics.frameInterval = 1000 / darworms.graphics.fps;
@@ -203,7 +204,9 @@ darworms.main = (function() {
     }
     if (darworms.theGame.gameState === darworms.gameStates.waiting) {
       // console.log("w");
-      darworms.theGame.drawSelectCell();
+      if( darworms.dwsettings.selectionUI == 0) {
+        darworms.theGame.drawSelectCell();
+      }
     }
 
   };
@@ -401,7 +404,9 @@ darworms.main = (function() {
       darworms.graphics.now = Date.now();
       darworms.graphics.uiElapsed = darworms.graphics.now - darworms.graphics.uiThen;
       if (darworms.graphics.uiElapsed > darworms.graphics.uiInterval) {
-        darworms.theGame.drawSelectCell();
+        if( darworms.dwsettings.selectionUI == 0) {
+          darworms.theGame.drawSelectCell();
+        }
         darworms.graphics.uiThen = darworms.graphics.now -
           (darworms.graphics.uiElapsed % darworms.graphics.uiInterval)
       }
@@ -423,7 +428,7 @@ darworms.main = (function() {
     console.log("Abort Game called");
     $.mobile.changePage('#playpage');
     darworms.theGame.gameState = darworms.gameStates.over;
-    darworms.startgame(false);;
+    darworms.startgame(false);
     // $("#lnkDialog").click();
 
   }
@@ -505,11 +510,11 @@ darworms.main = (function() {
     } else if (typeof webkitAudioContext !== "undefined") {
       darworms.audioContext = new webkitAudioContext();
     } else {
-      darworms.doAudio = false;
+      darworms.dwsettings.doAudio = false;
       $('#doAudio').hide();
     }
 
-    if (darworms.doAudio) {
+    if (darworms.dwsettings.doAudio) {
       if (darworms.audioContext.createGain !== undefined) {
         darworms.masterGainNode = darworms.audioContext.createGain(0.5);
       }

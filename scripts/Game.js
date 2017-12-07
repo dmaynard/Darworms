@@ -41,8 +41,8 @@ darworms.gameModule = (function() {
         this.numTurns = 0;
         this.numMoves = 0;
         this.timeInDraw = 0;
-        cellsInZoomPane = new Point(9,9);
-        // cellsInZoomPane = new Point(gridWidth, gridHeight);
+        // cellsInZoomPane = new Point(9,9);
+        cellsInZoomPane = new Point(gridWidth, gridHeight);
 
 
 
@@ -374,7 +374,7 @@ darworms.gameModule = (function() {
             if (currentState == 0x3F) {
                 // last sample is death sound
                 if (active.state != wormStates.dead) {
-                    if(darworms.doAudio == 1 && darworms.dwsettings.doAnimations == "true") {
+                    if(darworms.dwsettings.doAudio == 1 && darworms.dwsettings.doAnimations == "true") {
                         if (darworms.audioSamples[darworms.audioSamples.length-1]) {
                             darworms.audioSamples[darworms.audioSamples.length-1].playSample();
                         }
@@ -404,7 +404,7 @@ darworms.gameModule = (function() {
                 }
                 if ( graphicsOn ) {
                     this.dirtyCells.push(active.pos);
-                    if(darworms.doAudio == 1) {
+                    if(darworms.dwsettings.doAudio == 1) {
                         if ( active.notes[direction]) {
                             active.notes[direction].playSample();
                         }

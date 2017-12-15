@@ -542,22 +542,11 @@ darworms.main = (function() {
 
 
   }
-  var computeVertexCoordinates = function(angle, index, array) {
-    var rads = Math.PI / 180 * angle;
-    darworms.graphics.vertex_x[index] = Math.cos(rads) * darworms.graphics.hexEdgeLength;
-    darworms.graphics.vertex_y[index] = Math.sin(rads) * darworms.graphics.hexEdgeLength;
-  }
-
 
   var initGlobals = function() {
     // precompute some useful coordinates for hexgon grids
     // for a hex grid set inside of a square grid of w=h=1.0 the length
     // of every edge of the hex is sqrt (3)
-
-    // the angle to the verticies starting to 3o degrees and going cloclwise
-    darworms.graphics.hexEdgeLength = 0.5 / Math.cos(Math.PI / 180 * 30);
-    var vertangles = [30, 330, 270, 210, 150, 90];
-    // vertangles.forEach(computeVertexCoordinates);
 
   }
   var init = function() {
@@ -582,6 +571,8 @@ darworms.main = (function() {
     loadAudio();
 
     setTypes();
+
+    applySettings();
 
 
     darworms.dwsettings.scoreCanvas = document.getElementById("scorecanvas");

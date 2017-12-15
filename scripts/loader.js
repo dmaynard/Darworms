@@ -13,6 +13,7 @@ var darworms = {
     minTwoColumnWidth: 480,
     leftColumnWidth: 320,
     screens:{},
+    pickCells: [],
     graphics:{
         timer:undefined,
         scorectx:undefined,
@@ -37,11 +38,7 @@ var darworms = {
         vertex_fudge: 0.12,
         vertex_y: [0.3125, -0.3125, -0.6875, -0.3125, 0.3125, 0.6875],
         hexSize: 1.0,
-        sqrt3: Math.sqrt(3),
-        // hexEdgeLength: 1.0/Math.sqrt(3.0)
-        hexEdgeLength: undefined
-
-
+        sqrt3: Math.sqrt(3)
 
     },
     selectedDarworm:0,

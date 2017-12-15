@@ -16,6 +16,7 @@ function Worm(colorIndex, state) {
     this.numChoices = 0;
     this.died = false;
     this.notes = [];
+    this.pos = new Point(-1,-1);
 
    // for (var j = 0; j < 6 ; j = j+ 1) {
    //     this.notes.push(darworms.audioSamples [  ((colorIndex-1) + (j * 2)) % darworms.audioSamples.length]);
@@ -23,7 +24,7 @@ function Worm(colorIndex, state) {
    //  }
 
     for (var i = 0; i < 64; i = i + 1) {
-        this.dna[i] =darworms.dwsettings.codons.unSet;
+        this.dna[i] = darworms.dwsettings.codons.unSet;
     }
     this.dna[63] = darworms.dwsettings.codons.isTrapped;
     this.numChoices = 1;

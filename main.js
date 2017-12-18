@@ -204,9 +204,8 @@ darworms.main = (function() {
     }
     if (darworms.theGame.gameState === darworms.gameStates.waiting) {
       // console.log("w");
-      if( darworms.dwsettings.selectionUI == 0) {
-        darworms.theGame.drawSelectCell();
-      }
+       (darworms.dwsettings.selectionUI == 0) ?
+          darworms.theGame.drawSelectCell() : darworms.theGame.drawPickCells();
     }
 
   };
@@ -404,9 +403,8 @@ darworms.main = (function() {
       darworms.graphics.now = Date.now();
       darworms.graphics.uiElapsed = darworms.graphics.now - darworms.graphics.uiThen;
       if (darworms.graphics.uiElapsed > darworms.graphics.uiInterval) {
-        if( darworms.dwsettings.selectionUI == 0) {
-          darworms.theGame.drawSelectCell();
-        }
+      (darworms.dwsettings.selectionUI == 0)  ? darworms.theGame.drawSelectCell()
+      : darworms.theGame.drawPickCells()
         darworms.graphics.uiThen = darworms.graphics.now -
           (darworms.graphics.uiElapsed % darworms.graphics.uiInterval)
       }

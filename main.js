@@ -20,7 +20,8 @@ darworms.main = (function() {
 
   var playerTypes = [1, 0, 0, 0];
   var buttonNames = ['#p1button', '#p2button', '#p3button', '#p4button',
-                     '#p1Lbutton', '#p2Lbutton', '#p3Lbutton', '#p4Lbutton'];
+    '#p1Lbutton', '#p2Lbutton', '#p3Lbutton', '#p4Lbutton'
+  ];
   var typeNames = [" None ", "Random", " Same ", " New  "];
 
   var wGraphics;
@@ -57,12 +58,12 @@ darworms.main = (function() {
     var bref = $("#p4button");
     var brefa = bref[0];
 
-    gWorms.forEach( function( worm,i) {
+    gWorms.forEach(function(worm, i) {
       worm.wType = playerTypes[i];
       worm.setNotes(i);
-      $(buttonNames[i] ).removeClass(
+      $(buttonNames[i]).removeClass(
         playerTypes[i] === 0 ? "ui-opaque" : "ui-grayed-out");
-      $(buttonNames[i] ).addClass(
+      $(buttonNames[i]).addClass(
         playerTypes[i] === 0 ? "ui-grayed-out" : "ui-opaque");
     });
   };
@@ -204,36 +205,41 @@ darworms.main = (function() {
     }
     if (darworms.theGame.gameState === darworms.gameStates.waiting) {
       // console.log("w");
-       (darworms.dwsettings.selectionUI == 0) ?
-          darworms.theGame.drawSelectCell() : darworms.theGame.drawPickCells();
+      (darworms.dwsettings.selectionUI == 0) ?
+      darworms.theGame.drawSelectCell(): darworms.theGame.drawPickCells();
     }
 
   };
 
 
   var wormEventHandler = function(event) {
-    var touchX = event.pageX;
-    var touchY = event.pageY;
+    var touchX = event.offsetX;
+    var touchY = event.offsetY;
     var cWidth = $('#wcanvas').width();
     var cHeight = $('#wcanvas').height();
     console.log(" Tap Event at x: " + touchX + " y: " + touchY);
-    console.log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
+    // console.log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
     // console.log (" wcanvas coord width " + darworms.main.wCanvas.width + " coord height "  + darworms.main.wCanvas.height  );
     if (darworms.theGame.gameState === darworms.gameStates.waiting) {
-
-      if (darworms.gameModule.doZoomOut(new Point((touchX / cWidth) * 2.0 - 1.0, ((touchY) / cHeight) * 2.0 - 1.0))) {
-        console.log(" do zoomout here");
-      } else {
-        console.log(" touch event at " + new Point(touchX, touchY).format);
+      if (darworms.dwsettings.selectionUI == 1) { //main screen small ui
         darworms.gameModule.selectDirection(new Point(touchX, touchY));
+      } else {
 
+
+        if (darworms.gameModule.doZoomOut(new Point((touchX / cWidth) * 2.0 - 1.0, ((touchY) / cHeight) * 2.0 - 1.0))) {
+          console.log(" do zoomout here");
+        } else {
+          // console.log(" touch event at " + new Point(touchX, touchY).format);
+          darworms.gameModule.selectDirection(new Point(touchX, touchY));
+
+        }
       }
     }
   };
   darworms.menuButton = function() {
     console.log(" menuButton");
     if ((darworms.theGame.gameState == darworms.gameStates.running) ||
-     (darworms.theGame.gameState == darworms.gameStates.paused)) {
+      (darworms.theGame.gameState == darworms.gameStates.paused)) {
       darworms.theGame.gameState = darworms.gameStates.paused;
       $.mobile.changePage("#settingspage");
       $("#startpause").text("Resume Game");
@@ -278,12 +284,12 @@ darworms.main = (function() {
           worm.init(playerTypes[i]);
           $(buttonNames[i]).addClass("ui-opaque");
         } else {
-          $(buttonNames[i] ).addClass("ui-grayed-out");
+          $(buttonNames[i]).addClass("ui-grayed-out");
         }
         worm.place(initialWormStates[playerTypes[i]], darworms.theGame);
       })
     }
-      darworms.gameModule.updateScores();
+    darworms.gameModule.updateScores();
     if (startNow === false) return;
     console.log(" NEW in startgame darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
     if (darworms.theGame.gameState === darworms.gameStates.running) {
@@ -403,8 +409,7 @@ darworms.main = (function() {
       darworms.graphics.now = Date.now();
       darworms.graphics.uiElapsed = darworms.graphics.now - darworms.graphics.uiThen;
       if (darworms.graphics.uiElapsed > darworms.graphics.uiInterval) {
-      (darworms.dwsettings.selectionUI == 0)  ? darworms.theGame.drawSelectCell()
-      : darworms.theGame.drawPickCells()
+        (darworms.dwsettings.selectionUI == 0) ? darworms.theGame.drawSelectCell(): darworms.theGame.drawPickCells()
         darworms.graphics.uiThen = darworms.graphics.now -
           (darworms.graphics.uiElapsed % darworms.graphics.uiInterval)
       }
@@ -415,14 +420,14 @@ darworms.main = (function() {
     // }
   }
 
-  darworms.abortgame = function () {
+  darworms.abortgame = function() {
     console.log("Abort Game called");
-    $.mobile.changePage('#abortdialog','pop',true,true);
+    $.mobile.changePage('#abortdialog', 'pop', true, true);
     // $("#lnkDialog").click();
 
   }
 
-  darworms.yesabortgame = function () {
+  darworms.yesabortgame = function() {
     console.log("Abort Game called");
     $.mobile.changePage('#playpage');
     darworms.theGame.gameState = darworms.gameStates.over;
@@ -431,7 +436,7 @@ darworms.main = (function() {
 
   }
 
-  darworms.noabortgame = function () {
+  darworms.noabortgame = function() {
     console.log("Abort Game called");
     $.mobile.changePage('#settingspage');
     // $("#lnkDialog").click();

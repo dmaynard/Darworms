@@ -32,11 +32,10 @@ darworms.gameModule = (function() {
 
 
     darworms.main.wCanvas.width = darworms.wCanvasPixelDim.x;
-    darworms.main.wCanvas.height = darworms.main.wCanvas.width;
+    darworms.main.wCanvas.height = darworms.wCanvasPixelDim.y;
 
 
     this.gameState = darworms.gameStates.over;
-    this.margin = 10;
     this.grid = new darworms.gridModule.Grid(gridWidth, gridHeight);
     this.canvas = gameCanvas;
 
@@ -50,13 +49,10 @@ darworms.gameModule = (function() {
     cellsInZoomPane = new Point(gridWidth, gridHeight);
 
     this.zoomPane = new WPane(this.grid, cellsInZoomPane, new Point(gridWidth >> 1, gridHeight >> 1), document.getElementById("wcanvas"))
-    // this.scale = new Point((gameCanvas.width - (2*this.margin))/gridWidth, (gameCanvas.height- (2*this.margin))/gridHeight);
-    //TODO   fix this  *restore to above ?
-    this.scale = new Point((gameCanvas.width - (2 * this.margin)) / (gridWidth + 0.5), (gameCanvas.height - (4 * this.margin)) / gridHeight);
+
+    this.scale = new Point(((gameCanvas.width ) / (gridWidth + 1.5)), ((gameCanvas.height) / (gridHeight + 1)));
     this.origin = new Point(gridWidth >> 1, gridHeight >> 1);
     focusPoint = this.origin;
-    console.log("newGame  scalex " + (gameCanvas.width - (2 * this.margin)) / gridWidth);
-    // context.scale(this.scale.x, this.scale.y);
     this.worms = [];
     this.needsRedraw = true;
     this.avePos = new Point(0, 0);
@@ -108,12 +104,11 @@ darworms.gameModule = (function() {
     var xoff;
     var yoff;
     if ((point.y & 1) === 0) {
-      xoff = (point.x + 0.5 + (this.margin / this.scale.x)) * this.scale.x;
+      xoff = ((point.x + 0.5) * (this.scale.x)) + (this.scale.x>>1) ;
     } else {
-      xoff = (point.x + 1.0 + (this.margin / this.scale.x)) * this.scale.x;
-
+      xoff = ((point.x + 1.0) * (this.scale.x)) + (this.scale.x>>1) ;
     }
-    yoff = (point.y + 0.5 + (this.margin / this.scale.y)) * this.scale.y;
+    yoff = ((point.y + 0.5) * (this.scale.y)) + (this.scale.y>>1);
     return new Point(xoff, yoff);
   }
 
@@ -302,8 +297,8 @@ darworms.gameModule = (function() {
     }
     this.bullseyeoffset = new Point(hoffset, voffset);
     // console.log( "drawSelectCell  hoffset "  + hoffset + " scale.x = " + this.zoomPane.scale.x);
-    wGraphics.setTransform((gameCanvas.width - (2.0 * this.margin)) / 2, 0, 0, (gameCanvas.height - (2.0 * this.margin)) / 2,
-      (gameCanvas.width / 2) + hoffset, (gameCanvas.height) / 2 + voffset);
+    wGraphics.setTransform((gameCanvas.width - (this.scale.x/2) / 2, 0, 0, (gameCanvas.height - (this.scale.y/2)) / 2,
+      (gameCanvas.width / 2) + hoffset, (gameCanvas.height) / 2 + voffset));
     if ((darworms.graphics.animFrame % 0xFF) == 0) {
       console.log(" drawSelectCell  hoffset " + hoffset);
       console.log(" drawSelectCell  voffset " + voffset);
@@ -535,13 +530,12 @@ darworms.gameModule = (function() {
       if (((outvec & darworms.outMask[dir]) == 0) && ((inVec & darworms.outMask[dir]) == 0)) {
         var pickTarget = {};
         pickTarget.pos = this.grid.next(worm.pos, dir);
-        darworms.theGame.gsetTranslate(pickTarget.pos);
         pickTarget.screenCoordinates = this.getOffset(pickTarget.pos);
         pickTarget.dir = dir;
         pickTarget.color = darworms.dwsettings.alphaColorTable[focusWorm.colorIndex];
         darworms.pickCells.push(pickTarget);
-        console.log(" pushing cell at dir "  + darworms.compassPts[dir]);
-        var point00 = this.getOffset(new Point(0,0));
+        console.log(" pushing cell at dir "  + darworms.compassPts[dir] + " at "
+         +   pickTarget.screenCoordinates.format());
       }
     }
   }
@@ -759,15 +753,15 @@ darworms.gameModule = (function() {
           ((darworms.theGame.yPts[i] * .75) * (gameCanvas.clientHeight) / 2) +
           darworms.theGame.bullseyeoffset.y + (gameCanvas.clientHeight) / 2 + darworms.theGame.zoomPane.pMargin);
 
-        console.log(" direction: " + i + " target point " + target.format());
-        console.log("Touch Point: " + point.format());
+        // console.log(" direction: " + i + " target point " + target.format());
+        // console.log("Touch Point: " + point.format());
         dist = target.dist(point);
         //  Actual pixel coordinates
         if (dist < minDist) {
           minDist = dist;
           select = i;
         }
-        console.log("selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
+        // console.log("selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
       }
     }
     if ((minDist < gameCanvas.clientWidth / 8) && (select >= 0)) {

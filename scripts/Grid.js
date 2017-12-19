@@ -163,9 +163,9 @@ darworms.gridModule = (function() {
     var nP = new Point(point.x, point.y);
     // console.log ("  (" + point.x  + "," + point.y + ") dir: " + dir);
     if ((point.y & 1) === 0) {
-      nP = nP.add(evenRowVec[dir]);
+      nP.add(evenRowVec[dir]);
     } else {
-      nP = nP.add(oddRowVec[dir]);
+      nP.add(oddRowVec[dir]);
     }
     if ((darworms.dwsettings.gridGeometry == 'falloff' && ((nP.x < 0) || (nP.x > this.width - 1) || (nP.y < 0) || (nP.y > this.height - 1)))) {
       // console.log ("  (" + nP.x  + "," + nP.y + ") returning noWhere");

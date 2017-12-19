@@ -30,8 +30,10 @@ function WPane ( grid, size, center, canvas) {
     this.cWidth = size.x;
     this.cHeight =  size.y;
     this.pMargin  = 10;
-    this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
-        (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
+    //this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
+    //    (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
+    this.scale = new Point((this.pWidth / this.cWidth) ,
+        (this.pHeight/ this.cHeight ));
     this.offset = new Point(center.x - (this.cWidth >> 1), center.y - (this.cHeight >>1));
     this.offset.wrap(this.grid.width, this.grid.height);
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);

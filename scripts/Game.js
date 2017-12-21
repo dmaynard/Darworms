@@ -27,7 +27,6 @@ darworms.gameModule = (function() {
   var scorectx;
   var cellsInZoomPane = new Point(7, 7);
 
-
   function Game(gridWidth, gridHeight) {
 
 
@@ -50,7 +49,7 @@ darworms.gameModule = (function() {
 
     this.zoomPane = new WPane(this.grid, cellsInZoomPane, new Point(gridWidth >> 1, gridHeight >> 1), document.getElementById("wcanvas"))
 
-    this.scale = new Point(((gameCanvas.width ) / (gridWidth + 1.5)), ((gameCanvas.height) / (gridHeight + 1)));
+    this.scale = new Point(((gameCanvas.width) / (gridWidth + 1.5)), ((gameCanvas.height) / (gridHeight + 1)));
     this.origin = new Point(gridWidth >> 1, gridHeight >> 1);
     focusPoint = this.origin;
     this.worms = [];
@@ -104,11 +103,11 @@ darworms.gameModule = (function() {
     var xoff;
     var yoff;
     if ((point.y & 1) === 0) {
-      xoff = ((point.x + 0.5) * (this.scale.x)) + (this.scale.x>>1) ;
+      xoff = ((point.x + 0.5) * (this.scale.x)) + (this.scale.x >> 1);
     } else {
-      xoff = ((point.x + 1.0) * (this.scale.x)) + (this.scale.x>>1) ;
+      xoff = ((point.x + 1.0) * (this.scale.x)) + (this.scale.x >> 1);
     }
-    yoff = ((point.y + 0.5) * (this.scale.y)) + (this.scale.y>>1);
+    yoff = ((point.y + 0.5) * (this.scale.y)) + (this.scale.y >> 1);
     return new Point(xoff, yoff);
   }
 
@@ -134,20 +133,20 @@ darworms.gameModule = (function() {
 
 
 
-      wGraphics.strokeStyle = darworms.dwsettings.colorTable[owner & 0xF];
-      wGraphics.fillStyle =   owner == 0 ?
-          darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme] :
-          darworms.dwsettings.alphaColorTable[owner & 0xF];
-      wGraphics.beginPath();
-      wGraphics.moveTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
-      for (var j = 1; j < 6; j = j + 1) {
-        wGraphics.lineTo(darworms.graphics.vertex_x[j], darworms.graphics.vertex_y[j]);
-      }
-      // wGraphics.moveTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
-      wGraphics.stroke();
-      wGraphics.closePath();
-      wGraphics.fill();
-      // wGraphics.stroke();
+    wGraphics.strokeStyle = darworms.dwsettings.colorTable[owner & 0xF];
+    wGraphics.fillStyle = owner == 0 ?
+      darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme] :
+      darworms.dwsettings.alphaColorTable[owner & 0xF];
+    wGraphics.beginPath();
+    wGraphics.moveTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
+    for (var j = 1; j < 6; j = j + 1) {
+      wGraphics.lineTo(darworms.graphics.vertex_x[j], darworms.graphics.vertex_y[j]);
+    }
+    // wGraphics.moveTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
+    wGraphics.stroke();
+    wGraphics.closePath();
+    wGraphics.fill();
+    // wGraphics.stroke();
 
 
 
@@ -270,12 +269,13 @@ darworms.gameModule = (function() {
 
   };
   Game.prototype.drawPickCells = function() {
-      // darworms.pickCells.forEach(this.drawPickCell(this.pos,darworms.dwsettings.alphaColorTable[darworms.active]) );
-      darworms.pickCells.forEach( function (pickTarget) {
-        darworms.theGame.drawPickCell(pickTarget.pos, darworms.dwsettings.alphaColorTable[focusWorm.colorIndex] );
-      });
-      darworms.theGame.drawPickCellOrigin( focusWorm.pos, darworms.dwsettings.colorTable[focusWorm.colorIndex])
-    }
+    // darworms.pickCells.forEach(this.drawPickCell(this.pos,darworms.dwsettings.alphaColorTable[darworms.active]) );
+    darworms.pickCells.forEach(function(pickTarget) {
+      darworms.theGame.drawPickCell(pickTarget.pos, pickTarget.color);
+    });
+    darworms.theGame.drawPickCellOrigin(focusWorm.pos,
+      darworms.dwsettings.alphaColorTable[focusWorm.colorIndex]);
+  }
   Game.prototype.drawSelectCell = function() {
     //  Draw the large direction selectors screen
     //  A rectangle 2.0 x 2.0
@@ -297,8 +297,9 @@ darworms.gameModule = (function() {
     }
     this.bullseyeoffset = new Point(hoffset, voffset);
     // console.log( "drawSelectCell  hoffset "  + hoffset + " scale.x = " + this.zoomPane.scale.x);
-    wGraphics.setTransform((gameCanvas.width - (this.scale.x/2) / 2, 0, 0, (gameCanvas.height - (this.scale.y/2)) / 2,
-      (gameCanvas.width / 2) + hoffset, (gameCanvas.height) / 2 + voffset));
+    wGraphics.setTransform((gameCanvas.width - (this.scale.x / 2)) / 2, 0, 0, (gameCanvas.height - (this.scale.y / 2)) / 2,
+      (gameCanvas.width / 2) + hoffset, (gameCanvas.height) / 2 + voffset);
+
     if ((darworms.graphics.animFrame % 0xFF) == 0) {
       console.log(" drawSelectCell  hoffset " + hoffset);
       console.log(" drawSelectCell  voffset " + voffset);
@@ -469,7 +470,7 @@ darworms.gameModule = (function() {
           active.nMoves = active.nMoves + 1;
           this.zoomPane.canvasIsDirty = true;
           this.drawDirtyCells();
-          if(darworms.dwsettings.selectionUI == 1) {
+          if (darworms.dwsettings.selectionUI == 1) {
             this.initPickUI(active);
           }
           return (true);
@@ -534,8 +535,8 @@ darworms.gameModule = (function() {
         pickTarget.dir = dir;
         pickTarget.color = darworms.dwsettings.alphaColorTable[focusWorm.colorIndex];
         darworms.pickCells.push(pickTarget);
-        console.log(" pushing cell at dir "  + darworms.compassPts[dir] + " at "
-         +   pickTarget.screenCoordinates.format());
+        console.log(" pushing cell at dir " + darworms.compassPts[dir] + " at " +
+          pickTarget.screenCoordinates.format());
       }
     }
   }
@@ -740,6 +741,23 @@ darworms.gameModule = (function() {
   };
   // Called from user actions
   var selectDirection = function(point) {
+    (darworms.dwsettings.selectionUI == 0) ? selectLargeUIDirection(point):
+      selectSmallUIDirection(point);
+    }
+
+  var selectSmallUIDirection = function(touchPoint) {
+    // we should be able to bind the forEach to this instead using darworms.theGame
+    darworms.pickCells.forEach(function(pickTarget) {
+      var absdiff = touchPoint.absDiff(pickTarget.screenCoordinates);
+      if ( (absdiff.x < (darworms.theGame.scale.x/2)) && (absdiff.y < (darworms.theGame.scale.y/2))  &&
+        darworms.theGame.gameState === darworms.gameStates.waiting ) {
+          setDNAandResumeGame(pickTarget.dir);
+        }
+    });
+
+  }
+
+  var selectLargeUIDirection = function(point) {
     // console.log( "selectDirection: " + point.format());
     var outvec = darworms.theGame.grid.stateAt(focusPoint);
     var minDist = 100000;
@@ -765,15 +783,19 @@ darworms.gameModule = (function() {
       }
     }
     if ((minDist < gameCanvas.clientWidth / 8) && (select >= 0)) {
-      focusWorm.dna[focusValue & 0x3F] = select;
-      focusWorm.numChoices += 1;
-      //  TODO setState to animFromUI
-      darworms.theGame.gameState = darworms.graphics.enableTransitionStates ?
-        darworms.gameStates.animFromUI : darworms.gameStates.running;
-      darworms.theGame.clearCanvas();
-      darworms.theGame.drawCells();
+      setDNAandResumeGame(select);
     }
   };
+
+  var setDNAandResumeGame = function(direction) {
+    focusWorm.dna[focusValue & 0x3F] = direction;
+    focusWorm.numChoices += 1;
+    //  TODO setState to animFromUI
+    darworms.theGame.gameState = darworms.graphics.enableTransitionStates ?
+      darworms.gameStates.animFromUI : darworms.gameStates.running;
+    darworms.theGame.clearCanvas();
+    darworms.theGame.drawCells();
+  }
   var doZoomOut = function(tapPoint) {
     if (tapPoint.dist(new Point(0, 1.0)) < 0.2) {
       if (cellsInZoomPane.x > 5) {

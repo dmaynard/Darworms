@@ -224,8 +224,6 @@ darworms.main = (function() {
       if (darworms.dwsettings.selectionUI == 1) { //main screen small ui
         darworms.gameModule.selectDirection(new Point(touchX, touchY));
       } else {
-
-
         if (darworms.gameModule.doZoomOut(new Point((touchX / cWidth) * 2.0 - 1.0, ((touchY) / cHeight) * 2.0 - 1.0))) {
           console.log(" do zoomout here");
         } else {

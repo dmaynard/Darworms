@@ -26,6 +26,12 @@ Point.prototype.dist = function( other) {
     return Math.sqrt((this.x - other.x ) * (this.x - other.x) +  (this.y - other.y) * (this.y - other.y));
 }
 
+Point.prototype.absDiff = function( other) {
+    //  console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
+    return new Point( Math.abs(this.x-other.x) , Math.abs(this.y-other.y));
+
+}
+
 Point.prototype.wrap = function (wg, hg) {
     if (this.x >= wg) this.x = this.x - wg;
     if (this.x < 0) this.x = this.x + wg;

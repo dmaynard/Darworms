@@ -407,7 +407,12 @@ darworms.main = (function() {
       darworms.graphics.now = Date.now();
       darworms.graphics.uiElapsed = darworms.graphics.now - darworms.graphics.uiThen;
       if (darworms.graphics.uiElapsed > darworms.graphics.uiInterval) {
-        (darworms.dwsettings.selectionUI == 0) ? darworms.theGame.drawSelectCell(): darworms.theGame.drawPickCells()
+        if (darworms.dwsettings.selectionUI == 0) {
+          darworms.theGame.drawSelectCell(true)
+        } else {
+          darworms.theGame.drawPickCells();
+          // darworms.theGame.drawSelectCell(false);
+        }
         darworms.graphics.uiThen = darworms.graphics.now -
           (darworms.graphics.uiElapsed % darworms.graphics.uiInterval)
       }
@@ -554,7 +559,6 @@ darworms.main = (function() {
     // This may be needed when we actually build a phoneGap app
     // in this case delay initialization until we get the deviceready event
     document.addEventListener("deviceready", deviceInfo, true);
-
     darworms.wCanvasPixelDim = new Point(1, 1);
     // window.onresize = doReSize;
     // doReSize();
@@ -563,6 +567,9 @@ darworms.main = (function() {
     darworms.main.wGraphics = darworms.main.wCanvas.getContext("2d");
     // console.log ( " init wGraphics " + darworms.main.wGraphics);
     $('#wcanvas').bind('tap', wormEventHandler);
+
+    $('#selectionUI').slider().val(1);
+    $('#selectionUI').slider("refresh");
 
 
     darworms.wCanvasRef = $('#wcanvas');
@@ -603,11 +610,18 @@ darworms.main = (function() {
     $(window).bind('resize orientationchange', function(event) {
       window.scrollTo(1, 0);
       resizeCanvas();
+      var heightSlider = Math.floor($("#gridsize").val());
+      if ((heightSlider & 1) !== 0) {
+        // height must be an even number because of toroid shape
+        heightSlider = heightSlider + 1;
+      }
+      darworms.gameModule.reScale(heightSlider, heightSlider);
     });
   }
 
   return {
     init: init,
+
     setSelectedDarwormType: setSelectedDarwormType,
     setupRadioButtons: setupRadioButtons,
     applySettings: applySettings,

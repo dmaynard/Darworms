@@ -46,7 +46,7 @@ var darworms = {
         vgridsize:1.0,
         initialGridSize: 18,
         doAudio: true,
-        selectionUI: 0,
+        selectionUI: 1,
 
         noWhere: undefined,
 
@@ -55,12 +55,12 @@ var darworms = {
         compassPts: [ "e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"],
 
         codons:{ "e":0, "ne":1, "nw":2, "w":3, "sw":4, "se":5, "unSet":6, "isTrapped":7},
-        colorTable:["#000000", "#EE0000", "#00EE00", "#0000FF",
-            "#D0D000", "#448833", "#443388", "#338844",
+        colorTable:["#000000", "#EE0000", "#00EE00", "#0404EE",
+            "#D0A000", "#448833", "#443388", "#338844",
             "#FF1C0A", "#1CFF0A", "#1C0AFF", "#0AFF1C",
             "#884433", "#448833", "#443388", "#338844"],
         alphaColorTable:["rgba(  0,   0,   0, 0.2)",
-            "rgba(  238,   0,   0, 0.4)", "rgba(    0, 238,   0, 0.4)", "rgba(    0,   0, 238, 0.4)", "rgba(  238, 238, 0, 0.4)",
+            "rgba(  238,   0,   0, 0.4)", "rgba(    0, 238,   0, 0.4)", "rgba(    0,   0, 238, 0.4)", "rgba(  200, 200, 0, 0.4)",
             "#FFD70080", "#44883380", "#44338880", "#33884480",
             "#FF1C0A80", "#1CFF0A80", "#1C0AFF80", "#0AFF1C80",
             "#88443380", "#44883380", "#44338880", "#33884480"],
@@ -75,6 +75,7 @@ var darworms = {
     masterGainNode: undefined,
     masterAudioVolume:  0.3,
     audioSamples: []
+
 };
 
 window.addEventListener("load", function () {

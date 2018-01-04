@@ -213,10 +213,29 @@ darworms.main = (function() {
 
   };
 
+  var pointerEventToXY = function(e){
+       var out = {x:0, y:0};
+       if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
+         var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+         out.x = touch.pageX;
+         out.y = touch.pageY;
+       } else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
+         out.x = e.pageX;
+         out.y = e.pageY;
+       }  else if (e.type == 'tap') {
+         out.x = event.clientX;
+         out.y = event.clientY;
+       }
+       return out;
+     };
 
   var wormEventHandler = function(event) {
-    var touchX = event.offsetX;
-    var touchY = event.offsetY;
+    var loc = pointerEventToXY(event)
+    var touchX = loc.x;
+    var touchY = loc.y
+    // var touchX = event.clientX;
+    // var touchY = event.clientY;
+    // alert( event.toString() + " tap event x:" + touchX + "  y:" + touchY)
     var cWidth = $('#wcanvas').width();
     var cHeight = $('#wcanvas').height();
     console.log(" Tap Event at x: " + touchX + " y: " + touchY);
@@ -569,7 +588,8 @@ darworms.main = (function() {
     darworms.main.wGraphics = darworms.main.wCanvas.getContext("2d");
     // console.log ( " init wGraphics " + darworms.main.wGraphics);
     $('#wcanvas').bind('tap', wormEventHandler);
-
+    // $('#wcanvas').on("tap", wormEventHandler);
+    // $('#wcanvas').bind('vmousedown', wormEventHandler);
     $('#panToSelectionUI').slider().val(0);
     $('#panToSelectionUI').slider("refresh");
 

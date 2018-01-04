@@ -85,6 +85,9 @@
       display: inline-block;
       align: right;
     }
+    #wcanvas {
+      cursor: pointer;
+    }
 
     @media all and (max-height: 400px) {
       #canvascontainer {
@@ -118,6 +121,7 @@
 
       #wcanvas {
         width: 100%;
+        cursor: pointer;
       }
       #canvascontainer {
 
@@ -130,6 +134,12 @@
       #scorecanvas {
         height: 30px;
       }
+
+      .selectionuicontainer .ui-slider-switch  { width: 15em }
+
+      .pickcellsuicontainer .ui-slider-switch  { width: 15em }
+
+
     }
   </style>
 
@@ -169,7 +179,7 @@
         <div data-role="controlgroup">
           <ul>
             <a href="#red-darworm-page" id="p1Lbutton" data-role="button" data-theme="c"> Red  </a>
-            <a href="#green-darworm-page" id="p2Lbutton" data-role="button" data-theme="d" width="100%"> Green  </a>
+            <a href="#green-darworm-page" id="p2Lbutton" data-role="button" data-theme="d"> Green  </a>
             <a href="#blue-darworm-page" id="p3Lbutton" data-role="button" data-theme="e"> Blue  </a>
             <a href="#yellow-darworm-page" id="p4Lbutton" data-role="button" data-theme="f"> Yellow  </a>
 
@@ -213,7 +223,7 @@
       </form>
       <div data-role="fieldcontain">
         <label for="gridsize">Grid Size:</label>
-        <input type="range" name="gridsize" id="gridsize" value="18" step="2" min="4" max="256" />
+        <input type="range" name="gridsize" id="gridsize" value="18" step="2" min="4" max="64" />
       </div>
     </div>
     <div data-role=content id="realtimesettings">
@@ -245,6 +255,29 @@
           <select name="audioon" id="audioon" data-role="slider" data-mini='true'>
                     <option value=1>On</option>
                     <option value=0>Off</option>
+                </select>
+        </form>
+      </fieldset>
+    </div>
+    <div data-role="controlgroup" data-type="horizontal" class="selectionuicontainer">
+      <fieldset data-role="controlgroup" data-type="horizontal">
+        <form id="selectionui" name="selectionui">
+          <label for="panToSelectionUI">To Select a Direction when Darworms encounters a new cell type:</label>
+          <select name="panToSelectionUI" id="panToSelectionUI" data-mini="false" data-role="slider"  value='0'>
+                    <option value=0>Fixed Grid</option>
+                    <option value=1>Pan To Selection Point</option>
+                </select>
+        </form>
+      </fieldset>
+    </div>
+
+    <div data-role="controlgroup" data-type="horizontal" class="pickcellsuicontainer">
+      <fieldset data-role="controlgroup" data-type="horizontal">
+        <form id="pickdirectionui" name="pickdirectionui">
+          <label for="pickDirectionUI">Choose Cell or choose Screen quadrant to select a direction:</label>
+          <select name="pickDirectionUI" id="pickDirectionUI" data-mini="false" data-role="slider"  value='0'>
+                    <option value=0>Click on Cell</option>
+                    <option value=1>Click on Screen Quadrant</option>
                 </select>
         </form>
       </fieldset>
@@ -440,7 +473,7 @@
 
         <p> You can generate a Darworm with a preset randomly chosen program or train a new Darworm yourself. You can play the same Darworm in successive games.</p>
 
-        <p> Copyright 1983, 2013 by David S. Maynard</p>
+        <p> Copyright 1983, 2013, 2018 by David S. Maynard</p>
 
         <p> Based on the 1983 Electron Arts Game "Worms?" By David S. Maynard</p>
 

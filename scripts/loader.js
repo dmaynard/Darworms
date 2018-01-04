@@ -13,6 +13,7 @@ var darworms = {
     minTwoColumnWidth: 480,
     leftColumnWidth: 320,
     screens:{},
+    pickCells: [],
     graphics:{
         timer:undefined,
         scorectx:undefined,
@@ -37,18 +38,16 @@ var darworms = {
         vertex_fudge: 0.12,
         vertex_y: [0.3125, -0.3125, -0.6875, -0.3125, 0.3125, 0.6875],
         hexSize: 1.0,
-        sqrt3: Math.sqrt(3),
-        // hexEdgeLength: 1.0/Math.sqrt(3.0)
-        hexEdgeLength: undefined
-
-
+        sqrt3: Math.sqrt(3)
 
     },
     selectedDarworm:0,
     dwsettings:{
         vgridsize:1.0,
         initialGridSize: 18,
-
+        doAudio: true,
+        panToSelectionUI: 0,
+        pickDirectionUI: 0,
         noWhere: undefined,
 
         scoreCanvas:undefined,
@@ -56,12 +55,12 @@ var darworms = {
         compassPts: [ "e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"],
 
         codons:{ "e":0, "ne":1, "nw":2, "w":3, "sw":4, "se":5, "unSet":6, "isTrapped":7},
-        colorTable:["#000000", "#EE0000", "#00EE00", "#0000FF",
-            "#D0D000", "#448833", "#443388", "#338844",
+        colorTable:["#000000", "#EE0000", "#00EE00", "#0404EE",
+            "#D0A000", "#448833", "#443388", "#338844",
             "#FF1C0A", "#1CFF0A", "#1C0AFF", "#0AFF1C",
             "#884433", "#448833", "#443388", "#338844"],
         alphaColorTable:["rgba(  0,   0,   0, 0.2)",
-            "rgba(  238,   0,   0, 0.4)", "rgba(    0, 238,   0, 0.4)", "rgba(    0,   0, 238, 0.4)", "rgba(  238, 238, 0, 0.4)",
+            "rgba(  238,   0,   0, 0.4)", "rgba(    0, 238,   0, 0.4)", "rgba(    0,   0, 238, 0.4)", "rgba(  200, 200, 0, 0.4)",
             "#FFD70080", "#44883380", "#44338880", "#33884480",
             "#FF1C0A80", "#1CFF0A80", "#1C0AFF80", "#0AFF1C80",
             "#88443380", "#44883380", "#44338880", "#33884480"],
@@ -75,8 +74,8 @@ var darworms = {
     audioContext: undefined,
     masterGainNode: undefined,
     masterAudioVolume:  0.3,
-    doAudio: true,
     audioSamples: []
+
 };
 
 window.addEventListener("load", function () {

@@ -17,12 +17,19 @@ Point.prototype.isEqualTo = function(other) {
 
 Point.prototype.add = function( other) {
 //    console.log (" adding (" + other.x + "," + other.y + " to (" + this.x + "," + this.y );
-    return new Point( this.x + other.x, this.y + other.y);
-};
+    this.x = this.x + other.x;
+    this.y = this.y + other.y;
+  }
 
 Point.prototype.dist = function( other) {
     //  console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
     return Math.sqrt((this.x - other.x ) * (this.x - other.x) +  (this.y - other.y) * (this.y - other.y));
+}
+
+Point.prototype.absDiff = function( other) {
+    //  console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
+    return new Point( Math.abs(this.x-other.x) , Math.abs(this.y-other.y));
+
 }
 
 Point.prototype.wrap = function (wg, hg) {

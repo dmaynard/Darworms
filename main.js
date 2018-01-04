@@ -230,11 +230,11 @@ darworms.main = (function() {
      };
 
   var wormEventHandler = function(event) {
-    var loc = pointerEventToXY(event)
-    var touchX = loc.x;
-    var touchY = loc.y
-    // var touchX = event.clientX;
-    // var touchY = event.clientY;
+    //var loc = pointerEventToXY(event)
+    //var touchX = loc.x;
+    //var touchY = loc.y
+    var touchX = event.clientX;
+    var touchY = event.clientY;
     // alert( event.toString() + " tap event x:" + touchX + "  y:" + touchY)
     var cWidth = $('#wcanvas').width();
     var cHeight = $('#wcanvas').height();

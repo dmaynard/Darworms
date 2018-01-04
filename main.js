@@ -166,7 +166,9 @@ darworms.main = (function() {
     }
     darworms.dwsettings.doAnimations = $('#doanim').slider().val();
     darworms.dwsettings.doAudio = $('#audioon').slider().val();
-    darworms.dwsettings.selectionUI = $('#selectionUI').slider().val();
+    darworms.dwsettings.panToSelectionUI = $('#panToSelectionUI').slider().val();
+    darworms.dwsettings.pickDirectionUI = $('#pickDirectionUI').slider().val();
+
     console.log(" darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
     console.log(" darworms.dwsettings.doAudio " + darworms.doAudio);
     darworms.masterAudioVolume = $("#audiovol").val() / 100;
@@ -205,7 +207,7 @@ darworms.main = (function() {
     }
     if (darworms.theGame.gameState === darworms.gameStates.waiting) {
       // console.log("w");
-      (darworms.dwsettings.selectionUI == 0) ?
+      (darworms.dwsettings.panToSelectionUI == 1) ?
       darworms.theGame.drawSelectCell(): darworms.theGame.drawPickCells();
     }
 
@@ -221,7 +223,7 @@ darworms.main = (function() {
     // console.log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
     // console.log (" wcanvas coord width " + darworms.main.wCanvas.width + " coord height "  + darworms.main.wCanvas.height  );
     if (darworms.theGame.gameState === darworms.gameStates.waiting) {
-      if (darworms.dwsettings.selectionUI == 1) { //main screen small ui
+      if (darworms.dwsettings.panToSelectionUI == 0) { //main screen small ui
         darworms.gameModule.selectDirection(new Point(touchX, touchY));
       } else {
         if (darworms.gameModule.doZoomOut(new Point((touchX / cWidth) * 2.0 - 1.0, ((touchY) / cHeight) * 2.0 - 1.0))) {
@@ -407,7 +409,7 @@ darworms.main = (function() {
       darworms.graphics.now = Date.now();
       darworms.graphics.uiElapsed = darworms.graphics.now - darworms.graphics.uiThen;
       if (darworms.graphics.uiElapsed > darworms.graphics.uiInterval) {
-        if (darworms.dwsettings.selectionUI == 0) {
+        if (darworms.dwsettings.panToSelectionUI == 1) {
           darworms.theGame.drawSelectCell(true)
         } else {
           darworms.theGame.drawPickCells();
@@ -568,8 +570,13 @@ darworms.main = (function() {
     // console.log ( " init wGraphics " + darworms.main.wGraphics);
     $('#wcanvas').bind('tap', wormEventHandler);
 
-    $('#selectionUI').slider().val(1);
-    $('#selectionUI').slider("refresh");
+    $('#panToSelectionUI').slider().val(0);
+    $('#panToSelectionUI').slider("refresh");
+
+    // this should depend on scale factor.  On small screens
+    // we cshould set pickDirectionUI to true
+    $('#pickDirectionUI').slider().val(0);
+    $('#pickDirectionUI').slider("refresh");
 
 
     darworms.wCanvasRef = $('#wcanvas');

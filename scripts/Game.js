@@ -64,7 +64,14 @@ darworms.gameModule = (function() {
     // variable for animating zoom in to selection UI
     // create back buffer image  for current grid image
 
-
+    // this should depend on scale factor.  On small screens
+    // we cshould set pickDirectionUI to true
+    if ((this.scale.x) < 20 || (this.scale.y < 20)) {
+      $('#pickDirectionUI').slider().val(1);
+      $('#pickDirectionUI').slider("refresh");
+      darworms.dwsettings.pickDirectionUI = "1";
+    }
+    console.log(" Scale: " + this.scale.format());
     this.zoomFrame = 0;
     this.startx = 0;
     this.starty = 0;
@@ -337,7 +344,7 @@ darworms.gameModule = (function() {
   }
   Game.prototype.drawPickCells = function() {
     var animFraction = 1.0 * (darworms.graphics.animFrame & 0x7F) / 128;
-    if (animFraction < 0.1) {
+    if ((darworms.dwsettings.pickDirectionUI == 1) && (animFraction < 0.1)) {
       darworms.theGame.clearCanvas();
       darworms.theGame.drawCells(); // shound use backbuffer instead of redrawing?
     };
@@ -348,9 +355,11 @@ darworms.gameModule = (function() {
     darworms.theGame.drawPickCellOrigin(focusWorm.pos,
       darworms.dwsettings.alphaColorTable[focusWorm.colorIndex]);
 
-    darworms.pickCells.forEach(function(pickTarget) {
-      darworms.theGame.drawExpandedTarget(pickTarget);
-    });
+    if (darworms.dwsettings.pickDirectionUI == 1) {
+      darworms.pickCells.forEach(function(pickTarget) {
+        darworms.theGame.drawExpandedTarget(pickTarget);
+      });
+    }
 
     this.worms.forEach(function(worm, index) {
       darworms.theGame.highlightWorm(worm, index);
@@ -552,7 +561,7 @@ darworms.gameModule = (function() {
           active.nMoves = active.nMoves + 1;
           this.zoomPane.canvasIsDirty = true;
           this.drawDirtyCells();
-          if (darworms.dwsettings.selectionUI == 1) {
+          if (darworms.dwsettings.panToSelectionUI == 0) {
             this.initPickUI(active);
           }
           return (true);
@@ -827,7 +836,7 @@ darworms.gameModule = (function() {
   };
   // Called from user actions
   var selectDirection = function(point) {
-    (darworms.dwsettings.selectionUI == 0) ? selectLargeUIDirection(point):
+    ((darworms.dwsettings.panToSelectionUI == 1) || (darworms.dwsettings.pickDirectionUI == 1)) ? selectLargeUIDirection(point):
       selectSmallUIDirection(point);
   }
 

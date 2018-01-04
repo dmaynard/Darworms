@@ -130,6 +130,12 @@
       #scorecanvas {
         height: 30px;
       }
+
+      .selectionuicontainer .ui-slider-switch  { width: 15em }
+
+      .pickcellsuicontainer .ui-slider-switch  { width: 15em }
+
+
     }
   </style>
 
@@ -169,7 +175,7 @@
         <div data-role="controlgroup">
           <ul>
             <a href="#red-darworm-page" id="p1Lbutton" data-role="button" data-theme="c"> Red  </a>
-            <a href="#green-darworm-page" id="p2Lbutton" data-role="button" data-theme="d" width="100%"> Green  </a>
+            <a href="#green-darworm-page" id="p2Lbutton" data-role="button" data-theme="d"> Green  </a>
             <a href="#blue-darworm-page" id="p3Lbutton" data-role="button" data-theme="e"> Blue  </a>
             <a href="#yellow-darworm-page" id="p4Lbutton" data-role="button" data-theme="f"> Yellow  </a>
 
@@ -240,22 +246,34 @@
     </div>
     <div data-role="controlgroup" data-type="horizontal">
       <fieldset data-role="controlgroup" data-type="horizontal">
-        <form id="selectionui" name="selectionui">
-          <label for="selectionUI">Selection UI:</label>
-          <select name="selectionUI" id="selectionUI" data-role="slider" data-mini='true' value='1'>
-                    <option value=0>Large</option>
-                    <option value=1>Small</option>
-                </select>
-        </form>
-      </fieldset>
-    </div>
-    <div data-role="controlgroup" data-type="horizontal">
-      <fieldset data-role="controlgroup" data-type="horizontal">
         <form id="doAudio" name="Audio">
           <label for="audioon">Audio:</label>
           <select name="audioon" id="audioon" data-role="slider" data-mini='true'>
                     <option value=1>On</option>
                     <option value=0>Off</option>
+                </select>
+        </form>
+      </fieldset>
+    </div>
+    <div data-role="controlgroup" data-type="horizontal" class="selectionuicontainer">
+      <fieldset data-role="controlgroup" data-type="horizontal">
+        <form id="selectionui" name="selectionui">
+          <label for="panToSelectionUI">To Select a Direction when Darworms encounters a new cell type:</label>
+          <select name="panToSelectionUI" id="panToSelectionUI" data-mini="false" data-role="slider"  value='0'>
+                    <option value=0>Fixed Grid</option>
+                    <option value=1>Pan To Selection Point</option>
+                </select>
+        </form>
+      </fieldset>
+    </div>
+
+    <div data-role="controlgroup" data-type="horizontal" class="pickcellsuicontainer">
+      <fieldset data-role="controlgroup" data-type="horizontal">
+        <form id="pickdirectionui" name="pickdirectionui">
+          <label for="pickDirectionUI">Choose Cell or choose Screen quadrant to select a direction:</label>
+          <select name="pickDirectionUI" id="pickDirectionUI" data-mini="false" data-role="slider"  value='0'>
+                    <option value=0>Click on Cell</option>
+                    <option value=1>Click on Screen Quadrant</option>
                 </select>
         </form>
       </fieldset>

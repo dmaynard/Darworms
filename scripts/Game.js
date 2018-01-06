@@ -569,8 +569,8 @@ darworms.gameModule = (function() {
         if (graphicsOn) {
           this.dirtyCells.push(active.pos);
           if (darworms.dwsettings.doAudio == 1) {
-            if (active.notes[direction]) {
-              active.notes[direction].playSample();
+            if (active.audioSamples[direction]) {
+              active.audioSamples[direction].playSample();
             }
           }
         }
@@ -823,9 +823,7 @@ darworms.gameModule = (function() {
         darworms.theGame.showTimes();
         updateScores();
         darworms.theGame.gameState = darworms.gameStates.over;
-        // theGame.clearCanvas();
-        // alert("Game Over ");
-        // wGraphics.restore();
+        
       }
     }
     darworms.theGame.drawDirtyCells();

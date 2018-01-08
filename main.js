@@ -92,6 +92,7 @@ darworms.main = (function() {
     // $('input[name=green-radio-choice]').checkboxradio("refresh");
     var selectedType = $(selectinput + ':checked').val();
     gWorms.forEach(function(worm, i) {
+      worm.toText();
       $(textFields[i]).val(playerTypes[i] == 0 ? "" : worm.name);
     })
   }

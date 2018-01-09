@@ -823,7 +823,7 @@ darworms.gameModule = (function() {
         darworms.theGame.showTimes();
         updateScores();
         darworms.theGame.gameState = darworms.gameStates.over;
-        
+
       }
     }
     darworms.theGame.drawDirtyCells();

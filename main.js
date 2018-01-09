@@ -548,6 +548,7 @@ darworms.main = (function() {
   var initPlayPage = function() {
     if (!darworms.playpageInitialized) {
       darworms.startgame(false);
+      darworms.audioContext.resume();
       darworms.playpageInitialized = true;
       resizeCanvas();
     }
@@ -563,6 +564,7 @@ darworms.main = (function() {
       darworms.audioContext = new webkitAudioContext();
     } else {
       darworms.dwsettings.doAudio = false;
+      alert( " Could not load webAudio... muting game");
       $('#doAudio').hide();
     }
 
@@ -592,6 +594,20 @@ darworms.main = (function() {
       new AudioSample("death", "sounds/death.wav");
     }
 
+    // context state at this time is `undefined` in iOS8 Safari
+    if (darworms.audioContext.state === 'suspended') {
+      var resume = function () {
+        darworms.audioContext.resume();
+
+        setTimeout(function () {
+          if (darworms.audioContext.state === 'running') {
+            document.body.removeEventListener('touchend', resume, false);
+          }
+        }, 0);
+      };
+
+      document.body.addEventListener('touchend', resume, false);
+    }
 
   }
 

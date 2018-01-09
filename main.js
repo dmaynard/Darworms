@@ -18,12 +18,12 @@ darworms.main = (function() {
   /* Game Globals  Done   wrap these globals in a function  */
 
 
-  var playerTypes = [1, 0, 0, 0];
+  var playerTypes = [3, 0, 0, 0];
   var buttonNames = ['#p1button', '#p2button', '#p3button', '#p4button',
     '#p1Lbutton', '#p2Lbutton', '#p3Lbutton', '#p4Lbutton'
   ];
   var typeNames = [" None ", "Random", " Same ", " New  "];
-
+  var textFields = ['#p1textfield', '#p2textfield', '#p3textfield', '#p4textfield'];
   var wGraphics;
   var wCanvas;
 
@@ -91,9 +91,15 @@ darworms.main = (function() {
     $(selectinput).checkboxradio("refresh");
     // $('input[name=green-radio-choice]').checkboxradio("refresh");
     var selectedType = $(selectinput + ':checked').val();
+    gWorms.forEach(function(worm, i) {
+      worm.toText();
+      $(textFields[i]).val(playerTypes[i] == 0 ? "" : worm.name);
+    })
   }
 
   var setSelectedDarwormType = function() {
+    // This may no longer be needed since each properties page now
+    // directly sets the wTypes.
     var color = darworms.colorNames[darworms.selectedDarworm];
     var selectinput = 'input[name=' + color + '-radio-choice]';
     var selectedType = $(selectinput + ':checked').val();
@@ -213,28 +219,31 @@ darworms.main = (function() {
 
   };
 
-  var pointerEventToXY = function(e){
-       var out = {x:0, y:0};
-       if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
-         var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-         out.x = touch.pageX;
-         out.y = touch.pageY;
-       } else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
-         out.x = e.pageX;
-         out.y = e.pageY;
-       }  else if (e.type == 'tap') {
-         out.x = event.clientX;
-         out.y = event.clientY;
-       }
-       return out;
-     };
+  var pointerEventToXY = function(e) {
+    var out = {
+      x: 0,
+      y: 0
+    };
+    if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
+      var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+      out.x = touch.pageX;
+      out.y = touch.pageY;
+    } else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover' || e.type == 'mouseout' || e.type == 'mouseenter' || e.type == 'mouseleave') {
+      out.x = e.pageX;
+      out.y = e.pageY;
+    } else if (e.type == 'tap') {
+      out.x = event.clientX;
+      out.y = event.clientY;
+    }
+    return out;
+  };
 
   var wormEventHandler = function(event) {
     //var loc = pointerEventToXY(event)
     //var touchX = loc.x;
     //var touchY = loc.y
-    var touchX = event.clientX;
-    var touchY = event.clientY;
+    var touchX = (event.offsetX || event.clientX);
+    var touchY = (event.offsetY || event.clientY);
     // alert( event.toString() + " tap event x:" + touchX + "  y:" + touchY)
     var cWidth = $('#wcanvas').width();
     var cHeight = $('#wcanvas').height();
@@ -298,6 +307,7 @@ darworms.main = (function() {
       darworms.theGame.drawCells();
       darworms.theGame.worms = gWorms;
       console.log(" init gridsize: " + $("#gridsize").val() + " gHeight" + heightSlider);
+
       gWorms.forEach(function(worm, i) {
         if (playerTypes[i] !== 0) { //  not None
           worm.init(playerTypes[i]);
@@ -305,6 +315,7 @@ darworms.main = (function() {
         } else {
           $(buttonNames[i]).addClass("ui-grayed-out");
         }
+        $(textFields[i]).val(worm.toText());
         worm.place(initialWormStates[playerTypes[i]], darworms.theGame);
       })
     }
@@ -359,13 +370,12 @@ darworms.main = (function() {
           darworms.theGame.showTimes();
           darworms.theGame.gameState = darworms.gameStates.over;
           $("#startpause").text("Start Game");
-          // theGame.clearCanvas();
-          // alert("Game Over ");
           // wGraphics.restore();
         }
       }
       darworms.theGame.drawCells();
       darworms.gameModule.updateScores();
+
       $("#startpause").text("Start Game");
 
     }
@@ -400,6 +410,19 @@ darworms.main = (function() {
 
     darworms.graphics.rawFrameCount++;
     if (darworms.theGame.gameState == darworms.gameStates.over) {
+      //  end of game cleanup
+      gWorms.forEach(function(worm, i) {
+        if (worm.wType == 3) { //  new
+          worm.wType = 2; // Same
+
+        }
+        worm.toText(); //  update string version of dna
+      })
+      for (ig = 0; ig < 4; ig++) {
+        playerTypes[ig] = gWorms[ig].wType;
+      }
+      setTypes();
+      setupRadioButtons();
       return;
     }
     requestAnimationFrame(doGameLoop);
@@ -475,7 +498,9 @@ darworms.main = (function() {
   }
   var initTheGame = function(startNow) {
 
-
+    gWorms.forEach(function(worm, i) {
+      $(textFields[i]).val(worm.toText());
+    })
     if (startNow) {
       darworms.theGame.gameState = darworms.gameStates.running;
 
@@ -523,6 +548,7 @@ darworms.main = (function() {
   var initPlayPage = function() {
     if (!darworms.playpageInitialized) {
       darworms.startgame(false);
+      darworms.audioContext.resume();
       darworms.playpageInitialized = true;
       resizeCanvas();
     }
@@ -538,6 +564,7 @@ darworms.main = (function() {
       darworms.audioContext = new webkitAudioContext();
     } else {
       darworms.dwsettings.doAudio = false;
+      alert( " Could not load webAudio... muting game");
       $('#doAudio').hide();
     }
 
@@ -567,6 +594,20 @@ darworms.main = (function() {
       new AudioSample("death", "sounds/death.wav");
     }
 
+    // context state at this time is `undefined` in iOS8 Safari
+    if (darworms.audioContext.state === 'suspended') {
+      var resume = function () {
+        darworms.audioContext.resume();
+
+        setTimeout(function () {
+          if (darworms.audioContext.state === 'running') {
+            document.body.removeEventListener('touchend', resume, false);
+          }
+        }, 0);
+      };
+
+      document.body.addEventListener('touchend', resume, false);
+    }
 
   }
 
@@ -575,6 +616,26 @@ darworms.main = (function() {
     // for a hex grid set inside of a square grid of w=h=1.0 the length
     // of every edge of the hex is sqrt (3)
 
+  }
+  var typeFromName = function(name) {
+    switch (name) {
+      case "none":
+        return 0;
+        break;
+      case "random":
+        return 1;
+        break;
+      case "same":
+        return 2;
+        break;
+      case "new":
+        return 3;
+        break
+
+      default:
+        alert("unknown type (not none, randowm, new or same)");
+        return 0;
+    }
   }
   var init = function() {
     // This may be needed when we actually build a phoneGap app
@@ -643,6 +704,132 @@ darworms.main = (function() {
         heightSlider = heightSlider + 1;
       }
       darworms.gameModule.reScale(heightSlider, heightSlider);
+    });
+    $("input[name='red-radio-choice']").on("change", function() {
+      console.log(" red-radio-choice on change function")
+      var type = ($("input[name='red-radio-choice']:checked").val());
+      gWorms[0].init(typeFromName(type));
+      $(textFields[0]).val(typeFromName(type) == 0 ? "" : gWorms[0].name);
+
+    });
+    $("input[name='green-radio-choice']").on("change", function() {
+      console.log(" green-radio-choice on change function")
+      var type = ($("input[name='green-radio-choice']:checked").val());
+      gWorms[1].init(typeFromName(type));
+      $(textFields[1]).val(typeFromName(type) == 0 ? "" : gWorms[1].name);
+
+    });
+    $("input[name='blue-radio-choice']").on("change", function() {
+      console.log(" blue-radio-choice on change function")
+      var type = ($("input[name='blue-radio-choice']:checked").val());
+      gWorms[2].init(typeFromName(type));
+      $(textFields[2]).val(typeFromName(type) == 0 ? "" : gWorms[2].name);
+
+    });
+    $("input[name='yellow-radio-choice']").on("change", function() {
+      console.log(" yellow-radio-choice on change function")
+      var type = ($("input[name='yellow-radio-choice']:checked").val());
+      gWorms[3].init(typeFromName(type));
+      $(textFields[3]).val(typeFromName(type) == 0 ? "" : gWorms[3].name);
+
+    });
+    //  These four handlers should be combined into one parameterized one or
+    //  generated closures for each one
+    $("input[name='red-textname']").on("change", function() {
+      console.log(" red-textname")
+      var dnastring = ($("input[name='red-textname']").val());
+      var regx = /^[ABCDEF\?]{63}X$/;
+      if (regx.test(dnastring)) {
+        if (gWorms[0].fromText(dnastring)) {
+          gWorms[0].wType = 2; // Same
+          playerTypes[0] = 2;
+          setupRadioButtons();
+
+
+          $("#p1button").text(typeNames[playerTypes[0]]);
+          $("#p1Lbutton").text(typeNames[playerTypes[0]]);
+          gWorms[0].toText();
+          $("input[name='red-textname']").textinput({
+            theme: "c"
+          });
+        };
+      } else {
+        $("input[name='red-textname']").textinput({
+          theme: "a"
+        });
+      }
+    });
+    $("input[name='green-textname']").on("change", function() {
+      console.log(" green-textname")
+      var dnastring = ($("input[name='green-textname']").val());
+      var regx = /^[ABCDEF\?]{63}X$/;
+      if (regx.test(dnastring)) {
+        if (gWorms[1].fromText(dnastring)) {
+          gWorms[1].wType = 2; // Same
+          playerTypes[1] = 2;
+          setupRadioButtons();
+
+
+          $("#p2button").text(typeNames[playerTypes[1]]);
+          $("#p2Lbutton").text(typeNames[playerTypes[1]]);
+          gWorms[1].toText();
+          $("input[name='green-textname']").textinput({
+            theme: "d"
+          });
+        };
+      } else {
+        $("input[name='green-textname']").textinput({
+          theme: "a"
+        });
+      }
+    });
+    $("input[name='blue-textname']").on("change", function() {
+      console.log(" blue-textname")
+      var dnastring = ($("input[name='blue-textname']").val());
+      var regx = /^[ABCDEF\?]{63}X$/;
+      if (regx.test(dnastring)) {
+        if (gWorms[2].fromText(dnastring)) {
+          gWorms[2].wType = 2; // Same
+          playerTypes[2] = 2;
+          setupRadioButtons();
+
+
+          $("#p3button").text(typeNames[playerTypes[2]]);
+          $("#p3Lbutton").text(typeNames[playerTypes[2]]);
+          gWorms[2].toText();
+          $("input[name='blue-textname']").textinput({
+            theme: "e"
+          });
+        };
+      } else {
+        $("input[name='green-textname']").textinput({
+          theme: "a"
+        });
+      }
+    });
+    $("input[name='yellow-textname']").on("change", function() {
+      console.log(" yellow-textname")
+      var dnastring = ($("input[name='yellow-textname']").val());
+      var regx = /^[ABCDEF\?]{63}X$/;
+      if (regx.test(dnastring)) {
+        if (gWorms[3].fromText(dnastring)) {
+          gWorms[3].wType = 2; // Same
+          playerTypes[3] = 2;
+          setupRadioButtons();
+
+
+          $("#p4button").text(typeNames[playerTypes[2]]);
+          $("#p4Lbutton").text(typeNames[playerTypes[2]]);
+          gWorms[2].toText();
+          $("input[name='yellow-textname']").textinput({
+            theme: "f"
+          });
+        };
+      } else {
+        $("input[name='green-textname']").textinput({
+          theme: "a"
+        });
+      }
     });
   }
 

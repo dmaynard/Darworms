@@ -23,10 +23,9 @@
   <script src="scripts/loader.js"></script>
 
   <style type=text/css>
-
-  .ui-content {
-    padding-bottom: 6px;
-  }
+    .ui-content {
+      padding-bottom: 6px;
+    }
 
     .ui-page .ui-content .ui-block-a.playerbutton1 .ui-block-a {
       color: red;
@@ -85,6 +84,7 @@
       display: inline-block;
       align: right;
     }
+
     #wcanvas {
       cursor: pointer;
     }
@@ -123,9 +123,7 @@
         width: 100%;
         cursor: pointer;
       }
-      #canvascontainer {
-
-      }
+      #canvascontainer {}
 
       #landnavcontainer {
         display: none;
@@ -135,11 +133,13 @@
         height: 30px;
       }
 
-      .selectionuicontainer .ui-slider-switch  { width: 15em }
+      .selectionuicontainer .ui-slider-switch {
+        width: 15em
+      }
 
-      .pickcellsuicontainer .ui-slider-switch  { width: 15em }
-
-
+      .pickcellsuicontainer .ui-slider-switch {
+        width: 15em
+      }
     }
   </style>
 
@@ -159,7 +159,7 @@
     </div>
   </div>
   <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true>
-    <div data-role="content"  class="ui-content">
+    <div data-role="content" class="ui-content">
       <div id="canvascontainer" class="canvas-container">
         <canvas id="wcanvas" class="wcanvasclass"></canvas>
         <canvas id="scorecanvas" class="scorecanvasclass" height="20"></canvas>
@@ -263,7 +263,7 @@
       <fieldset data-role="controlgroup" data-type="horizontal">
         <form id="selectionui" name="selectionui">
           <label for="panToSelectionUI">To Select a Direction when Darworms encounters a new cell type:</label>
-          <select name="panToSelectionUI" id="panToSelectionUI" data-mini="false" data-role="slider"  value='0'>
+          <select name="panToSelectionUI" id="panToSelectionUI" data-mini="false" data-role="slider" value='0'>
                     <option value=0>Fixed Grid</option>
                     <option value=1>Pan To Selection Point</option>
                 </select>
@@ -275,7 +275,7 @@
       <fieldset data-role="controlgroup" data-type="horizontal">
         <form id="pickdirectionui" name="pickdirectionui">
           <label for="pickDirectionUI">Choose Cell or choose Screen quadrant to select a direction:</label>
-          <select name="pickDirectionUI" id="pickDirectionUI" data-mini="false" data-role="slider"  value='0'>
+          <select name="pickDirectionUI" id="pickDirectionUI" data-mini="false" data-role="slider" value='0'>
                     <option value=0>Click on Cell</option>
                     <option value=1>Click on Screen Quadrant</option>
                 </select>
@@ -372,6 +372,10 @@
           <label for="red-radio-choice-4">New</label>
         </fieldset>
       </form>
+      <div role="main" class="ui-content">
+        <label for="p1textfield">Darworm Definition:</label>
+        <input type="text" name="red-textname" id="p1textfield" value="">
+      </div>
     </div>
   </div>
 
@@ -399,6 +403,10 @@
           <label for="green-radio-choice-4">New</label>
         </fieldset>
       </form>
+      <div role="main" class="ui-content">
+        <label for="p2textfield">Darworm Definition:</label>
+        <input type="text" name="green-textname" id="p2textfield" value="">
+      </div>
     </div>
   </div>
 
@@ -426,6 +434,10 @@
           <label for="blue-radio-choice-4">New</label>
         </fieldset>
       </form>
+      <div role="main" class="ui-content">
+        <label for="p3textfield">Darworm Definition:</label>
+        <input type="text" name="blue-textname" id="p3textfield" value="">
+      </div>
     </div>
   </div>
 
@@ -453,6 +465,10 @@
           <label for="yellow-radio-choice-4">New</label>
         </fieldset>
       </form>
+      <div role="main" class="ui-content">
+        <label for="p4textfield">Darworm Definition:</label>
+        <input type="text" name="yellow-textname" id="p4textfield" value="">
+      </div>
     </div>
   </div>
 

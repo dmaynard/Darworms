@@ -18,7 +18,7 @@ function Worm(colorIndex, state) {
   this.name = "";
   this.wType = 0; // None (asleep)
 
-  this.audioSamples = [];
+  this.audioSamplesPtrs = [];
   this.pos = new Point(-1, -1);
 
   // for (var j = 0; j < 6 ; j = j+ 1) {
@@ -43,7 +43,12 @@ function Worm(colorIndex, state) {
 
 Worm.prototype.setNotes = function(index) {
   for (var j = 0; j < 6; j = j + 1) {
-    this.audioSamples.push(darworms.audioSamples[((index) + (j * 2)) % darworms.audioSamples.length]);
+    var sampleIndex = ((index) + (j * 2)) % (darworms.audioSamples.length-1);
+    // this.audioSamples.push(darworms.audioSamples[((index) + (j * 2)) % (darworms.audioSamples.length-1)]);
+    // console.log (" index: " + index + " dir: " + j + " Sample Index: " + sampleIndex  + " length: " + darworms.audioSamples.length);
+     // this.audioSamples.push(darworms.audioSamples[sampleIndex]);
+     // this.audioSamples.push(sampleIndex);
+     this.audioSamplesPtrs.push(index); // c2,wav
   }
 
 

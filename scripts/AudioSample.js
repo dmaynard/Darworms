@@ -25,7 +25,7 @@ function AudioSample(name, location) {
     darworms.audioSamples.push(this);
 }
 
-AudioSample.prototype.playSample = function () {
+AudioSample.prototype.playSample = function (rate) {
     var source;
     // console.log(" playSample " + this.name + "  " + this.location + "  savedBuffer " + this.savedBuffer);
     if (darworms.audioContext !== undefined && this.savedBuffer !== undefined) {
@@ -36,6 +36,8 @@ AudioSample.prototype.playSample = function () {
         // console.log(" playSample " + this.name + " volume  " + darworms.masterGainNode.gain.value);
         darworms.masterGainNode.connect(darworms.audioContext.destination);
         source.start(0); // Play sound immediately. Renamed source.start from source.noteOn
+        if (rate ) {
+          source.playbackRate.value = rate;
+        }
     }
 };
-

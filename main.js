@@ -6,6 +6,13 @@
  git push bitbltstudios:~/repo/ master
 
  darworms.com
+
+   interesting DarWorms
+ EEF?A??FB??F?FF?CC?F?FF???A?FF?FD??E?EE??CE?E??E?DD?D??DB??C?BAX
+ DBCDAFEDCEFFEFEEFFADDBADBCFFFFAFBCCCADEDBBAEBBEEABDDABDDCBACABAX
+ AEF?AE?DB??F?FF?C??C?FF??FA?FF?FD??C?BE??CA?A??E?B??A??DA??C?BAX
+ AEF?AE?EB??F?FF?C??D?FD??BC?B??FD??D?DE??CC?B??E?DA?BD?DB??C?BAX
+ AEF?AE?FB??E?FF?C??F?FD??FC?BF?FD??D?EA??CA?A??E?BD?A??DB??C?BAX
  */
 darworms.main = (function() {
 
@@ -17,6 +24,9 @@ darworms.main = (function() {
   };
   /* Game Globals  Done   wrap these globals in a function  */
 
+  var useKalimbaAudio = false;
+  var usePianoAudio = true;
+  var useSitarAudio = false;
 
   var playerTypes = [3, 0, 0, 0];
   var buttonNames = ['#p1button', '#p2button', '#p3button', '#p4button',
@@ -575,23 +585,57 @@ darworms.main = (function() {
 
 
       //   loading AudioSample Files
-      new AudioSample("b3", "sounds/a_kalimba_b3.wav");
-      new AudioSample("c4", "sounds/b_kalimba_c4.wav");
-      new AudioSample("d4", "sounds/c_kalimba_d4.wav");
-      new AudioSample("e4", "sounds/d_kalimba_e4.wav");
-      new AudioSample("fsharp4", "sounds/e_kalimba_fsharp4.wav");
-      new AudioSample("g4", "sounds/f_kalimba_g4.wav");
-      new AudioSample("a4", "sounds/g_kalimba_a4.wav");
-      new AudioSample("b4", "sounds/h_kalimba_b4.wav");
-      new AudioSample("c5", "sounds/i_kalimba_c5.wav");
-      new AudioSample("b3", "sounds/j_kalimba_d5.wav");
-      new AudioSample("e5", "sounds/k_kalimba_e5.wav");
-      new AudioSample("fsharp5", "sounds/l_kalimba_fsharp5.wav");
-      new AudioSample("g5", "sounds/m_kalimba_g5.wav");
-      new AudioSample("a5", "sounds/n_kalimba_a5.wav");
-      new AudioSample("b5", "sounds/o_kalimba_b5.wav");
-      new AudioSample("c6", "sounds/p_kalimba_c6.wav");
+      /*
+      if (useKalimbaAudio) {
+        new AudioSample("b3", "sounds/a_kalimba_b3.wav");
+        new AudioSample("c4", "sounds/b_kalimba_c4.wav");
+        new AudioSample("d4", "sounds/c_kalimba_d4.wav");
+        new AudioSample("e4", "sounds/d_kalimba_e4.wav");
+        new AudioSample("fsharp4", "sounds/e_kalimba_fsharp4.wav");
+        new AudioSample("g4", "sounds/f_kalimba_g4.wav");
+        new AudioSample("a4", "sounds/g_kalimba_a4.wav");
+        new AudioSample("b4", "sounds/h_kalimba_b4.wav");
+        new AudioSample("c5", "sounds/i_kalimba_c5.wav");
+        new AudioSample("b3", "sounds/j_kalimba_d5.wav");
+        new AudioSample("e5", "sounds/k_kalimba_e5.wav");
+        new AudioSample("fsharp5", "sounds/l_kalimba_fsharp5.wav");
+        new AudioSample("g5", "sounds/m_kalimba_g5.wav");
+        new AudioSample("a5", "sounds/n_kalimba_a5.wav");
+        new AudioSample("b5", "sounds/o_kalimba_b5.wav");
+        new AudioSample("c6", "sounds/p_kalimba_c6.wav");
+
+      }
+      if (usePianoAudio) {
+        new AudioSample("a1", "sounds/piano/a1.wav");
+        new AudioSample("a1s", "sounds/piano/a1s.wav");
+        new AudioSample("b1", "sounds/piano/b1.wav");
+        new AudioSample("c1", "sounds/piano/c1.wav");
+        new AudioSample("c1s", "sounds/piano/c1s.wav");
+        new AudioSample("c2", "sounds/piano/c2.wav");
+        new AudioSample("d1", "sounds/piano/d1.wav");
+        new AudioSample("d1s", "sounds/piano/a1.wav");
+        new AudioSample("e1", "sounds/piano/e1.wav");
+        new AudioSample("f1", "sounds/piano/f1.wav");
+        new AudioSample("f1s", "sounds/piano/f1s.wav");
+        new AudioSample("g1", "sounds/piano/g1.wav");
+        new AudioSample("g1s", "sounds/piano/g1s.wav");
+      }
+      if (useSitarAudio) {
+        new AudioSample("sitar1", "sounds/sitar/sitar1.wav");
+        new AudioSample("sitar2", "sounds/sitar/sitar2.wav");
+        new AudioSample("sitar3", "sounds/sitar/sitar3.wav");
+        new AudioSample("sitar4", "sounds/sitar/sitar4.wav");
+        new AudioSample("sitar5", "sounds/sitar/sitar5.wav");
+        new AudioSample("sitar6", "sounds/sitar/sitar6.wav");
+
+      }
+      */
+      new AudioSample("kalimba", "sounds/i_kalimba_c5.wav");
+      new AudioSample("piano", "sounds/piano-c2.wav");
+      new AudioSample("guitar", "sounds/AcousticGuitar.wav");
+      new AudioSample("sitar", "sounds/Sitar-C5.wav");
       new AudioSample("death", "sounds/death.wav");
+
     }
 
     // context state at this time is `undefined` in iOS8 Safari

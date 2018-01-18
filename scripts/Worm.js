@@ -42,6 +42,7 @@ function Worm(colorIndex, state) {
 }
 
 Worm.prototype.setNotes = function(index) {
+  this.audioSamplesPtrs.length = 0;
   for (var j = 0; j < 6; j = j + 1) {
     var sampleIndex = ((index) + (j * 2)) % (darworms.audioSamples.length-1);
     // this.audioSamples.push(darworms.audioSamples[((index) + (j * 2)) % (darworms.audioSamples.length-1)]);

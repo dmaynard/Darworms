@@ -13,6 +13,9 @@
  AEF?AE?DB??F?FF?C??C?FF??FA?FF?FD??C?BE??CA?A??E?B??A??DA??C?BAX
  AEF?AE?EB??F?FF?C??D?FD??BC?B??FD??D?DE??CC?B??E?DA?BD?DB??C?BAX
  AEF?AE?FB??E?FF?C??F?FD??FC?BF?FD??D?EA??CA?A??E?BD?A??DB??C?BAX
+ AEF?AB?FB??F?FE?C??C?FA??BA?A??FD??D?EEE?EA?E??E?CA?D??DC??C?BAX
+ //  nice   almost perfect worm (316)
+ AEF?AE?FB??C?FE?C??D?DF??CA?AF?FD??E?BA??BA?A??E?DD?A??DC??C?BAX
  */
 darworms.main = (function() {
 
@@ -70,7 +73,7 @@ darworms.main = (function() {
 
     gWorms.forEach(function(worm, i) {
       worm.wType = playerTypes[i];
-      worm.setNotes(i);
+      // worm.setNotes(i);
       $(buttonNames[i]).removeClass(
         playerTypes[i] === 0 ? "ui-opaque" : "ui-grayed-out");
       $(buttonNames[i]).addClass(
@@ -131,6 +134,10 @@ darworms.main = (function() {
         alert("unknown type");
     }
     setTypes();
+    var selectedInstrumentInput = $('#select-native-' + color);
+    if (selectedInstrumentInput.length == 1) {  
+      gWorms[darworms.selectedDarworm].setNotes(parseInt(selectedInstrumentInput.val()));
+    }
   }
   var showSettings = function() {
     if (darworms.theGame && darworms.theGame.gameState !== darworms.gameStates.over) {
@@ -510,6 +517,7 @@ darworms.main = (function() {
 
     gWorms.forEach(function(worm, i) {
       $(textFields[i]).val(worm.toText());
+      // worm.setNotes(i);
     })
     if (startNow) {
       darworms.theGame.gameState = darworms.gameStates.running;
@@ -574,7 +582,7 @@ darworms.main = (function() {
       darworms.audioContext = new webkitAudioContext();
     } else {
       darworms.dwsettings.doAudio = false;
-      alert( " Could not load webAudio... muting game");
+      alert(" Could not load webAudio... muting game");
       $('#doAudio').hide();
     }
 
@@ -640,10 +648,10 @@ darworms.main = (function() {
 
     // context state at this time is `undefined` in iOS8 Safari
     if (darworms.audioContext.state === 'suspended') {
-      var resume = function () {
+      var resume = function() {
         darworms.audioContext.resume();
 
-        setTimeout(function () {
+        setTimeout(function() {
           if (darworms.audioContext.state === 'running') {
             document.body.removeEventListener('touchend', resume, false);
           }
@@ -749,6 +757,11 @@ darworms.main = (function() {
       }
       darworms.gameModule.reScale(heightSlider, heightSlider);
     });
+
+    gWorms.forEach(function(worm, i) {
+      worm.setNotes(i);
+    })
+    resizeCanvas();
     $("input[name='red-radio-choice']").on("change", function() {
       console.log(" red-radio-choice on change function")
       var type = ($("input[name='red-radio-choice']:checked").val());

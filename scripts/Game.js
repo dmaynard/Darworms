@@ -570,7 +570,8 @@ darworms.gameModule = (function() {
           this.dirtyCells.push(active.pos);
           if (darworms.dwsettings.doAudio == 1) {
             if (active.audioSamplesPtrs[direction] !== undefined) {
-              darworms.audioSamples[active.audioSamplesPtrs[direction]].playSample( (direction +  3) / 6);
+              darworms.audioSamples[active.audioSamplesPtrs[direction]].
+                      playSample( darworms.audioPlaybackRates[active.MusicScale[direction]]);
             }
           }
         }

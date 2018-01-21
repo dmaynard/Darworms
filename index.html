@@ -384,7 +384,26 @@
         <option value="1">Piano</option>
         <option value="2">Guitar</option>
         <option value="3">Sitar</option>
+        <option value="4">Flute</option>
+        <option value="5">Clarinet</option>
     </select>
+</div>
+<div class="ui-field-contain">
+    <label for="select-key-red">Key:</label>
+    <select name="select-key-red" onchange="darworms.setKeyVal(0)" id="select-native-key-red">
+        <option value="AMajor">A Major</option>
+        <option value="BMajor">B Major</option>
+        <option value="CMajor">C Major</option>
+        <option value="CMinor">C Minor</option>
+        <option value="DMajor">D Major</option>
+        <option value="EMajor">E Major</option>
+        <option value="FMajor">F Major</option>
+        <option value="GMajor">G Major</option>
+
+    </select>
+</div>
+<div>
+  <a id="abortgame" data-role=button data-inline="true" onclick=darworms.playScale(0)>Play Scale</a>
 </div>
 </form>
     </div>

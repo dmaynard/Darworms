@@ -16,7 +16,26 @@
  AEF?AB?FB??F?FE?C??C?FA??BA?A??FD??D?EEE?EA?E??E?CA?D??DC??C?BAX
  //  nice   almost perfect worm (316)
  AEF?AE?FB??C?FE?C??D?DF??CA?AF?FD??E?BA??BA?A??E?DD?A??DC??C?BAX
+ // perfect
+ DFADAFEEFBCEBFEFDDCDBDADCBAFBBAFEDCEBEDEAEECAEAEDDADDBDDBBACABAX
+
+ // nice score  297
+ AEF?AF?FB??E?FA?C??F?DD??CA?F??FD??E?BAE?EE?E??E?BD?D??DA??C?BAX
+
+ // 116
+ AEF?AE?FB??C?BE?C??F?DD??FA?BF?FD??E??A??CC?B??E?D??D??DC??C?BAX
+
+ //  short  score 10
+ //  short score 42
+ AEF?AE?FB??C?BE?C??F?DDF??C?B??FD??E??A??EA?B??E?DA?D??DC??C?BAX
+// short score 2
+ AEF?AB?FB????B?EC??F?B????C????FD?????E???C????E?D??B??DC??C?BAX
+// nice 30
+AEF?AF?FB????BA?C??F?DA???F?B??FD??E?D?D???????E?D??D??DC??C?BAX
  */
+
+
+
 darworms.main = (function() {
 
   var deviceInfo = function() {
@@ -134,11 +153,8 @@ darworms.main = (function() {
         alert("unknown type");
     }
     setTypes();
-    var selectedInstrumentInput = $('#select-native-' + color);
-    if (selectedInstrumentInput.length == 1) {  
-      gWorms[darworms.selectedDarworm].setNotes(parseInt(selectedInstrumentInput.val()));
-    }
   }
+
   var showSettings = function() {
     if (darworms.theGame && darworms.theGame.gameState !== darworms.gameStates.over) {
       $('#geometryradios').hide();
@@ -296,6 +312,18 @@ darworms.main = (function() {
       }
     }
   }
+  darworms.setKeyVal = function(index) {
+    var selectedKeyInput = $('#select-native-key-' + darworms.colorNames[index]);
+    if (selectedKeyInput.length == 1) {
+      gWorms[index].setKey(selectedKeyInput.val());
+    }
+  }
+  darworms.setInstrumentVal = function(index) {
+    var selectedInstrumentInput = $('#select-native-' + darworms.colorNames[index]);
+    if (selectedInstrumentInput.length == 1) {
+      gWorms[darworms.selectedDarworm].setNotes(parseInt(selectedInstrumentInput.val()));
+    }
+  }
   darworms.startgame = function(startNow) {
     var heightSlider = Math.floor($("#gridsize").val());
     var curScreen = new Point($('#wcanvas').width(), $('#wcanvas').height());
@@ -326,8 +354,9 @@ darworms.main = (function() {
       console.log(" init gridsize: " + $("#gridsize").val() + " gHeight" + heightSlider);
 
       gWorms.forEach(function(worm, i) {
+        worm.init(playerTypes[i]);
         if (playerTypes[i] !== 0) { //  not None
-          worm.init(playerTypes[i]);
+
           $(buttonNames[i]).addClass("ui-opaque");
         } else {
           $(buttonNames[i]).addClass("ui-grayed-out");
@@ -491,6 +520,12 @@ darworms.main = (function() {
 
   }
 
+  darworms.playScale = function(index) {
+    console.log("playScale called");
+    gWorms[index].playScale();
+
+
+  }
   darworms.yesabortgame = function() {
     console.log("Abort Game called");
     $.mobile.changePage('#playpage');
@@ -638,13 +673,32 @@ darworms.main = (function() {
 
       }
       */
-      new AudioSample("kalimba", "sounds/i_kalimba_c5.wav");
+
       new AudioSample("piano", "sounds/piano-c2.wav");
       new AudioSample("guitar", "sounds/AcousticGuitar.wav");
+      new AudioSample("kalimba", "sounds/i_kalimba_c5.wav");
       new AudioSample("sitar", "sounds/Sitar-C5.wav");
+      new AudioSample("flute", "sounds/FluteC3Trimmed.wav");
+      new AudioSample("clarinet", "sounds/ClarinetTrimmed.wav");
       new AudioSample("death", "sounds/death.wav");
 
     }
+    var twelfrootoftwo = 1.05946309436;
+    var noteRate = 0.5; // lowest note
+    var noteFrequency = 261.626;
+    do {
+      darworms.audioPlaybackRates.push(noteRate);
+      darworms.audioFrequencies.push(noteFrequency * noteRate);
+      noteRate = noteRate * twelfrootoftwo;
+
+    }
+    while (darworms.audioPlaybackRates.length < 13);
+    console.log ( "Final rate = " +  darworms.audioPlaybackRates[12]  + "  error: " +
+          (1.0 - darworms.audioPlaybackRates[12]));
+
+     darworms.audioPlaybackRates[12] = 1.0;
+
+
 
     // context state at this time is `undefined` in iOS8 Safari
     if (darworms.audioContext.state === 'suspended') {
@@ -888,6 +942,10 @@ darworms.main = (function() {
         });
       }
     });
+    $("input[name='select-native-key-red']").on("change", function() {
+      console.log(" select-key-red")
+
+    });
   }
 
   return {
@@ -899,7 +957,7 @@ darworms.main = (function() {
     showSettings: showSettings,
     setupGridGeometry: setupGridGeometry,
     initPlayPage: initPlayPage,
-    wormEventHandler: wormEventHandler,
+    wormEventHandler: wormEventHandler
 
   };
 

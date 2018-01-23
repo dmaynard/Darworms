@@ -26,7 +26,8 @@ function Worm(colorIndex, state) {
       darworms.notes.CS,
       darworms.notes.D,
       darworms.notes.E,
-      darworms.notes.FS
+      darworms.notes.FS,
+      darworms.notes.GS
     ],
     "BMajor": [
       darworms.notes.B,
@@ -34,7 +35,8 @@ function Worm(colorIndex, state) {
       darworms.notes.DS,
       darworms.notes.E,
       darworms.notes.FS,
-      darworms.notes.GS
+      darworms.notes.GS,
+      darworms.notes.AS
     ],
     "CMajor": [
       darworms.notes.C1,
@@ -42,15 +44,17 @@ function Worm(colorIndex, state) {
       darworms.notes.E,
       darworms.notes.F,
       darworms.notes.G,
-      darworms.notes.A
+      darworms.notes.A,
+      darworms.notes.B
     ],
     "CMinor": [
+      darworms.notes.C1,
       darworms.notes.D,
       darworms.notes.EF,
+      darworms.notes.F,
       darworms.notes.G,
       darworms.notes.AF,
-      darworms.notes.BF,
-      darworms.notes.C2
+      darworms.notes.BF
     ],
 
     "DMajor": [
@@ -59,7 +63,8 @@ function Worm(colorIndex, state) {
       darworms.notes.FS,
       darworms.notes.G,
       darworms.notes.A,
-      darworms.notes.B
+      darworms.notes.B,
+      darworms.notes.CS
     ],
 
     "EMajor": [
@@ -68,7 +73,8 @@ function Worm(colorIndex, state) {
       darworms.notes.GS,
       darworms.notes.A,
       darworms.notes.B,
-      darworms.notes.CS
+      darworms.notes.CS,
+      darworms.notes.DS
     ],
     "FMajor": [
       darworms.notes.F,
@@ -76,25 +82,19 @@ function Worm(colorIndex, state) {
       darworms.notes.A,
       darworms.notes.BF,
       darworms.notes.C2,
+      darworms.notes.D,
       darworms.notes.E
     ],
     "GMajor": [
       darworms.notes.G,
       darworms.notes.A,
       darworms.notes.B,
-      darworms.notes.C,
+      darworms.notes.C2,
       darworms.notes.D,
-      darworms.notes.E
+      darworms.notes.E,
+      darworms.notes.FS
     ]
   }
-
-
-
-
-
-
-
-
 
   this.MusicScale = [],
 
@@ -158,7 +158,7 @@ Worm.prototype.init = function(wType) {
 
 Worm.prototype.setNotes = function(index) {
   this.audioSamplesPtrs.length = 0;
-  for (var j = 0; j < 6; j = j + 1) {
+  for (var j = 0; j < 7; j = j + 1) {
     this.audioSamplesPtrs.push(index); // c2,wav
   }
 
@@ -169,13 +169,18 @@ Worm.prototype.setKey = function(keyName) {
 }
 
 Worm.prototype.playScale = function() {
-  for (var j = 0; j < 6; j = j + 1) {
+  for (var j = 0; j < 7; j = j + 1) {
     darworms.directionIndex = j;
-    setTimeout(function(that,index) {
-      darworms.audioSamples[that.audioSamplesPtrs[index]].
-      playSample(darworms.audioPlaybackRates[that.MusicScale[index]]);
+    var sorted = this.MusicScale;
+    sorted.sort(function (a, b) {  return a - b;  });
+    setTimeout(function(that, index, notes) {
+      if (that.audioSamplesPtrs[index] >= 0) {
+        darworms.audioSamples[that.audioSamplesPtrs[index]].
+      playSample(darworms.audioPlaybackRates[notes[index]]);
+    }
       //do what you need here
-    }, 500 * j,this, j);
+    }, 500 * j, this, j, sorted);
+
   }
 }
 Worm.prototype.getMoveDir = function(value) {

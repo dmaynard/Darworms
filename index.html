@@ -377,23 +377,26 @@
         <input type="text" name="red-textname" id="p1textfield" value="">
       </div>
       <form>
-<div class="ui-field-contain">
-    <label for="select-instrument-red">Instrument:</label>
-    <select name="select-instrument-red" id="select-native-red">
-        <option value="0">Kalimba</option>
-        <option value="1">Piano</option>
-        <option value="2">Guitar</option>
+        <div class="ui-field-contain">
+          <label for="select-instrument-red">Instrument:</label>
+          <select name="select-instrument-red" onchange="darworms.setInstrumentVal(0)" id="select-native-red">
+        <option value="0" selected="selected">Piano </option>
+        <option value="1">Guitar</option>
+        <option value="2">Kalimba</option>
         <option value="3">Sitar</option>
         <option value="4">Flute</option>
         <option value="5">Clarinet</option>
+        <option value="-1">Muted</option>
     </select>
-</div>
-<div class="ui-field-contain">
-    <label for="select-key-red">Key:</label>
-    <select name="select-key-red" onchange="darworms.setKeyVal(0)" id="select-native-key-red">
+        </div>
+
+
+        <div class="ui-field-contain">
+          <label for="select-key-red">Key:</label>
+          <select name="select-key-red" onchange="darworms.setKeyVal(0)" data-inline="true" id="select-native-key-red">
         <option value="AMajor">A Major</option>
         <option value="BMajor">B Major</option>
-        <option value="CMajor">C Major</option>
+        <option value="CMajor" selected="selected">C Major</option>
         <option value="CMinor">C Minor</option>
         <option value="DMajor">D Major</option>
         <option value="EMajor">E Major</option>
@@ -401,11 +404,11 @@
         <option value="GMajor">G Major</option>
 
     </select>
-</div>
-<div>
-  <a id="abortgame" data-role=button data-inline="true" onclick=darworms.playScale(0)>Play Scale</a>
-</div>
-</form>
+
+          <a id="playButton" data-role=button data-inline="true" onclick=darworms.playScale(0)>Play Key Notes</a>
+        </div>
+
+      </form>
     </div>
   </div>
 
@@ -437,15 +440,39 @@
         <label for="p2textfield">Darworm Definition:</label>
         <input type="text" name="green-textname" id="p2textfield" value="">
       </div>
-      <div class="ui-field-contain">
+      <form>
+        <div class="ui-field-contain">
           <label for="select-instrument-green">Instrument:</label>
-          <select name="select-instrument-green" id="select-native-green">
-              <option value="0">Kalimba</option>
-              <option value="1" selected="selected">Piano</option>
-              <option value="2">Guitar</option>
-              <option value="3">Sitar</option>
-          </select>
-      </div>
+          <select name="select-instrument-green" onchange="darworms.setInstrumentVal(1)" id="select-native-green">
+        <option value="0">Piano </option>
+        <option value="1" selected="selected">Guitar</option>
+        <option value="2">Kalimba</option>
+        <option value="3">Sitar</option>
+        <option value="4">Flute</option>
+        <option value="5">Clarinet</option>
+        <option value="-1">Muted</option>
+    </select>
+        </div>
+
+
+        <div class="ui-field-contain">
+          <label for="select-key-green">Key:</label>
+          <select name="select-key-green" onchange="darworms.setKeyVal(1)" data-inline="true" id="select-native-key-green">
+        <option value="AMajor">A Major</option>
+        <option value="BMajor">B Major</option>
+        <option value="CMajor" selected="selected">C Major</option>
+        <option value="CMinor">C Minor</option>
+        <option value="DMajor">D Major</option>
+        <option value="EMajor">E Major</option>
+        <option value="FMajor">F Major</option>
+        <option value="GMajor">G Major</option>
+
+    </select>
+
+          <a id="playButton" data-role=button data-inline="true" onclick=darworms.playScale(1)>Play Key Notes</a>
+        </div>
+
+      </form>
     </div>
   </div>
 
@@ -477,15 +504,39 @@
         <label for="p3textfield">Darworm Definition:</label>
         <input type="text" name="blue-textname" id="p3textfield" value="">
       </div>
-      <div class="ui-field-contain">
+      <form>
+        <div class="ui-field-contain">
           <label for="select-instrument-blue">Instrument:</label>
-          <select name="select-instrument-blue" id="select-native-blue">
-              <option value="0">Kalimba</option>
-              <option value="1">Piano</option>
-              <option value="2" selected="selected">Guitar</option>
-              <option value="3">Sitar</option>
-          </select>
-      </div>
+          <select name="select-instrument-blue" onchange="darworms.setInstrumentVal(2)" id="select-native-blue">
+        <option value="0">Piano </option>
+        <option value="1">Guitar</option>
+        <option value="2" selected="selected">Kalimba</option>
+        <option value="3">Sitar</option>
+        <option value="4">Flute</option>
+        <option value="5">Clarinet</option>
+        <option value="-1">Muted</option>
+    </select>
+        </div>
+
+
+        <div class="ui-field-contain">
+          <label for="select-key-blue">Key:</label>
+          <select name="select-key-blue" onchange="darworms.setKeyVal(2)" data-inline="true" id="select-native-key-blue">
+        <option value="AMajor">A Major</option>
+        <option value="BMajor">B Major</option>
+        <option value="CMajor" selected="selected">C Major</option>
+        <option value="CMinor">C Minor</option>
+        <option value="DMajor">D Major</option>
+        <option value="EMajor">E Major</option>
+        <option value="FMajor">F Major</option>
+        <option value="GMajor">G Major</option>
+
+    </select>
+
+          <a id="playButton" data-role=button data-inline="true" onclick=darworms.playScale(2)>Play Key Notes</a>
+        </div>
+
+      </form>
     </div>
   </div>
 
@@ -517,15 +568,39 @@
         <label for="p4textfield">Darworm Definition:</label>
         <input type="text" name="yellow-textname" id="p4textfield" value="">
       </div>
-      <div class="ui-field-contain">
+      <form>
+        <div class="ui-field-contain">
           <label for="select-instrument-yellow">Instrument:</label>
-          <select name="select-instrument-yellow" id="select-native-yellow">
-              <option value="0">Kalimba</option>
-              <option value="1">Piano</option>
-              <option value="2">Guitar</option>
-              <option value="3" selected="selected">Sitar</option>
-          </select>
-      </div>
+          <select name="select-instrument-yellow" onchange="darworms.setInstrumentVal(3)" id="select-native-yellow">
+        <option value="0">Piano </option>
+        <option value="1">Guitar</option>
+        <option value="2">Kalimba</option>
+        <option value="3" selected="selected">Sitar</option>
+        <option value="4">Flute</option>
+        <option value="5">Clarinet</option>
+        <option value="-1">Muted</option>
+    </select>
+        </div>
+
+
+        <div class="ui-field-contain">
+          <label for="select-key-yellow">Key:</label>
+          <select name="select-key-yellow" onchange="darworms.setKeyVal(3)" data-inline="true" id="select-native-key-yellow">
+        <option value="AMajor">A Major</option>
+        <option value="BMajor">B Major</option>
+        <option value="CMajor" selected="selected">C Major</option>
+        <option value="CMinor">C Minor</option>
+        <option value="DMajor">D Major</option>
+        <option value="EMajor">E Major</option>
+        <option value="FMajor">F Major</option>
+        <option value="GMajor">G Major</option>
+
+    </select>
+
+          <a id="playButton" data-role=button data-inline="true" onclick=darworms.playScale(3)>Play Key Notes</a>
+        </div>
+
+      </form>
     </div>
   </div>
 

@@ -17,14 +17,89 @@ function Worm(colorIndex, state) {
   this.died = false;
   this.name = "";
   this.wType = 0; // None (asleep)
+  this.directionIndex = 0;
 
-  this.audioSamplesPtrs = [];
+  this.musicalkeys = {
+    "AMajor": [
+      darworms.notes.A,
+      darworms.notes.B,
+      darworms.notes.CS,
+      darworms.notes.D,
+      darworms.notes.E,
+      darworms.notes.FS,
+      darworms.notes.GS
+    ],
+    "BMajor": [
+      darworms.notes.B,
+      darworms.notes.CS,
+      darworms.notes.DS,
+      darworms.notes.E,
+      darworms.notes.FS,
+      darworms.notes.GS,
+      darworms.notes.AS
+    ],
+    "CMajor": [
+      darworms.notes.C1,
+      darworms.notes.D,
+      darworms.notes.E,
+      darworms.notes.F,
+      darworms.notes.G,
+      darworms.notes.A,
+      darworms.notes.B
+    ],
+    "CMinor": [
+      darworms.notes.C1,
+      darworms.notes.D,
+      darworms.notes.EF,
+      darworms.notes.F,
+      darworms.notes.G,
+      darworms.notes.AF,
+      darworms.notes.BF
+    ],
+
+    "DMajor": [
+      darworms.notes.D,
+      darworms.notes.E,
+      darworms.notes.FS,
+      darworms.notes.G,
+      darworms.notes.A,
+      darworms.notes.B,
+      darworms.notes.CS
+    ],
+
+    "EMajor": [
+      darworms.notes.E,
+      darworms.notes.FS,
+      darworms.notes.GS,
+      darworms.notes.A,
+      darworms.notes.B,
+      darworms.notes.CS,
+      darworms.notes.DS
+    ],
+    "FMajor": [
+      darworms.notes.F,
+      darworms.notes.G,
+      darworms.notes.A,
+      darworms.notes.BF,
+      darworms.notes.C2,
+      darworms.notes.D,
+      darworms.notes.E
+    ],
+    "GMajor": [
+      darworms.notes.G,
+      darworms.notes.A,
+      darworms.notes.B,
+      darworms.notes.C2,
+      darworms.notes.D,
+      darworms.notes.E,
+      darworms.notes.FS
+    ]
+  }
+
+  this.MusicScale = [],
+
+    this.audioSamplesPtrs = [];
   this.pos = new Point(-1, -1);
-
-  // for (var j = 0; j < 6 ; j = j+ 1) {
-  //     this.audioSamples.push(darworms.audioSamples [  ((colorIndex-1) + (j * 2)) % darworms.audioSamples.length]);
-  //     this.numChoices += 1;
-  //  }
 
   for (var i = 0; i < 64; i = i + 1) {
     this.dna[i] = darworms.dwsettings.codons.unSet;
@@ -41,22 +116,11 @@ function Worm(colorIndex, state) {
   this.toText();
 }
 
-Worm.prototype.setNotes = function(index) {
-  for (var j = 0; j < 6; j = j + 1) {
-    var sampleIndex = ((index) + (j * 2)) % (darworms.audioSamples.length-1);
-    // this.audioSamples.push(darworms.audioSamples[((index) + (j * 2)) % (darworms.audioSamples.length-1)]);
-    // console.log (" index: " + index + " dir: " + j + " Sample Index: " + sampleIndex  + " length: " + darworms.audioSamples.length);
-     // this.audioSamples.push(darworms.audioSamples[sampleIndex]);
-     // this.audioSamples.push(sampleIndex);
-     this.audioSamplesPtrs.push(index); // c2,wav
-  }
-
-
-}
 Worm.prototype.init = function(wType) {
   this.nMoves = 0;
   this.score = 0;
   this.prevScore = 0;
+  this.MusicScale = this.musicalkeys["CMajor"];
   if (wType === 0) { // none   asleep
     this.state = 3; // sleeping
   }
@@ -92,6 +156,33 @@ Worm.prototype.init = function(wType) {
   this.toText();
 };
 
+Worm.prototype.setNotes = function(index) {
+  this.audioSamplesPtrs.length = 0;
+  for (var j = 0; j < 7; j = j + 1) {
+    this.audioSamplesPtrs.push(index); // c2,wav
+  }
+
+}
+Worm.prototype.setKey = function(keyName) {
+  console.log(" keyname: " + keyName)
+  this.MusicScale = this.musicalkeys[keyName];
+}
+
+Worm.prototype.playScale = function() {
+  for (var j = 0; j < 7; j = j + 1) {
+    darworms.directionIndex = j;
+    var sorted = this.MusicScale;
+    sorted.sort(function (a, b) {  return a - b;  });
+    setTimeout(function(that, index, notes) {
+      if (that.audioSamplesPtrs[index] >= 0) {
+        darworms.audioSamples[that.audioSamplesPtrs[index]].
+      playSample(darworms.audioPlaybackRates[notes[index]]);
+    }
+      //do what you need here
+    }, 500 * j, this, j, sorted);
+
+  }
+}
 Worm.prototype.getMoveDir = function(value) {
   if (value === 0x3F) { // trapped
     this.state = wormStates.dead;
@@ -207,18 +298,18 @@ Worm.prototype.fromText = function(dnastring) {
         break;
       default:
         alert(" illegal dna string at position " + (i + 1));
-        return(false);
-      }
-      if(!(( (1<<this.dna[i]) & i) === 0) && (this.dna[i] !==6)) {
-        alert("illegal direction " + dnastring.charAt(i) + "(" + compassPts[this.dna[i]]
-        + ")"  + "given for cell " + i  );
-        gooddna = false;
-      }
+        return (false);
     }
-    if (gooddna) {
-      this.toText();
+    if (!(((1 << this.dna[i]) & i) === 0) && (this.dna[i] !== 6)) {
+      alert("illegal direction " + dnastring.charAt(i) + "(" + compassPts[this.dna[i]] +
+        ")" + "given for cell " + i);
+      gooddna = false;
     }
-    return gooddna;
-  };
+  }
+  if (gooddna) {
+    this.toText();
+  }
+  return gooddna;
+};
 
 /* end of Worm */

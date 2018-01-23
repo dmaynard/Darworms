@@ -568,11 +568,7 @@ darworms.gameModule = (function() {
         }
         if (graphicsOn) {
           this.dirtyCells.push(active.pos);
-          if (darworms.dwsettings.doAudio == 1) {
-            if (active.audioSamplesPtrs[direction] !== undefined) {
-              darworms.audioSamples[active.audioSamplesPtrs[direction]].playSample( (direction +  3) / 6);
-            }
-          }
+
         }
         // console.log (" Move Direction = " + direction);
         var next = this.grid.next(active.pos, direction);
@@ -580,7 +576,8 @@ darworms.gameModule = (function() {
           active.state = wormStates.dead;
           active.died = true;
         } else {
-          active.score = active.score + this.grid.move(active.pos, next, direction, active.colorIndex);
+          var didScore = this.grid.move(active.pos, next, direction, active.colorIndex);
+          active.score = active.score + didScore;
           this.numMoves = this.numMoves + 1;
           active.nMoves = active.nMoves + 1;
           // console.log("    Worm " + active.colorIndex + "  just made move " + active.nMoves + " game turn " + this.numTurns + " From " + this.grid.formatStateAt(active.pos) + " direction  " + direction);
@@ -588,6 +585,14 @@ darworms.gameModule = (function() {
 
           if (graphicsOn) {
             this.dirtyCells.push(next);
+            if (darworms.dwsettings.doAudio == 1) {
+              if ((active.audioSamplesPtrs[direction] !== undefined) && (active.audioSamplesPtrs[direction] >= 0)) {
+                darworms.audioSamples[active.audioSamplesPtrs[direction]].
+                        playSample(
+                         darworms.audioPlaybackRates[active.MusicScale[ (didScore == 1) ? 6 : direction]]);
+              }
+            }
+
           }
 
           // console.log(" active.score [" +  i + "] ="  + active.score);

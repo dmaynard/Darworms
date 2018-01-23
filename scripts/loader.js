@@ -42,6 +42,28 @@ var darworms = {
 
     },
     selectedDarworm:0,
+    notes: {
+      C1: 0,
+      CS: 1,
+      DF: 1,
+      D: 2,
+      DS: 3,
+      EF: 3,
+      E: 4,
+      F: 5,
+      FS: 6,
+      GF: 6,
+      G: 7,
+      GS: 8,
+      FF: 8,
+      AF: 8,
+      A: 9,
+      AS: 10,
+      BF: 10,
+      B: 11,
+      C2: 12
+    },
+
     dwsettings:{
         vgridsize:1.0,
         initialGridSize: 18,
@@ -74,7 +96,11 @@ var darworms = {
     audioContext: undefined,
     masterGainNode: undefined,
     masterAudioVolume:  0.3,
-    audioSamples: []
+    audioSamples: [],
+    // an array of 12 playback rates ranging from 0.5 to 1.0
+    // this gives 12 notes from an octave in an equal tempered scale.
+    audioPlaybackRates: [],
+    audioFrequencies: []
 
 };
 

@@ -19,6 +19,9 @@
  // perfect
  DFADAFEEFBCEBFEFDDCDBDADCBAFBBAFEDCEBEDEAEECAEAEDDADDBDDBBACABAX
 
+ // perfect and interesting
+ FDEDBDAEABFEBEEFCFDFBFFFFBCCBBAFDBEDAEDEACCCBBAEACCCBDADCCCCBBAX
+
  // nice score  297
  AEF?AF?FB??E?FA?C??F?DD??CA?F??FD??E?BAE?EE?E??E?BD?D??DA??C?BAX
 
@@ -103,35 +106,45 @@ darworms.main = (function() {
 
   var setupRadioButtons = function() {
     darworms.selectedDarworm = $.mobile.activePage.attr("data-selecteddarworm");
-    var darwormType = playerTypes[darworms.selectedDarworm];
-    var color = darworms.colorNames[darworms.selectedDarworm];
-    switch (darwormType) {
-      case 0:
-        $('#' + color + '-radio-choice-1').prop("checked", true).checkboxradio("refresh");
-        break;
-      case 1:
-        $('#' + color + '-radio-choice-2').prop("checked", true).checkboxradio("refresh");
-        break;
-      case 2:
-        $('#' + color + '-radio-choice-3').prop("checked", true).checkboxradio("refresh");
-        break;
-      case 3:
-        $('#' + color + '-radio-choice-4').prop("checked", true).checkboxradio("refresh");
-        break;
+    if (darworms.theGame && darworms.theGame.gameState !== darworms.gameStates.over) {
+      $('.darwormTypeRadioButtons').hide();
+      $('.playKeyNotes').hide();
+    } else {
+      $('.darwormTypeRadioButtons').show();
+      $('.playKeyNotes').show();
+      var darwormType = playerTypes[darworms.selectedDarworm];
+      var color = darworms.colorNames[darworms.selectedDarworm];
+      switch (darwormType) {
+        case 0:
+          $('#' + color + '-radio-choice-1').prop("checked", true).checkboxradio("refresh");
+          break;
+        case 1:
+          $('#' + color + '-radio-choice-2').prop("checked", true).checkboxradio("refresh");
+          break;
+        case 2:
+          $('#' + color + '-radio-choice-3').prop("checked", true).checkboxradio("refresh");
+          break;
+        case 3:
+          $('#' + color + '-radio-choice-4').prop("checked", true).checkboxradio("refresh");
+          break;
+      }
+      var selectinput = 'input[name=' + color + '-radio-choice]';
+      $(selectinput).checkboxradio("refresh");
+      // $('input[name=green-radio-choice]').checkboxradio("refresh");
+      var selectedType = $(selectinput + ':checked').val();
+      gWorms.forEach(function(worm, i) {
+        worm.toText();
+        $(textFields[i]).val(playerTypes[i] == 0 ? "" : worm.name);
+      })
     }
-    var selectinput = 'input[name=' + color + '-radio-choice]';
-    $(selectinput).checkboxradio("refresh");
-    // $('input[name=green-radio-choice]').checkboxradio("refresh");
-    var selectedType = $(selectinput + ':checked').val();
-    gWorms.forEach(function(worm, i) {
-      worm.toText();
-      $(textFields[i]).val(playerTypes[i] == 0 ? "" : worm.name);
-    })
   }
 
   var setSelectedDarwormType = function() {
     // This may no longer be needed since each properties page now
     // directly sets the wTypes.
+    if (darworms.theGame && darworms.theGame.gameState !== darworms.gameStates.over) {
+      return;
+    }
     var color = darworms.colorNames[darworms.selectedDarworm];
     var selectinput = 'input[name=' + color + '-radio-choice]';
     var selectedType = $(selectinput + ':checked').val();
@@ -166,6 +179,8 @@ darworms.main = (function() {
 
     console.log(" showSettings ");
   }
+
+
   var setupGridGeometry = function() {
     console.log(" pagebeforeshow setupGridGeometry ");
     if (darworms.theGame && darworms.theGame.gameState !== darworms.gameStates.over) {
@@ -693,10 +708,10 @@ darworms.main = (function() {
 
     }
     while (darworms.audioPlaybackRates.length < 13);
-    console.log ( "Final rate = " +  darworms.audioPlaybackRates[12]  + "  error: " +
-          (1.0 - darworms.audioPlaybackRates[12]));
+    console.log("Final rate = " + darworms.audioPlaybackRates[12] + "  error: " +
+      (1.0 - darworms.audioPlaybackRates[12]));
 
-     darworms.audioPlaybackRates[12] = 1.0;
+    darworms.audioPlaybackRates[12] = 1.0;
 
 
 

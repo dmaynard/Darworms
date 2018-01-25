@@ -645,6 +645,9 @@ darworms.main = (function() {
       if (darworms.audioContext.createGain !== undefined) {
         darworms.masterGainNode = darworms.audioContext.createGain(0.5);
       }
+      if (darworms.audioContext.createStereoPanner  !== undefined) {
+        darworms.audioPanner = darworms.audioContext.createStereoPanner();
+      }
 
 
       //   loading AudioSample Files

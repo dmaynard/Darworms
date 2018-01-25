@@ -176,7 +176,7 @@ Worm.prototype.playScale = function() {
     setTimeout(function(that, index, notes) {
       if (that.audioSamplesPtrs[index] >= 0) {
         darworms.audioSamples[that.audioSamplesPtrs[index]].
-      playSample(darworms.audioPlaybackRates[notes[index]]);
+      playSample(darworms.audioPlaybackRates[notes[index]], 0.0);
     }
       //do what you need here
     }, 500 * j, this, j, sorted);

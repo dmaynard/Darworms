@@ -96,6 +96,7 @@ var darworms = {
     audioContext: undefined,
     masterGainNode: undefined,
     masterAudioVolume:  0.3,
+    audioPanner: undefined,
     audioSamples: [],
     // an array of 12 playback rates ranging from 0.5 to 1.0
     // this gives 12 notes from an octave in an equal tempered scale.

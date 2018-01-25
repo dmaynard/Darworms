@@ -280,19 +280,24 @@ darworms.main = (function() {
       out.x = e.pageX;
       out.y = e.pageY;
     } else if (e.type == 'tap') {
-      out.x = event.clientX;
-      out.y = event.clientY;
+      out.x = (e.clientX || e.changedTouches[0].pageX) - (e.currentTarget.offsetLeft);
+      out.y = (e.clientY || e.changedTouches[0].pageY) - (e.currentTarget.offsetTop);
     }
     return out;
   };
 
   var wormEventHandler = function(event) {
-    //var loc = pointerEventToXY(event)
-    //var touchX = loc.x;
-    //var touchY = loc.y
+    var loc = pointerEventToXY(event)
+    var touchX = loc.x;
+    var touchY = loc.y
+    /*
     var touchX = (event.offsetX || event.clientX);
     var touchY = (event.offsetY || event.clientY);
+    var touchX = touchX - event.currentTarget.;  //  padding between canvas container and wcanvas
+    var touchY = touchY - 15;  //  padding between canvas container and wcanvas
     // alert( event.toString() + " tap event x:" + touchX + "  y:" + touchY)
+    */
+
     var cWidth = $('#wcanvas').width();
     var cHeight = $('#wcanvas').height();
     console.log(" Tap Event at x: " + touchX + " y: " + touchY);

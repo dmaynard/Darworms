@@ -115,11 +115,11 @@ darworms.gameModule = (function() {
     var xoff;
     var yoff;
     if ((point.y & 1) === 0) {
-      xoff = ((point.x + 0.5) * (this.scale.x)) + (this.scale.x >> 1);
+      xoff = ((point.x + 0.5) * (this.scale.x))  + (this.scale.x / 2);
     } else {
-      xoff = ((point.x + 1.0) * (this.scale.x)) + (this.scale.x >> 1);
+      xoff = ((point.x + 1.0) * (this.scale.x))  + (this.scale.x / 2);
     }
-    yoff = ((point.y + 0.5) * (this.scale.y)) + (this.scale.y >> 1);
+    yoff = ((point.y + 0.5) * (this.scale.y)) + (this.scale.y / 2);
     return new Point(xoff, yoff);
   }
 
@@ -848,8 +848,10 @@ darworms.gameModule = (function() {
     darworms.pickCells.forEach(function(pickTarget) {
       var screenCoordinates = this.getOffset(pickTarget.pos);
       var absdiff = touchPoint.absDiff(screenCoordinates);
+      var diff = new Point( touchPoint.x - screenCoordinates.x,  touchPoint.y - screenCoordinates.y);
       if ((absdiff.x < (this.scale.x / 2)) && (absdiff.y < (this.scale.y / 2)) &&
         this.gameState === darworms.gameStates.waiting) {
+        console.log(" target hit delta: " + diff.format());
         setDNAandResumeGame(pickTarget.dir);
       }
     }, darworms.theGame);

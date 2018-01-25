@@ -24,7 +24,10 @@
 
   <style type=text/css>
     .ui-content {
-      padding-bottom: 6px;
+      padding-top: 0px;
+      padding-bottom: 0px;
+      padding-left: 0px;
+      padding-right: 0px;
     }
 
     .ui-page .ui-content .ui-block-a.playerbutton1 .ui-block-a {
@@ -57,6 +60,9 @@
       font-size: 0.8em;
       padding-bottom: 4px;
       padding-top: 12px;
+    }
+    .ui-navbar {
+      padding-bottom: 8px;
     }
 
     .right {
@@ -160,7 +166,8 @@
   </div>
   <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true>
     <div data-role="content" class="ui-content">
-      <div id="canvascontainer" class="canvas-container">
+      <!-- div id="canvascontainer" class="canvas-container" -->
+        <div id="canvascontainer">
         <canvas id="wcanvas" class="wcanvasclass"></canvas>
         <canvas id="scorecanvas" class="scorecanvasclass" height="20"></canvas>
       </div>

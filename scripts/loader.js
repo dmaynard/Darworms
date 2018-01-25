@@ -66,7 +66,7 @@ var darworms = {
 
     dwsettings:{
         vgridsize:1.0,
-        initialGridSize: 18,
+        initialGridSize: 10,
         doAudio: true,
         panToSelectionUI: 0,
         pickDirectionUI: 0,

@@ -698,7 +698,7 @@ darworms.main = (function() {
       */
 
       new AudioSample("piano", "sounds/piano-c2.wav");
-      new AudioSample("guitar", "sounds/AcousticGuitar.wav");
+      new AudioSample("guitar", "sounds/GuitarTrimmed.wav");
       new AudioSample("kalimba", "sounds/i_kalimba_c5.wav");
       new AudioSample("sitar", "sounds/Sitar-C5.wav");
       new AudioSample("flute", "sounds/FluteC3Trimmed.wav");
@@ -836,7 +836,7 @@ darworms.main = (function() {
     });
 
     gWorms.forEach(function(worm, i) {
-      worm.setNotes(i);
+      worm.setNotes(0);
     })
     resizeCanvas();
     $("input[name='red-radio-choice']").on("change", function() {

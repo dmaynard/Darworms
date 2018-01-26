@@ -35,9 +35,17 @@ AudioSample.prototype.playSample = function (rate, pan) {
         darworms.masterGainNode.gain.value = darworms.masterAudioVolume;
         source.connect(darworms.masterGainNode);
         // console.log(" playSample " + this.name + " volume  " + darworms.masterGainNode.gain.value);
-        darworms.masterGainNode.connect(darworms.audioPanner);
-        darworms.audioPanner.connect(darworms.audioContext.destination);
-        darworms.audioPanner.pan.value = (pan * 0.80) ;  // jump cut is too harsh
+        if ( darworms.audioPanner !== undefined ) {
+          darworms.masterGainNode.connect(darworms.audioPanner);
+          darworms.audioPanner.connect(darworms.audioContext.destination);
+        }
+        else {
+          darworms.masterGainNode.connect(darworms.audioContext.destination);
+        }
+
+        if ( darworms.audioPanner !== undefined ) {
+          darworms.audioPanner.pan.value = (pan * 0.80) ;  // jump cut is too harsh
+        }
         source.start(0); // Play sound immediately. Renamed source.start from source.noteOn
         if (rate ) {
           source.playbackRate.value = rate;

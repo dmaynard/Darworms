@@ -25,19 +25,23 @@ function AudioSample(name, location) {
     darworms.audioSamples.push(this);
 }
 
-AudioSample.prototype.playSample = function (rate) {
+AudioSample.prototype.playSample = function (rate, pan) {
     var source;
     // console.log(" playSample " + this.name + "  " + this.location + "  savedBuffer " + this.savedBuffer);
     if (darworms.audioContext !== undefined && this.savedBuffer !== undefined) {
+        // Do we have to create a new buffer every time we play a note ?
         source = darworms.audioContext.createBufferSource();
         source.buffer = this.savedBuffer;
         darworms.masterGainNode.gain.value = darworms.masterAudioVolume;
         source.connect(darworms.masterGainNode);
         // console.log(" playSample " + this.name + " volume  " + darworms.masterGainNode.gain.value);
-        darworms.masterGainNode.connect(darworms.audioContext.destination);
+        darworms.masterGainNode.connect(darworms.audioPanner);
+        darworms.audioPanner.connect(darworms.audioContext.destination);
+        darworms.audioPanner.pan.value = (pan * 0.80) ;  // jump cut is too harsh
         source.start(0); // Play sound immediately. Renamed source.start from source.noteOn
         if (rate ) {
           source.playbackRate.value = rate;
         }
+
     }
 };

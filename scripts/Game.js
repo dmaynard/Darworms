@@ -539,7 +539,7 @@ darworms.gameModule = (function() {
         if (active.state != wormStates.dead) {
           if (darworms.dwsettings.doAudio == 1 && darworms.dwsettings.doAnimations == "true") {
             if (darworms.audioSamples[darworms.audioSamples.length - 1]) {
-              darworms.audioSamples[darworms.audioSamples.length - 1].playSample();
+              darworms.audioSamples[darworms.audioSamples.length - 1].playSample(1.0, 0.0);
             }
           }
 
@@ -589,7 +589,8 @@ darworms.gameModule = (function() {
               if ((active.audioSamplesPtrs[direction] !== undefined) && (active.audioSamplesPtrs[direction] >= 0)) {
                 darworms.audioSamples[active.audioSamplesPtrs[direction]].
                         playSample(
-                         darworms.audioPlaybackRates[active.MusicScale[ (didScore == 1) ? 6 : direction]]);
+                         darworms.audioPlaybackRates[active.MusicScale[ (didScore == 1) ? 6 : direction]],
+                         (active.pos.x - (darworms.theGame.grid.width/2))/ (darworms.theGame.grid.width/2) );
               }
             }
 

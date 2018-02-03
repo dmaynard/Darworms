@@ -27,6 +27,7 @@ darworms.gameModule = (function() {
   var scorectx;
   var cellsInZoomPane = new Point(7, 7);
 
+
   function Game(gridWidth, gridHeight) {
 
 
@@ -115,9 +116,9 @@ darworms.gameModule = (function() {
     var xoff;
     var yoff;
     if ((point.y & 1) === 0) {
-      xoff = ((point.x + 0.5) * (this.scale.x))  + (this.scale.x / 2);
+      xoff = ((point.x + 0.5) * (this.scale.x)) + (this.scale.x / 2);
     } else {
-      xoff = ((point.x + 1.0) * (this.scale.x))  + (this.scale.x / 2);
+      xoff = ((point.x + 1.0) * (this.scale.x)) + (this.scale.x / 2);
     }
     yoff = ((point.y + 0.5) * (this.scale.y)) + (this.scale.y / 2);
     return new Point(xoff, yoff);
@@ -156,17 +157,17 @@ darworms.gameModule = (function() {
     this.timeInDraw -= Date.now();
     // wGraphics.save();
     this.gsetTranslate(point);
-    wGraphics.fillStyle = darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme];
-    // wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
     var owner = this.grid.spokeAt(point, 7);
     wGraphics.lineWidth = 2.0 / this.scale.x;
-
-
+    //  first clear cell to prevent multiple cals to drawcell from
+    // darkening the cell  (multiple calls to the same cell are made to
+    // highlite worm positions and animate death.
+    // perhaps we should add a parameter to the call indicating whether clear is needsReDraw
 
     wGraphics.strokeStyle = darworms.dwsettings.colorTable[owner & 0xF];
-    wGraphics.fillStyle = owner == 0 ?
-      darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme] :
-      darworms.dwsettings.alphaColorTable[owner & 0xF];
+    wGraphics.fillStyle =
+      darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme] ;
+
     wGraphics.beginPath();
     wGraphics.moveTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
     for (var j = 1; j < 6; j = j + 1) {
@@ -174,8 +175,26 @@ darworms.gameModule = (function() {
     }
     // wGraphics.moveTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
     wGraphics.stroke();
+
     wGraphics.closePath();
     wGraphics.fill();
+    // wGraphics.stroke();
+
+    if (owner) {
+      wGraphics.strokeStyle = darworms.dwsettings.colorTable[owner & 0xF];
+      wGraphics.fillStyle =
+        darworms.dwsettings.alphaColorTable[owner & 0xF];
+      wGraphics.beginPath();
+      wGraphics.moveTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
+      for (var j = 1; j < 6; j = j + 1) {
+        wGraphics.lineTo(darworms.graphics.vertex_x[j], darworms.graphics.vertex_y[j]);
+      }
+      // wGraphics.moveTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
+      wGraphics.stroke();
+      wGraphics.closePath();
+      wGraphics.fill();
+    }
+
     // wGraphics.stroke();
 
 
@@ -456,6 +475,46 @@ darworms.gameModule = (function() {
     }
     // wGraphics.restore();
   };
+
+  Game.prototype.animateDyingWorms = function() {
+    for (var i = 0; i < 4; i = i + 1) {
+      // We don't want to do the animates in the same order ever frame because
+      // when tow worms die together the second's animations would always overwite
+      // the first's/
+
+      var whichWorm = ((i + darworms.graphics.uiFrames) & 0x3);
+      if (this.worms[whichWorm].state == wormStates.dying) {
+        this.animateDyingCell(this.worms[whichWorm]);
+      }
+    }
+  }
+
+
+  Game.prototype.animateDyingCell = function(worm) {
+    this.drawCell(worm.pos);
+    this.drawShrikingOutline(worm);
+  }
+  Game.prototype.drawShrikingOutline = function(worm) {
+    var animFraction = (darworms.graphics.dyningAnimationFrames - (darworms.graphics.uiFrames - worm.diedAtFrame)) /
+      darworms.graphics.dyningAnimationFrames;
+    darworms.theGame.gsetTranslate(worm.pos);
+
+    wGraphics.strokeStyle = darworms.dwsettings.alphaColorTable[worm.colorIndex];
+    wGraphics.lineWidth = .1;
+    wGraphics.fillStyle = darworms.dwsettings.alphaColorTable[worm.colorIndex];
+    wGraphics.beginPath();
+    wGraphics.moveTo(darworms.graphics.vertex_x[0] * animFraction, darworms.graphics.vertex_y[0] * animFraction);
+    for (var j = 1; j < 6; j = j + 1) {
+      wGraphics.lineTo(darworms.graphics.vertex_x[j] * animFraction, darworms.graphics.vertex_y[j] * animFraction);
+    }
+    wGraphics.lineTo(darworms.graphics.vertex_x[0] * animFraction, darworms.graphics.vertex_y[0]  * animFraction);
+    //wGraphics.stroke();
+    wGraphics.closePath();
+    wGraphics.stroke();
+    //wGraphics.fill();
+    // wGraphics.stroke();
+  }
+
   Game.prototype.clearCanvas = function() {
     // Store the current transformation matrix
     wGraphics.save();
@@ -536,15 +595,23 @@ darworms.gameModule = (function() {
       // console.log (" Current State = " + currentState);
       if (currentState == 0x3F) {
         // last sample is death sound
-        if (active.state != wormStates.dead) {
-          if (darworms.dwsettings.doAudio == 1 && darworms.dwsettings.doAnimations == "true") {
-            if (darworms.audioSamples[darworms.audioSamples.length - 1]) {
+        if ((active.state != (wormStates.dead) && (active.state != wormStates.dying))) {
+          if ( darworms.dwsettings.doAnimations == "true") {
+            if ( (darworms.dwsettings.doAudio == 1) &&darworms.audioSamples[darworms.audioSamples.length - 1]) {
               darworms.audioSamples[darworms.audioSamples.length - 1].playSample(1.0, 0.0);
             }
+            active.state = wormStates.dying;
+            active.diedAtFrame = darworms.graphics.uiFrames;
+            console.log(" darworm " + active.colorIndex + " dying at frame: " + darworms.graphics.animFrame);
           }
 
         }
-        active.state = wormStates.dead;
+        if (active.state == wormStates.dying) {
+          if ((darworms.graphics.uiFrames - active.diedAtFrame) > darworms.graphics.dyningAnimationFrames) {
+            active.state = wormStates.dead;
+            console.log(" darworm " + active.colorIndex + " dead at frame: " + darworms.graphics.animFrame);
+          }
+        }
         // console.log (" death of worm " + active.colorIndex + " Current State = " + currentState);
       } else {
         var direction = active.getMoveDir(currentState);
@@ -588,9 +655,9 @@ darworms.gameModule = (function() {
             if (darworms.dwsettings.doAudio == 1) {
               if ((active.audioSamplesPtrs[direction] !== undefined) && (active.audioSamplesPtrs[direction] >= 0)) {
                 darworms.audioSamples[active.audioSamplesPtrs[direction]].
-                        playSample(
-                         darworms.audioPlaybackRates[active.MusicScale[ (didScore == 1) ? 6 : direction]],
-                         (active.pos.x - (darworms.theGame.grid.width/2))/ (darworms.theGame.grid.width/2) );
+                playSample(
+                  darworms.audioPlaybackRates[active.MusicScale[(didScore == 1) ? 6 : direction]],
+                  (active.pos.x - (darworms.theGame.grid.width / 2)) / (darworms.theGame.grid.width / 2));
               }
             }
 
@@ -605,7 +672,7 @@ darworms.gameModule = (function() {
         }
 
       }
-      if (active.state !== wormStates.dead) {
+      if ((active.state !== wormStates.dead)) {
         nAlive = nAlive + 1;
       }
       //console.log (" Game  After Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
@@ -833,6 +900,7 @@ darworms.gameModule = (function() {
       }
     }
     darworms.theGame.drawDirtyCells();
+    darworms.theGame.animateDyingWorms();
     darworms.theGame.getAvePos();
     updateScores();
     var elapsed = new Date().getTime() - startTime;
@@ -849,7 +917,7 @@ darworms.gameModule = (function() {
     darworms.pickCells.forEach(function(pickTarget) {
       var screenCoordinates = this.getOffset(pickTarget.pos);
       var absdiff = touchPoint.absDiff(screenCoordinates);
-      var diff = new Point( touchPoint.x - screenCoordinates.x,  touchPoint.y - screenCoordinates.y);
+      var diff = new Point(touchPoint.x - screenCoordinates.x, touchPoint.y - screenCoordinates.y);
       if ((absdiff.x < (this.scale.x / 2)) && (absdiff.y < (this.scale.y / 2)) &&
         this.gameState === darworms.gameStates.waiting) {
         console.log(" target hit delta: " + diff.format());

@@ -18,6 +18,7 @@ var darworms = {
         timer:undefined,
         scorectx:undefined,
         animFrame:0,
+        uiFrames: 0,
         rawFrameCount: 0,
         drawFrameCount: 0,
         uiFrameCount: 0,
@@ -38,7 +39,8 @@ var darworms = {
         vertex_fudge: 0.12,
         vertex_y: [0.3125, -0.3125, -0.6875, -0.3125, 0.3125, 0.6875],
         hexSize: 1.0,
-        sqrt3: Math.sqrt(3)
+        sqrt3: Math.sqrt(3),
+        dyningAnimationFrames: 8
 
     },
     selectedDarworm:0,

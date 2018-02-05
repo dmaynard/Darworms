@@ -332,8 +332,8 @@ darworms.main = (function() {
   };
   darworms.menuButton = function() {
     console.log(" menuButton");
-    if ((darworms.theGame.gameState == darworms.gameStates.running) ||
-      (darworms.theGame.gameState == darworms.gameStates.paused)) {
+    if ( darworms.theGame.gameState &&  ((darworms.theGame.gameState == darworms.gameStates.running) ||
+      (darworms.theGame.gameState == darworms.gameStates.paused))) {
       darworms.theGame.gameState = darworms.gameStates.paused;
       $.mobile.changePage("#settingspage");
       $("#startpause").text("Resume Game");

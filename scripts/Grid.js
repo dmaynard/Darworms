@@ -15,7 +15,7 @@ darworms.gridModule = (function() {
   var oddRowVec = [new Point(1, 0), new Point(1, 1), new Point(0, 1),
     new Point(-1, 0), new Point(0, -1), new Point(1, -1)
   ];
-
+  //  although we reserve 4 bits for each direction we actually only use 3 bits
   var spokeMask = [0xFFFFFFF0,
     0xFFFFFF0F,
     0xFFFFF0FF,
@@ -24,7 +24,9 @@ darworms.gridModule = (function() {
     0xFF0FFFFF,
     0xF0FFFFFF,
     0x0FFFFFFF
-  ]
+  ];
+  // sink mask is high bit of spoke 6
+  var sinkMask = 0x08000000;
 
   function Grid(width, height) {
     this.width = Math.floor(width);
@@ -112,7 +114,7 @@ darworms.gridModule = (function() {
     return (this.valueAt(point) >> 16) & 0x3F;
   };
   Grid.prototype.spokeAt = function(point, dir) {
-    return (this.colors[point.y * this.width + point.x] >>> (dir * 4)) & 0x0F;
+    return (this.colors[point.y * this.width + point.x] >>> (dir * 4)) & 0x07;
   };
   Grid.prototype.colorsAt = function(point) {
     return (this.colors[point.y * this.width + point.x]);
@@ -127,6 +129,16 @@ darworms.gridModule = (function() {
   Grid.prototype.setValueAt = function(point, value) {
     this.cells[point.y * this.width + point.x] = value;
   };
+
+  Grid.prototype.setSinkAt = function(point) {
+    this.cells[point.y * this.width + point.x] =
+        (this.cells[point.y * this.width + point.x] ^ sinkMask);
+  };
+
+  Grid.prototype.isSink = function(point) {
+    return ( (this.cells[point.y * this.width + point.x] & sinkMask) !== 0);
+  };
+
   Grid.prototype.isInside = function(point) {
     return point.x >= 0 && point.y >= 0 &&
       point.x < this.width && point.y < this.height;

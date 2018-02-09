@@ -70,6 +70,7 @@ var darworms = {
         vgridsize:1.0,
         initialGridSize: 10,
         doAudio: true,
+        fixedInitPos: true,
         panToSelectionUI: 0,
         pickDirectionUI: 0,
         noWhere: undefined,

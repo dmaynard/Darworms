@@ -82,6 +82,7 @@ darworms.gameModule = (function() {
     this.endScale = 1.0;
     // three second zoom animation
     this.targetZoomFrames = 60;
+    this.asterixSize = 0.2;
     this.bullseyeoffset = new Point(0, 0);
 
   }
@@ -246,6 +247,18 @@ darworms.gameModule = (function() {
         wGraphics.lineTo(0, 0);
         wGraphics.stroke();
         wGraphics.closePath();
+      }
+    }
+    if (this.grid.isSink(point))  {
+      wGraphics.strokeStyle = darworms.dwsettings.colorTable[0];
+      for (var k = 0; k < 3; k = k + 1) {
+        var m = ((k+3) % 6);
+        wGraphics.beginPath();
+        wGraphics.moveTo(this.xPts[k] * this.asterixSize, this.yPts[k]*this.asterixSize);
+        wGraphics.lineTo(this.xPts[m] * this.asterixSize, this.yPts[m]*this.asterixSize);
+        wGraphics.stroke();
+        wGraphics.closePath();
+        wGraphics.lineTo(darworms.graphics.vertex_x[j], darworms.graphics.vertex_y[j]);
       }
     }
     // wGraphics.restore();

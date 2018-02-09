@@ -233,6 +233,7 @@ darworms.main = (function() {
     }
     darworms.dwsettings.doAnimations = $('#doanim').slider().val();
     darworms.dwsettings.doAudio = $('#audioon').slider().val();
+    darworms.dwsettings.fixedInitPos = $('#fixedinitpos').slider().val();
     darworms.dwsettings.panToSelectionUI = $('#panToSelectionUI').slider().val();
     darworms.dwsettings.pickDirectionUI = $('#pickDirectionUI').slider().val();
 
@@ -395,7 +396,16 @@ darworms.main = (function() {
           $(buttonNames[i]).addClass("ui-grayed-out");
         }
         $(textFields[i]).val(worm.toText());
-        worm.place(initialWormStates[playerTypes[i]], darworms.theGame);
+        var startingPoint = ((darworms.dwsettings.fixedInitPos == 1) ? darworms.theGame.origin :
+           new Point ((Math.floor(Math.random() * darworms.theGame.grid.width)),
+         (Math.floor(Math.random() * darworms.theGame.grid.height))));
+
+
+        worm.place(initialWormStates[playerTypes[i]], darworms.theGame,
+          startingPoint);
+          if (playerTypes[i] !== 0) { //  not None
+              darworms.theGame.grid.setSinkAt(startingPoint);
+          }
       })
     }
     darworms.gameModule.updateScores();

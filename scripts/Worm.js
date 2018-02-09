@@ -99,7 +99,7 @@ function Worm(colorIndex, state) {
 
   this.MusicScale = [],
 
-    this.audioSamplesPtrs = [];
+  this.audioSamplesPtrs = [];
   this.pos = new Point(-1, -1);
 
   for (var i = 0; i < 64; i = i + 1) {
@@ -230,8 +230,8 @@ Worm.prototype.log = function() {
   var dir;
   console.log(" Worm State: " + wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
 };
-Worm.prototype.place = function(aState, aGame) {
-  this.pos = aGame.origin;
+Worm.prototype.place = function(aState, aGame, pos) {
+  this.pos = pos;
   this.nMoves = 0;
   this.score = 0;
   this.state = aState;

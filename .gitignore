@@ -2,3 +2,17 @@
 .DS_Store
 projectFilesBackup/*
 projectFilesBackup1/*
+# compiled output
+/dist
+/tmp
+
+# dependencies
+/node_modules
+/bower_components
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log*

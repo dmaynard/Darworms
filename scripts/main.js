@@ -235,7 +235,7 @@ darworms.main = (function() {
         darworms.theGame.drawCells();
       }
     }
-    darworms.dwsettings.doAnimations = $('#doanim').slider().val();
+    darworms.dwsettings.doAnimations = $('#doanim').slider().val() == "true" ? true : false;
     darworms.dwsettings.doAudio = $('#audioon').slider().val();
     darworms.dwsettings.fixedInitPos = $('#fixedinitpos').slider().val();
     darworms.dwsettings.panToSelectionUI = $('#panToSelectionUI').slider().val();
@@ -444,8 +444,11 @@ darworms.main = (function() {
       initTheGame(true);
       darworms.theGame.log();
     }
-    if (darworms.dwsettings.doAnimations == "false") {
+    if (!darworms.dwsettings.doAnimations) {
       // run game loop inline and draw after game is over
+      //  No.  This locks the browser.  We must put it inside the the
+      // animation request and do a set of moves each animframe and draw the
+      // playfield
       console.log('darworms.dwsettings.doAnimations == "false"')
       darworms.theGame.gameState = darworms.gameStates.running;
       darworms.theGame.clearCanvas();
@@ -453,7 +456,8 @@ darworms.main = (function() {
 
       console.log(" Game Running");
       $("#startpause").text("Running");
-      while (darworms.theGame.gameState != darworms.gameStates.over) {
+     /*  busy loop maling moves.  Freezes the javascript engine
+       while (darworms.theGame.gameState != darworms.gameStates.over) {
         if (darworms.theGame.gameState === darworms.gameStates.waiting) {
           break;
         }
@@ -470,7 +474,7 @@ darworms.main = (function() {
       darworms.gameModule.updateScores();
 
       $("#startpause").text("Start Game");
-
+      */
     }
 
   };
@@ -535,6 +539,16 @@ darworms.main = (function() {
             (darworms.graphics.elapsed % darworms.graphics.frameInterval)
         }
 
+      }  else {
+          var nMoves = 0;
+          while ((nMoves < 100)  &&  (darworms.theGame.gameState != darworms.gameStates.over) &&
+        (darworms.theGame.gameState !== darworms.gameStates.waiting)) {
+            nMoves = nMoves + 1;;
+            darworms.gameModule.makeMoves();
+          }
+          darworms.gameModule.updateScores();
+          darworms.theGame.drawCells();
+          console.log(".");
       }
 
     }

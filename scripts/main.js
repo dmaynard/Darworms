@@ -437,7 +437,8 @@ darworms.main = (function() {
       // alert("About to Start Game.");
       darworms.theGame.gameState = darworms.gameStates.running;
       // darworms.graphics.timer = setInterval(updateGameState, 1000 / $("#fps").val());
-      startGameLoop($("#fps").val());
+      var animFramesPerSec = darworms.dwsettings.doAnimations ? $("#fps").val() : 60;
+      startGameLoop(animFramesPerSec);
       console.log(" setInterval: " + 1000 / $("#fps").val());
       // document.getElementById("startpause").innerHTML = "Pause Game";
       $("#startpause").text("Pause Game");
@@ -541,13 +542,13 @@ darworms.main = (function() {
 
       }  else {
           var nMoves = 0;
-          while ((nMoves < 100)  &&  (darworms.theGame.gameState != darworms.gameStates.over) &&
+          while ((nMoves < 50)  &&  (darworms.theGame.gameState != darworms.gameStates.over) &&
         (darworms.theGame.gameState !== darworms.gameStates.waiting)) {
             nMoves = nMoves + 1;;
             darworms.gameModule.makeMoves();
           }
           darworms.gameModule.updateScores();
-          darworms.theGame.drawCells();
+          darworms.theGame.drawDirtyCells();
           console.log(".");
       }
 

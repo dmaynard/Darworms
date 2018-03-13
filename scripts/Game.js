@@ -625,7 +625,7 @@ darworms.gameModule = (function() {
           console.log(" darworm " + active.colorIndex + " dead at frame: " + darworms.graphics.animFrame);
         }
       }
-      
+
     } else {
       var direction = active.getMoveDir(currentState);
       if (direction === darworms.dwsettings.codons.unSet) {
@@ -646,7 +646,7 @@ darworms.gameModule = (function() {
         }
         return (true);
       }
-      if (graphicsOn) {
+      if (true || graphicsOn) {
         this.dirtyCells.push(active.pos);
 
       }
@@ -663,9 +663,9 @@ darworms.gameModule = (function() {
         // console.log("    Worm " + active.colorIndex + "  just made move " + active.nMoves + " game turn " + this.numTurns + " From " + this.grid.formatStateAt(active.pos) + " direction  " + direction);
         active.pos = next;
 
-        if (graphicsOn) {
+        if (true || graphicsOn) {
           this.dirtyCells.push(next);
-          if (darworms.dwsettings.doAudio == 1) {
+          if (darworms.dwsettings.doAudio == 1  && graphicsOn) {
             if ((active.audioSamplesPtrs[direction] !== undefined) && (active.audioSamplesPtrs[direction] >= 0)) {
               darworms.audioSamples[active.audioSamplesPtrs[direction]].
               playSample(

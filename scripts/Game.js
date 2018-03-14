@@ -609,12 +609,12 @@ darworms.gameModule = (function() {
       if (currentState == 0x3F) {
         // last sample is death sound
         if ((active.state != (wormStates.dead) && (active.state != wormStates.dying))) {
-          if (darworms.dwsettings.doAnimations == "true") {
+          if (darworms.dwsettings.doAnimations) {
             if ((darworms.dwsettings.doAudio == 1) && darworms.audioSamples[darworms.audioSamples.length - 1]) {
               darworms.audioSamples[darworms.audioSamples.length - 1].playSample(1.0, 0.0);
             }
           }
-          active.state = (darworms.dwsettings.doAnimations == "true")? wormStates.dying : wormStates.dead;
+          active.state = (darworms.dwsettings.doAnimations)? wormStates.dying : wormStates.dead;
           active.diedAtFrame = darworms.graphics.uiFrames;
           console.log(" darworm " + active.colorIndex + " dying at frame: " + darworms.graphics.animFrame);
         }
@@ -625,7 +625,7 @@ darworms.gameModule = (function() {
           console.log(" darworm " + active.colorIndex + " dead at frame: " + darworms.graphics.animFrame);
         }
       }
-      console.log (" death of worm " + active.colorIndex + " Current State = " + currentState);
+
     } else {
       var direction = active.getMoveDir(currentState);
       if (direction === darworms.dwsettings.codons.unSet) {
@@ -646,7 +646,7 @@ darworms.gameModule = (function() {
         }
         return (true);
       }
-      if (graphicsOn) {
+      if (true || graphicsOn) {
         this.dirtyCells.push(active.pos);
 
       }
@@ -663,9 +663,9 @@ darworms.gameModule = (function() {
         // console.log("    Worm " + active.colorIndex + "  just made move " + active.nMoves + " game turn " + this.numTurns + " From " + this.grid.formatStateAt(active.pos) + " direction  " + direction);
         active.pos = next;
 
-        if (graphicsOn) {
+        if (true || graphicsOn) {
           this.dirtyCells.push(next);
-          if (darworms.dwsettings.doAudio == 1) {
+          if (darworms.dwsettings.doAudio == 1  && graphicsOn) {
             if ((active.audioSamplesPtrs[direction] !== undefined) && (active.audioSamplesPtrs[direction] >= 0)) {
               darworms.audioSamples[active.audioSamplesPtrs[direction]].
               playSample(
@@ -900,7 +900,7 @@ var makeMoves = function() {
 
   }
   if (darworms.theGame.gameState != darworms.gameStates.over) {
-    if (darworms.theGame.makeMove(true) === false) {
+    if (darworms.theGame.makeMove(darworms.dwsettings.doAnimations) === false) {
       darworms.theGame.elapsedTime = darworms.theGame.elapsedTime + new Date().getTime();
       console.log(" Game Over");
       clearInterval(darworms.graphics.timer);

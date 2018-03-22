@@ -1,4 +1,5 @@
 var darworms = {
+    version: "0.9.0",
     compassPts: [ "e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
     gameStates: {"over": 0, "running" : 1, "waiting": 2, "paused": 3, "animToUI" : 4, "animFromUI": 5},
     gameStateNames: ["over", "running", "waiting", "paused", "to_ui" , "from_ui"],

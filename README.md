@@ -1,6 +1,10 @@
 # Darworms
-Darworms  1.0  All client side HTML 5 Single Page Application.
+Darworms  A client side HTML 5 Single Page Application.
 An implementation of the 1983 Electronic Arts Game Worms? in JavaScript.
+Version 0.9.0
+This version has four player mode on one browser page.
+No server component, therefore no user id, no login, no authentication and no
+remote storage.
 
 [Darworms](http://www.darworms.com/darworms)
 

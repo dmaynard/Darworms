@@ -6,7 +6,7 @@ This version has four player mode on one browser page.
 No server component, therefore no user id, no login, no authentication and no
 remote storage.
 
-[Darworms](http://www.darworms.com/darworms)
+[Darworms](https://dmaynard.github.io/Darworms/)
 
 [Worms?](https://en.wikipedia.org/wiki/Worms%3F) Copyright 1983 Electronic Arts
 Darworms 2018 David S. Maynard

@@ -1,6 +1,6 @@
 # Darworms
-Darworms  A client side HTML 5 Single Page Application.
-An implementation of the 1983 Electronic Arts Game Worms? in JavaScript.
+Darworms is a territory capture strategy game for one to four players.
+An implementation of the 1983 Electronic Arts Game Worms? as a single page javascript application.
 Version 0.9.0
 This version has four player mode on one browser page.
 No server component, therefore no user id, no login, no authentication and no

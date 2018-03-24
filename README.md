@@ -11,3 +11,4 @@ remote storage.
 [Worms?](https://en.wikipedia.org/wiki/Worms%3F) Copyright 1983 Electronic Arts
 Darworms 2018 David S. Maynard
 [LinkedIn](https://www.linkedin.com/in/david-maynard-86ab3/)
+[MIT License](https://github.com/dmaynard/Darworms/blob/master/LICENSE)

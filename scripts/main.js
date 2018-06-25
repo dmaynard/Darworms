@@ -859,6 +859,7 @@ darworms.main = (function() {
     //  The following code is designed to remove the toolbar on mobile Safari
     if (!window.location.hash && window.addEventListener) {
       window.addEventListener("load", function() {
+        console.log("load event listener triggered");
         setTimeout(function() {
           window.scrollTo(0, 0);
         }, 100);

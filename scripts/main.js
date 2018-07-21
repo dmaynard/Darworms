@@ -69,7 +69,7 @@ darworms.main = (function() {
   var usePianoAudio = true;
   var useSitarAudio = false;
 
-  var playerTypes = [3, 0, 0, 0];
+  var playerTypes = [3, 0, 1, 0];
   var buttonNames = ['#p1button', '#p2button', '#p3button', '#p4button',
     '#p1Lbutton', '#p2Lbutton', '#p3Lbutton', '#p4Lbutton'
   ];

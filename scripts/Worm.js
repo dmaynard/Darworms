@@ -19,6 +19,7 @@ function Worm(colorIndex, state) {
   this.wType = 0; // None (asleep)
   this.directionIndex = 0;
   this.diedAtFrame = 0;
+  this.showTutorial = true;
 
   this.musicalkeys = {
     "AMajor": [

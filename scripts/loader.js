@@ -141,6 +141,15 @@ window.addEventListener("load", function() {
     $("#settingspage").on('pagebeforeshow', darworms.main.setupGridGeometry);
     $("#settingspage").on('pagehide', darworms.main.applySettings);
     $("#playpage").on('pageshow', darworms.main.initPlayPage);
+    $( "#tutorialpopup" ).popup({
+        afterclose: function( event, ui ) {
+          console.log(" afterclose even fired" + $('#tutorialpopup input[type=checkbox]').prop("checked"));
+          if ( $('#tutorialpopup input[type=checkbox]').prop("checked") ) {
+            darworms.theGame.focusWorm.showTutorial = false;
+          }
+
+        }
+});
     darworms.wCanvasPixelDim = new Point();
     console.log("Initial Screen Size " + darworms.wCanvasPixelDim.format());
     darworms.main.init();

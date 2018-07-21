@@ -45,6 +45,8 @@ darworms.gameModule = (function() {
     this.numTurns = 0;
     this.numMoves = 0;
     this.timeInDraw = 0;
+    this.activeIndex = 0;
+    
     // cellsInZoomPane = new Point(9,9);
     cellsInZoomPane = new Point(gridWidth, gridHeight);
 
@@ -84,6 +86,7 @@ darworms.gameModule = (function() {
     this.targetZoomFrames = 60;
     this.asterixSize = 0.2;
     this.bullseyeoffset = new Point(0, 0);
+    this.focusWorm = null;
 
   }
 
@@ -595,6 +598,7 @@ darworms.gameModule = (function() {
     // console.log ("Game  StartingTurn " + this.numTurns );
     for (var i = nextToMove; i < this.worms.length; i = i + 1) {
       var active = this.worms[i];
+      darworms.theGame.activeIndex = i;
       // console.log (" GamemakeMove   for worm" + i + " :  " + wormStateNames[active.state] + " at "  + active.pos.format());
       if (active.state === wormStates.sleeping) {
         continue;
@@ -632,10 +636,24 @@ darworms.gameModule = (function() {
         this.gameState = darworms.graphics.enableTransitionStates ?
           darworms.gameStates.animToUI : darworms.gameStates.waiting;
         // console.log(this.grid.formatStateAt(active.pos));
+        if (this.gameState === darworms.gameStates.animToUI) {
+          this.initPanZoom(active);
+        }
+
         console.log(" setting gamestate to  " + this.gameState);
         focusPoint = active.pos;
         focusWorm = active;
+        darworms.theGame.focusWorm = active;
         focusValue = currentState;
+        if (darworms.theGame.focusWorm.showTutorial) {
+          $("input[type='checkbox']").attr("checked",false);
+          var themes = ["c", "d", "e", "f"];
+          // ToDo  set proper theme for popup   red green blue ye
+          // Setter
+          // $('#tutorialpopup' ).popup( "option", "overlayTheme", "d" );
+          $('#tutorialpopup').popup( "option", "theme", themes[darworms.theGame.activeIndex] );
+          $('#tutorialpopup').popup("open");
+        }
         nextToMove = i;
         this.numMoves = this.numMoves + 1;
         active.nMoves = active.nMoves + 1;

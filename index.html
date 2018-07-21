@@ -69,6 +69,7 @@
       padding-bottom: 4px;
       padding-top: 12px;
     }
+
     .ui-navbar {
       padding-bottom: 8px;
     }
@@ -175,7 +176,7 @@
   <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true>
     <div data-role="content" class="ui-content">
       <!-- div id="canvascontainer" class="canvas-container" -->
-        <div id="canvascontainer">
+      <div id="canvascontainer">
         <canvas id="wcanvas" class="wcanvasclass"></canvas>
         <canvas id="scorecanvas" class="scorecanvasclass" height="20"></canvas>
       </div>
@@ -201,17 +202,25 @@
           </ul>
         </div>
       </div>
-    </div>
+      <div data-role="popup" id="tutorialpopup" data-position-to="window" data-theme="c" data-transition="turn">
+        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+        <p>Your Darworm has never seen this grid pattern cell before.
+          <br> Please choose a direction to go in and you Darworm will remember this choice each time it sees this grid pattern cell. <br>
+        </p>
+        <label>
+          <input class="mycheckbox" type="checkbox" id="tutorialCheckbox"> Don't show this again
+        </label>
+      </div>
 
-    <div data-role=footer class="ui-bar" data-theme="b">
-      <div id="menufooter" data-role=navbar>
-        <ul>
-          <li><a id="startpause" data-role=button onclick=darworms.startgame(true)>Start Game</a></li>
-          <li><a id="menubutton" data-role=button onclick=darworms.menuButton()>Menu</a></li>
-        </ul>
+      <div data-role=footer class="ui-bar" data-theme="b">
+        <div id="menufooter" data-role=navbar>
+          <ul>
+            <li><a id="startpause" data-role=button onclick=darworms.startgame(true)>Start Game</a></li>
+            <li><a id="menubutton" data-role=button onclick=darworms.menuButton()>Menu</a></li>
+          </ul>
+        </div>
       </div>
     </div>
-
   </div>
   <div data-role="page" data-theme="a" id=settingspage data-add-back-btn=true data-back-btn-text=Menu>
     <div data-role="header">
@@ -641,7 +650,7 @@
   </div>
 
 
-  <div data-role="page" data-theme="a" id=aboutpage  data-add-back-btn=true data-back-btn-text=Menu>
+  <div data-role="page" data-theme="b" id=aboutpage data-add-back-btn=true data-back-btn-text=Menu>
     <div data-role="header">
       <h1>ABOUT</h1>
     </div>
@@ -653,37 +662,39 @@
         and asks you which direction to go. It remembers this and adds it to its program. The next time it sees the same pattern of grid lines it will go in that same direction again without stopping to ask you which way to go. Soon your Darworm will
         take off on its own. It may take several games to completely train (program) your Darworm.</p>
 
-        <p> The Darworm that eats the sixth and last spoke in any grid point captures that grid point. You get one point for each grid point you capture.  "The fact that you can rip off some other worm's territory just by being the last one to lay a trail in it gives <i>Worms?</i> all the strategic fascination of ancient, classic games like Go and Chess"
-        William Michael Brown's game review from  <a href=https://ia801705.us.archive.org/20/items/Electronic_Fun_with_Computer_Games_Vol_01_No_11_1983-09_Fun_Games_Publishing_US/Electronic_Fun_with_Computer__Games_Vol_01_No_11_1983-09_Fun__Games_Publishing_US.pdf#page=62 >Electronic Fun with Computers and Games, September 1983</a></p>
+      <p> The Darworm that eats the sixth and last spoke in any grid point captures that grid point. You get one point for each grid point you capture. "The fact that you can rip off some other worm's territory just by being the last one to lay a trail in
+        it gives <i>Worms?</i> all the strategic fascination of ancient, classic games like Go and Chess" William Michael Brown's game review from <a href=http:./pdfs/WilliamMichaelBrownReview.pdf>Electronic Fun with Computers and Games, September 1983</a></p>
 
-        <p> You can generate a Darworm with a preset randomly chosen program or train a new Darworm yourself. You can play the same Darworm in successive games.</p>
-        <p>The initial setup pits you against a Darworm that has been randomly pre-programmed in advance which direction to go given the pattern of its current grid cell.  Your Darwin initially has no training. It doesn't know which way to go for any grid cell pattern.
-            So it asks you which direction to go every time it sees a grid pattern it hasn't seen before.
-            Eventually your Darworm will be able to move on its own using the training you have given it.  When a game ends the default it to use the "SAME" Darworm for the next game,
-            that is to use the existing training and add new training as new configurations are seen in each new game.
+      <p> You can generate a Darworm with a preset randomly chosen program or train a new Darworm yourself. You can play the same Darworm in successive games.</p>
+      <p>The initial setup pits you against a Darworm that has been randomly pre-programmed in advance which direction to go given the pattern of its current grid cell. Your Darwin initially has no training. It doesn't know which way to go for any grid cell
+        pattern. So it asks you which direction to go every time it sees a grid pattern it hasn't seen before. Eventually your Darworm will be able to move on its own using the training you have given it. When a game ends the default it to use the "SAME"
+        Darworm for the next game, that is to use the existing training and add new training as new configurations are seen in each new game.
 
-            <p> Or you can just set all four Darworms on "RANDOM" and watch and hear a game play that in all probability no one else has ever seen nor heard. </p>
+        <p> Or you can just set all four Darworms on "RANDOM" and watch and hear a game play that in all probability no one else has ever seen nor heard. </p>
 
-           <p>  On the <a href=#settingspage  data-transition="fade"> Settings Page </a> you can control many parameters pof the game such as grid size, and the default Darworm speed. </p>
-          <p> pushing one of the four large color buttons brings up page to select the type of Darworm (None, Random, Same, or New) as well as additional attributes for the Darworm</p>
+        <p> On the <a href=#settingspage data-transition="fade"> Settings Page </a> you can control many parameters pof the game such as grid size, and the default Darworm speed. </p>
+        <p> pushing one of the four large color buttons brings up page to select the type of Darworm (None, Random, Same, or New) as well as additional attributes for the Darworm</p>
 
-            <p> <a href=#red-darworm-page  data-transition="fade"> Red   </a>
-              <a href=#green-darworm-page  data-transition="fade"> Green   </a>
-             <a href=#blue-darworm-page  data-transition="fade"> Blue   </a>
-            <a href=#yellow-darworm-page  data-transition="fade"> Yellow </a>
-          </p>
+        <p> <a href=#red-darworm-page data-transition="fade"> Red   </a>
+          <a href=#green-darworm-page data-transition="fade"> Green   </a>
+          <a href=#blue-darworm-page data-transition="fade"> Blue   </a>
+          <a href=#yellow-darworm-page data-transition="fade"> Yellow </a>
+        </p>
 
         <p> Based on the 1983 Electron Arts Game <a href=https://en.wikipedia.org/wiki/Worms%3F> Worms? </a> By David S. Maynard</p>
 
-        <p> Inspired by Martin Gardner's  <b> Mathematical Games column </b> <i> Fantastic patterns traced by programmed "worms" </i>in the November 1973 issue of Scientific American</p>
-         <a href=https://en.wikipedia.org/wiki/Paterson%27s_worms > Paterson's worms</a>
+        <p> Inspired by Martin Gardner's <b> Mathematical Games column </b> <i> Fantastic patterns traced by programmed "worms" </i>in the November 1973 issue of Scientific American</p>
+        <a href=https://en.wikipedia.org/wiki/Paterson%27s_worms> Paterson's worms</a>
         <p> Version 0.9.0</p>
         <p> MIT License</p>
-        <p> Copyright (c) 2012-2018 David S. Maynard <davidsmaynard@gmail.com></p>
+        <p> Copyright (c) 2012-2018 David S. Maynard
+          <davidsmaynard@gmail.com>
+        </p>
 
         <a href=#playpage data-role=button data-transition="fade"> Play </a>
     </div>
   </div>
+
 </body>
 
 </html>

@@ -1,4 +1,6 @@
-var darworms = {
+import Point from "./Point.js";
+
+window.darworms = {
   version: "0.9.0",
   compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
   gameStates: {

@@ -1,3 +1,5 @@
+import Point from "./Point.js";
+
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -18,7 +20,7 @@
  *  margin ?
  *
  */
-function WPane ( grid, size, center, canvas) {
+export default function WPane ( grid, size, center, canvas) {
     this.grid = grid;
     this.canvas = canvas;
     this.pWidth = canvas.width;

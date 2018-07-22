@@ -1,3 +1,6 @@
+import Point from "./Point.js";
+import WPane from "./WPane.js";
+
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -1033,7 +1036,7 @@ function init() {
 
   wGraphics = darworms.main.wGraphics;
   nextToMove = 0;
-  scoreCanvas = document.getElementById("scorecanvas");
+  window.scoreCanvas = document.getElementById("scorecanvas");
   scorectx = darworms.dwsettings.scoreCanvas.getContext("2d");
   scorectx.font = "bold 18px sans-serif";
   scorectx.shadowColor = "rgb(190, 190, 190)";

@@ -1,3 +1,22 @@
+import "./loader.js";
+import AudioSample from "./AudioSample.js";
+import Point from "./Point.js";
+import "./Grid.js";
+import Worm from "./Worm.js";
+import "./WPane.js";
+import "./Game.js";
+
+/*
+  <script src="scripts/loader.js"></script>
+  <script src="scripts/AudioSample.js"></script>
+  <script src="scripts/Point.js"></script>
+  <script src="scripts/Grid.js"></script>
+  <script src="scripts/Worm.js"></script>
+  <script src="scripts/WPane.js"></script>
+  <script src="scripts/Game.js"></script>
+  <script src="scripts/main.js"></script>
+*/
+
 /*  DarWorms
  Copyright BitBLT Studios inc
  Author: David S. Maynard
@@ -82,16 +101,16 @@ darworms.main = (function() {
   //    new Point(-0.375,0), new Point(-0.25,-0.375), new Point(  0.25,-0.375)];
   /* Worm  Constants */
 
-  compassPts = ["e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"];
-  wormStates = {
+  window.compassPts = ["e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"];
+  window.wormStates = {
     "dead": 0,
     "moving": 1,
     "paused": 2,
     "sleeping": 3,
     "dying": 4   //  dead but let the game keep going for a few frames to animate
   };
-  wormStateNames = ["dead", "moving", "paused", "sleeping", "dying"];
-  initialWormStates = [3, 2, 2, 2];
+  window.wormStateNames = ["dead", "moving", "paused", "sleeping", "dying"];
+  window.initialWormStates = [3, 2, 2, 2];
   var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused), new Worm(3, wormStates.paused), new Worm(4, wormStates.paused)];
 
 
@@ -518,7 +537,7 @@ darworms.main = (function() {
         }
         worm.toText(); //  update string version of dna
       })
-      for (ig = 0; ig < 4; ig++) {
+      for (let ig = 0; ig < 4; ig++) {
         playerTypes[ig] = gWorms[ig].wType;
       }
       setTypes();

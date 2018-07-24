@@ -1,3 +1,5 @@
+import Point from "./Point.js";
+
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -6,7 +8,7 @@
  * To change this template use File | Settings | File Templates.
  */
 /* Worm Object */
-function Worm(colorIndex, state) {
+export default function Worm(colorIndex, state) {
   this.colorIndex = colorIndex;
   this.dna = new Array(64);
   this.state = state;

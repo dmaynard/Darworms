@@ -43,3 +43,5 @@ Point.prototype.wrap = function (wg, hg) {
 Point.prototype.format = function( ) {
     return "(" + this.x + "," + this.y + ")";
 };
+
+export default Point;

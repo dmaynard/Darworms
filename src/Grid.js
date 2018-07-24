@@ -1,3 +1,5 @@
+import Point from "./Point.js";
+
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard

@@ -2,7 +2,7 @@
  * Created by dmaynard on 1/19/15.
  */
 
-function AudioSample(name, location) {
+export default function AudioSample(name, location) {
     this.location = location;
     this.name = name;
     this.incomingbuffer = undefined;

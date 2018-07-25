@@ -78,7 +78,7 @@ window.darworms = {
 
   dwsettings: {
     vgridsize: 1.0,
-    initialGridSize: 10,
+    initialGridSize: 18,  // The original Atari 800 Character mode
     doAudio: true,
     fixedInitPos: true,
     panToSelectionUI: 0,

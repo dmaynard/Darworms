@@ -49,7 +49,7 @@ darworms.gameModule = (function() {
     this.numMoves = 0;
     this.timeInDraw = 0;
     this.activeIndex = 0;
-    
+
     // cellsInZoomPane = new Point(9,9);
     cellsInZoomPane = new Point(gridWidth, gridHeight);
 
@@ -352,7 +352,7 @@ darworms.gameModule = (function() {
     wGraphics.save();
 
 
-    fillColorString = darworms.dwsettings.alphaColorTable[pickTarget.wormColorIndex];
+    const fillColorString = darworms.dwsettings.alphaColorTable[pickTarget.wormColorIndex];
 
     wGraphics.strokeStyle = fillColorString;
 
@@ -969,7 +969,7 @@ var selectLargeUIDirection = function(point) {
   var select = -1;
   for (var i = 0; i < 6; i = i + 1) {
     if ((outvec & darworms.outMask[i]) === 0) {
-      target = new Point((darworms.theGame.xPts[i] * .75) * (gameCanvas.clientWidth / 2) +
+      const target = new Point((darworms.theGame.xPts[i] * .75) * (gameCanvas.clientWidth / 2) +
         darworms.theGame.bullseyeoffset.x + (gameCanvas.clientWidth / 2) + darworms.theGame.zoomPane.pMargin,
 
         ((darworms.theGame.yPts[i] * .75) * (gameCanvas.clientHeight) / 2) +

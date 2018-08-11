@@ -1029,7 +1029,7 @@ var doZoomOut = function(tapPoint) {
 
 
 function init() {
-  // used to initialize variable in this module's closure
+  // used to initialize variables in this module's closure
   console.log(" darworms.main.wCanvas,width: " + darworms.main.wCanvas.width);
   gameCanvas = darworms.main.wCanvas;
   console.log(" gameCanvas.width " + darworms.main.wCanvas.width);

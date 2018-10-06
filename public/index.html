@@ -23,9 +23,9 @@
   <script src="./bundle.js"></script>
 
   <style type=text/css>
-    .ui-content {
-      padding-top: 0px;
-      padding-bottom: 0px;
+    .ui-page .ui-content {
+      padding-top: 4px;
+      padding-bottom: 4px;
       padding-left: 0px;
       padding-right: 0px;
     }
@@ -81,6 +81,8 @@
 
     #scorecanvas {
       display: inline-block;
+      padding-top: 0px;
+      padding-bottom: 0px;
     }
 
     #background {
@@ -165,8 +167,8 @@
       <a href=#aboutpage data-role=button data-transition="flip" data-rel="dialog" data-dialog="true"> About </a>
     </div>
   </div>
-  <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true>
-    <div data-role="content" class="ui-content">
+  <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true scroll="no" style="overflow: hidden">
+    <div data-role="content" >
       <!-- div id="canvascontainer" class="canvas-container" -->
       <div id="canvascontainer">
         <canvas id="wcanvas" class="wcanvasclass"></canvas>
@@ -204,7 +206,7 @@
         </label>
       </div>
 
-      <div data-role=footer class="ui-bar" data-theme="b">
+      <div data-role=footer id="footerbar" class="ui-bar" data-theme="b">
         <div id="menufooter" data-role=navbar>
           <ul>
             <li><a id="startpause" data-role=button onclick=darworms.startgame(true)>Start Game</a></li>

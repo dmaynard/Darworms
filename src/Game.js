@@ -94,7 +94,7 @@ darworms.gameModule = (function() {
   }
 
   Game.prototype.reScale = function() {
-    this.scale = new Point(((gameCanvas.width) / (gridWidth + 1.5)), ((gameCanvas.height) / (gridHeight + 1)));
+    this.scale = new Point(((gameCanvas.width) / (this.grid.width + 1.5)), ((gameCanvas.height) / (this.grid.height + 1)));
   };
 
   Game.prototype.log = function() {

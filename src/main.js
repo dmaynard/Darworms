@@ -690,12 +690,11 @@ darworms.main = (function() {
     if ($('#debug').slider().val() === "1") {
       alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val() + "arg " + nw);
     }
-    console.log (" Resize Window  " + w + " x " + h + " y \n"
-               + " wcanvas size   " + xc.width() + " x " + xc.height() + " y \n"
-               + " score canvas   " + sc.width() + " x " + sc.height() + "y \n"
-               + " nav container  " + nc.width() + " x " + nc.height() + "y \n"
-               + " footer bar     " + fb.width() + " x " + fb.height() + "y \n"
-             );
+
+    if (darworms.theGame) {
+      darworms.theGame.reScale();
+    }
+
   }
   var initPlayPage = function() {
     var mainbody = $('#myPages');
@@ -724,6 +723,13 @@ darworms.main = (function() {
       darworms.audioContext.resume();
       darworms.playpageInitialized = true;
     }
+    $("body").css("scroll", "on");
+    $("body").css("overflow", "hidden");
+  }
+
+  var leavePlayPage = function() {
+      $("body").css("scroll", "auto");
+      $("body").css("overflow", "auto");
   }
 
   var loadAudio = function() {

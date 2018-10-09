@@ -125,7 +125,11 @@
 
     dwsettings: {
       vgridsize: 1.0,
-      initialGridSize: 18,  // The original Atari 800 Character mode
+      forceInitialGridSize: true,
+      largeGridSize: 18, // The original Atari 800 Character mode
+      smallGridSize: 10, // so cells can be selected with touch
+      minLargeWidth: 400, //
+      isLargeScreen: true,
       doAudio: true,
       fixedInitPos: true,
       panToSelectionUI: 0,
@@ -190,6 +194,7 @@
       $("#settingspage").on('pagebeforeshow', darworms.main.setupGridGeometry);
       $("#settingspage").on('pagehide', darworms.main.applySettings);
       $("#playpage").on('pageshow', darworms.main.initPlayPage);
+
       $("#playpage").on('pagehide', darworms.main.leavePlayPage);
 
       $( "#tutorialpopup" ).popup({
@@ -199,8 +204,11 @@
               darworms.theGame.focusWorm.showTutorial = false;
             }
 
+
           }
-  });
+
+        }
+      });
       darworms.wCanvasPixelDim = new Point();
       console.log("Initial Screen Size " + darworms.wCanvasPixelDim.format());
       darworms.main.init();
@@ -2293,9 +2301,11 @@
         $('#geometryradios').show();
         $('#abortgame').hide();
       }
-      if (darworms.dwsettings.initialGridSize  > 0 ) {
-          $('#gridsize').val(darworms.dwsettings.initialGridSize).slider("refresh");
-            darworms.dwsettings.initialGridSize = 0;
+      if (darworms.dwsettings.forceInitialGridSize  ) {
+          $('#gridsize').val(
+            darworms.dwsettings.isLargeScreen ? darworms.dwsettings.largeGridSize:
+             darworms.dwsettings.smallGridSize).slider("refresh");
+            darworms.dwsettings.forceInitialGridSize = false;
       }
     };
 
@@ -2430,7 +2440,13 @@
       }
     };
     darworms.startgame = function(startNow) {
-      var heightSlider = darworms.dwsettings.initialGridSize > 0 ?  darworms.dwsettings.initialGridSize:
+      darworms.main.wCanvas.width = $('#wcanvas').width();
+      darworms.main.wCanvas.height = $('#wcanvas').height(); // make it square
+      darworms.dwsettings.isLargeScreen = darworms.main.wCanvas.width >= darworms.dwsettings.minLargeWidth;
+      var curScreen = new Point(darworms.main.wCanvas.width, darworms.main.wCanvas.height);
+      darworms.wCanvasPixelDim = curScreen;
+      var heightSlider = darworms.dwsettings.forceInitialGridSize ?  (darworms.dwsettings.isLargeScreen ?
+           darworms.dwsettings.largeGridSize : darworms.dwsettings.smallGridSize) :
              Math.floor($("#gridsize").val());
       var curScreen = new Point($('#wcanvas').width(), $('#wcanvas').height());
       if (darworms.theGame === undefined || darworms.theGame === null || darworms.theGame.grid.height != heightSlider ||
@@ -2441,9 +2457,7 @@
           // height must be an even number because of toroid shape
           heightSlider = heightSlider + 1;
         }
-        darworms.main.wCanvas.width = $('#wcanvas').width();
-        darworms.main.wCanvas.height = $('#wcanvas').height(); // make it square
-        darworms.wCanvasPixelDim = curScreen;
+
         if ($('#debug').slider().val() === 1) {
           alert(" wCanvas " + darworms.main.wCanvas.width + " x " + darworms.main.wCanvas.height +
             " css " + $('#wcanvas').width() + " x " + $('#wcanvas').height() +
@@ -2694,13 +2708,13 @@
       var xc = $('#wcanvas');
       var sc = $('#scorecanvas');
       var nc = $('#navcontainer');
+      var fb = $('#footerbar');
       var w = $(window).width();
       var h = $(window).height();
-
       if (h > 400) {
         xc.css({
           width: w - 20 + 'px',
-          height: h - 130 + 'px'
+          height: h - 140 + 'px'
         });
         sc.css({
           width: w - 20 + 'px',
@@ -2722,16 +2736,38 @@
       if ($('#debug').slider().val() === "1") {
         alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val() + "arg " + nw);
       }
+
       if (darworms.theGame) {
         darworms.theGame.reScale();
       }
+
     };
     var initPlayPage = function() {
+      var mainbody = $('#myPages');
+      mainbody.css({
+        overflow: 'hidden',
+        height: '100%'
+      });
+
       if (!darworms.playpageInitialized) {
+        resizeCanvas();
         darworms.startgame(false);
         darworms.audioContext.resume();
         darworms.playpageInitialized = true;
+      }
+    };
+    var leavePlayPage = function() {
+      var mainbody = $('#myPages');
+      mainbody.css({
+        overflow: 'auto',
+        height: 'auto'
+      });
+
+      if (!darworms.playpageInitialized) {
         resizeCanvas();
+        darworms.startgame(false);
+        darworms.audioContext.resume();
+        darworms.playpageInitialized = true;
       }
       $("body").css("scroll", "on");
       $("body").css("overflow", "hidden");
@@ -2912,7 +2948,7 @@
       //  so for now we keep them as globals
       //  Perhaps the time routines should all be moved into the gameModule closure
       // and we can make some or all of these private to the gameModule closure
-      // darworms.theGame = new darworms.gameModule.Game ( darworms.dwsettings.initialGridSize, darworms.dwsettings.initialGridSize);
+      // darworms.theGame = new darworms.gameModule.Game ( darworms.dwsettings.forceInitialGridSize, darworms.dwsettings.forceInitialGridSize);
       // darworms.startgame(false);
       darworms.dwsettings.noWhere = new Point(-1, -1);
 

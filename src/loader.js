@@ -78,7 +78,11 @@ window.darworms = {
 
   dwsettings: {
     vgridsize: 1.0,
-    initialGridSize: 18,  // The original Atari 800 Character mode
+    forceInitialGridSize: true,
+    largeGridSize: 18, // The original Atari 800 Character mode
+    smallGridSize: 10, // so cells can be selected with touch
+    minLargeWidth: 400, //
+    isLargeScreen: true,
     doAudio: true,
     fixedInitPos: true,
     panToSelectionUI: 0,
@@ -143,6 +147,7 @@ window.addEventListener("load", function() {
     $("#settingspage").on('pagebeforeshow', darworms.main.setupGridGeometry);
     $("#settingspage").on('pagehide', darworms.main.applySettings);
     $("#playpage").on('pageshow', darworms.main.initPlayPage);
+
     $("#playpage").on('pagehide', darworms.main.leavePlayPage);
 
     $( "#tutorialpopup" ).popup({
@@ -152,8 +157,11 @@ window.addEventListener("load", function() {
             darworms.theGame.focusWorm.showTutorial = false;
           }
 
+
         }
-});
+
+      }
+    });
     darworms.wCanvasPixelDim = new Point();
     console.log("Initial Screen Size " + darworms.wCanvasPixelDim.format());
     darworms.main.init();

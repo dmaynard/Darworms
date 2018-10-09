@@ -143,6 +143,8 @@ window.addEventListener("load", function() {
     $("#settingspage").on('pagebeforeshow', darworms.main.setupGridGeometry);
     $("#settingspage").on('pagehide', darworms.main.applySettings);
     $("#playpage").on('pageshow', darworms.main.initPlayPage);
+    $("#playpage").on('pagehide', darworms.main.leavePlayPage);
+
     $( "#tutorialpopup" ).popup({
         afterclose: function( event, ui ) {
           console.log(" afterclose even fired" + $('#tutorialpopup input[type=checkbox]').prop("checked"));

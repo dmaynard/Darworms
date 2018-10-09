@@ -190,6 +190,8 @@
       $("#settingspage").on('pagebeforeshow', darworms.main.setupGridGeometry);
       $("#settingspage").on('pagehide', darworms.main.applySettings);
       $("#playpage").on('pageshow', darworms.main.initPlayPage);
+      $("#playpage").on('pagehide', darworms.main.leavePlayPage);
+
       $( "#tutorialpopup" ).popup({
           afterclose: function( event, ui ) {
             console.log(" afterclose even fired" + $('#tutorialpopup input[type=checkbox]').prop("checked"));
@@ -1135,7 +1137,7 @@
     }
 
     Game.prototype.reScale = function() {
-      this.scale = new Point(((gameCanvas.width) / (gridWidth + 1.5)), ((gameCanvas.height) / (gridHeight + 1)));
+      this.scale = new Point(((gameCanvas.width) / (this.grid.width + 1.5)), ((gameCanvas.height) / (this.grid.height + 1)));
     };
 
     Game.prototype.log = function() {
@@ -2346,7 +2348,7 @@
       darworms.masterAudioVolume = $("#audiovol").val() / 100;
       darworms.graphics.fps = $("#fps").val();
       darworms.graphics.frameInterval = 1000 / darworms.graphics.fps;
-      
+
       console.log(" darworms.masterAudioVolume " + darworms.masterAudioVolume);
     };
 
@@ -2720,6 +2722,9 @@
       if ($('#debug').slider().val() === "1") {
         alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val() + "arg " + nw);
       }
+      if (darworms.theGame) {
+        darworms.theGame.reScale();
+      }
     };
     var initPlayPage = function() {
       if (!darworms.playpageInitialized) {
@@ -2728,6 +2733,13 @@
         darworms.playpageInitialized = true;
         resizeCanvas();
       }
+      $("body").css("scroll", "on");
+      $("body").css("overflow", "hidden");
+    };
+
+    var leavePlayPage = function() {
+        $("body").css("scroll", "auto");
+        $("body").css("overflow", "auto");
     };
 
     var loadAudio = function() {
@@ -3071,6 +3083,7 @@
       showSettings: showSettings,
       setupGridGeometry: setupGridGeometry,
       initPlayPage: initPlayPage,
+      leavePlayPage: leavePlayPage,
       wormEventHandler: wormEventHandler
 
     };

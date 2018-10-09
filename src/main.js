@@ -267,7 +267,7 @@ darworms.main = (function() {
     darworms.masterAudioVolume = $("#audiovol").val() / 100;
     darworms.graphics.fps = $("#fps").val();
     darworms.graphics.frameInterval = 1000 / darworms.graphics.fps;
-    
+
     console.log(" darworms.masterAudioVolume " + darworms.masterAudioVolume);
   }
 
@@ -684,6 +684,9 @@ darworms.main = (function() {
     if ($('#debug').slider().val() === "1") {
       alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val() + "arg " + nw);
     }
+    if (darworms.theGame) {
+      darworms.theGame.reScale();
+    }
   }
   var initPlayPage = function() {
     if (!darworms.playpageInitialized) {
@@ -692,6 +695,13 @@ darworms.main = (function() {
       darworms.playpageInitialized = true;
       resizeCanvas();
     }
+    $("body").css("scroll", "on");
+    $("body").css("overflow", "hidden");
+  }
+
+  var leavePlayPage = function() {
+      $("body").css("scroll", "auto");
+      $("body").css("overflow", "auto");
   }
 
   var loadAudio = function() {
@@ -1048,6 +1058,7 @@ darworms.main = (function() {
     showSettings: showSettings,
     setupGridGeometry: setupGridGeometry,
     initPlayPage: initPlayPage,
+    leavePlayPage: leavePlayPage,
     wormEventHandler: wormEventHandler
 
   };

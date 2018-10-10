@@ -203,11 +203,7 @@
             if ( $('#tutorialpopup input[type=checkbox]').prop("checked") ) {
               darworms.theGame.focusWorm.showTutorial = false;
             }
-
-
           }
-
-        }
       });
       darworms.wCanvasPixelDim = new Point();
       console.log("Initial Screen Size " + darworms.wCanvasPixelDim.format());

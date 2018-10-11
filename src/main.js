@@ -364,6 +364,8 @@ darworms.main = (function() {
       (darworms.theGame.gameState == darworms.gameStates.paused))) {
       darworms.theGame.gameState = darworms.gameStates.paused;
       $.mobile.changePage("#settingspage");
+      darworms.theGame.needsRedraw = true;
+      darworms.theGame.drawCells();
       $("#startpause").text("Resume Game");
     } else {
       if (darworms.theGame.gameState == darworms.gameStates.waiting) {
@@ -449,6 +451,8 @@ darworms.main = (function() {
       // document.getElementById("startpause").innerHTML = "Resume Game";
       $("#startpause").text("Resume Game");
       darworms.theGame.gameState = darworms.gameStates.paused;
+      darworms.theGame.needsRedraw = true;
+      darworms.theGame.drawCells();
       return;
     }
     if (darworms.theGame.gameState === darworms.gameStates.paused) {

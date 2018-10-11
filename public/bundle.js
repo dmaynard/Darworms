@@ -1576,6 +1576,7 @@
     Game.prototype.clearCanvas = function() {
       // Store the current transformation matrix
       wGraphics.save();
+      console.log(" Clear Canvas");
 
       // Use the identity matrix while clearing the canvas
       wGraphics.setTransform(1, 0, 0, 1, 0, 0);
@@ -1695,6 +1696,8 @@
             // Setter
             // $('#tutorialpopup' ).popup( "option", "overlayTheme", "d" );
             $('#tutorialpopup').popup( "option", "theme", themes[darworms.theGame.activeIndex] );
+            // this makes the popup background transparent, but it looks reall bad
+            // $('#tutorialpopup').popup( "option","theme", 'none' );
             $('#tutorialpopup').popup("open",  {positionTo: btns[darworms.theGame.activeIndex]});
           }
           nextToMove = i;
@@ -2415,6 +2418,8 @@
         (darworms.theGame.gameState == darworms.gameStates.paused))) {
         darworms.theGame.gameState = darworms.gameStates.paused;
         $.mobile.changePage("#settingspage");
+        darworms.theGame.needsRedraw = true;
+        darworms.theGame.drawCells();
         $("#startpause").text("Resume Game");
       } else {
         if (darworms.theGame.gameState == darworms.gameStates.waiting) {
@@ -2500,6 +2505,8 @@
         // document.getElementById("startpause").innerHTML = "Resume Game";
         $("#startpause").text("Resume Game");
         darworms.theGame.gameState = darworms.gameStates.paused;
+        darworms.theGame.needsRedraw = true;
+        darworms.theGame.drawCells();
         return;
       }
       if (darworms.theGame.gameState === darworms.gameStates.paused) {

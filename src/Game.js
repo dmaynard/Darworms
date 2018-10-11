@@ -14,13 +14,6 @@ import WPane from "./WPane.js";
    var gameObject - new darworms.gameModule.Game()
  *     */
 darworms.gameModule = (function() {
-
-  var gameStates = {
-    "over": 0,
-    "running": 1,
-    "waiting": 2,
-    "paused": 3
-  };
   var gameCanvas;
   var wGraphics;
   var nextToMove;
@@ -537,6 +530,7 @@ darworms.gameModule = (function() {
   Game.prototype.clearCanvas = function() {
     // Store the current transformation matrix
     wGraphics.save();
+    console.log(" Clear Canvas");
 
     // Use the identity matrix while clearing the canvas
     wGraphics.setTransform(1, 0, 0, 1, 0, 0);
@@ -656,6 +650,8 @@ darworms.gameModule = (function() {
           // Setter
           // $('#tutorialpopup' ).popup( "option", "overlayTheme", "d" );
           $('#tutorialpopup').popup( "option", "theme", themes[darworms.theGame.activeIndex] );
+          // this makes the popup background transparent, but it looks reall bad
+          // $('#tutorialpopup').popup( "option","theme", 'none' );
           $('#tutorialpopup').popup("open",  {positionTo: btns[darworms.theGame.activeIndex]});
         }
         nextToMove = i;

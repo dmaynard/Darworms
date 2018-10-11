@@ -651,11 +651,12 @@ darworms.gameModule = (function() {
         if (darworms.theGame.focusWorm.showTutorial) {
           $("input[type='checkbox']").attr("checked",false);
           var themes = ["c", "d", "e", "f"];
+          var btns = [ '#p1button', '#p2button', '#p3buton', '#p4button'];
           // ToDo  set proper theme for popup   red green blue ye
           // Setter
           // $('#tutorialpopup' ).popup( "option", "overlayTheme", "d" );
           $('#tutorialpopup').popup( "option", "theme", themes[darworms.theGame.activeIndex] );
-          $('#tutorialpopup').popup("open");
+          $('#tutorialpopup').popup("open",  {positionTo: btns[darworms.theGame.activeIndex]});
         }
         nextToMove = i;
         this.numMoves = this.numMoves + 1;

@@ -861,6 +861,7 @@
       //    (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
       this.scale = new Point((this.pWidth / this.cWidth) ,
           (this.pHeight/ this.cHeight ));
+      console.log("wpane scale " + this.scale.format());
       this.offset = new Point(center.x - (this.cWidth >> 1), center.y - (this.cHeight >>1));
       this.offset.wrap(this.grid.width, this.grid.height);
       this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -900,6 +901,7 @@
 
       this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
           (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
+      console.log("setCenter scale " + this.scale.format());
       this.offset = new Point(center.x - Math.floor(this.cWidth /2), center.y - Math.floor(this.cHeight /2));
       this.offset.wrap(this.grid.width, this.grid.height);
       // console.log( "         WPane.prototype.setCenter  offset after wrap : "   + this.offset.format()  );
@@ -1075,7 +1077,7 @@
     var focusWorm;
     var focusValue;
     var scorectx;
-    var cellsInZoomPane = new Point(7, 7);
+
 
 
     function Game(gridWidth, gridHeight) {
@@ -1097,10 +1099,10 @@
       this.timeInDraw = 0;
       this.activeIndex = 0;
 
-      // cellsInZoomPane = new Point(9,9);
-      cellsInZoomPane = new Point(gridWidth, gridHeight);
+      // this.cellsInZoomPane = new Point(9,9);
+      this.cellsInZoomPane = new Point(gridWidth, gridHeight);
 
-      this.zoomPane = new WPane(this.grid, cellsInZoomPane, new Point(gridWidth >> 1, gridHeight >> 1), document.getElementById("wcanvas"));
+      this.zoomPane = new WPane(this.grid, this.cellsInZoomPane, new Point(gridWidth >> 1, gridHeight >> 1), document.getElementById("wcanvas"));
 
       this.scale = new Point(((gameCanvas.width) / (gridWidth + 1.5)), ((gameCanvas.height) / (gridHeight + 1)));
       console.log(" new Game scale set to " + this.scale.format());
@@ -1140,8 +1142,11 @@
 
     }
 
-    Game.prototype.reScale = function() {
-      this.scale = new Point(((gameCanvas.width) / (this.grid.width + 1.5)), ((gameCanvas.height) / (this.grid.height + 1)));
+    Game.prototype.updateScale = function(width, height) {
+      this.scale = new Point(((width) / (this.grid.width + 1.5)), ((height) / (this.grid.height + 1)));
+      this.gameCanvas = $('#wcanvas')[0];
+
+      console.log("updateScale " + this.scale.format());
     };
 
     Game.prototype.log = function() {
@@ -1455,7 +1460,7 @@
       //  it only changes on zoom in or zoom out I think
       var hoffset = -this.zoomPane.scale.x / 4;
       var voffset = 0;
-      if ((focusPoint.y & 1) === 1 && (cellsInZoomPane.x > 1)) {
+      if ((focusPoint.y & 1) === 1 && (this.cellsInZoomPane.x > 1)) {
         hoffset = this.zoomPane.scale.x / 4;
         // console.log( "drawSelectCell  hoffset "  + hoffset);
       }
@@ -1492,7 +1497,7 @@
           wGraphics.lineCap = 'round';
           wGraphics.beginPath();
           wGraphics.moveTo(0, 0);
-          wGraphics.lineTo(this.xPts[i] / cellsInZoomPane.x * 2.0, this.yPts[i] / cellsInZoomPane.y * 2.0);
+          wGraphics.lineTo(this.xPts[i] / this.cellsInZoomPane.x * 2.0, this.yPts[i] / this.cellsInZoomPane.y * 2.0);
           wGraphics.stroke();
           wGraphics.closePath();
         } else {
@@ -1630,7 +1635,7 @@
     };
     Game.prototype.drawZoom = function() {
       //   console.log (" drawZoom   "  + " at "  + aPos.format());
-      this.zoomPane.setCenter(focusPoint, cellsInZoomPane);
+      this.zoomPane.setCenter(focusPoint, this.cellsInZoomPane);
       this.zoomPane.drawCells();
     };
     Game.prototype.makeMove = function(graphicsOn) {
@@ -1859,7 +1864,7 @@
 
     var hoffset = -this.zoomPane.scale.x / 4;
 
-    if ((activeWorm.pos.y & 1) === 1 && (cellsInZoomPane.x > 1)) {
+    if ((activeWorm.pos.y & 1) === 1 && (this.cellsInZoomPane.x > 1)) {
       hoffset = this.zoomPane.scale.x / 4;
       // console.log( "drawSelectCell  hoffset "  + hoffset);
     }
@@ -2045,24 +2050,24 @@
   };
   var doZoomOut = function(tapPoint) {
     if (tapPoint.dist(new Point(0, 1.0)) < 0.2) {
-      if (cellsInZoomPane.x > 5) {
-        cellsInZoomPane.x = cellsInZoomPane.x - 1;
-        cellsInZoomPane.y = cellsInZoomPane.y - 1;
+      if (this.cellsInZoomPane.x > 5) {
+        this.cellsInZoomPane.x = this.cellsInZoomPane.x - 1;
+        this.cellsInZoomPane.y = this.cellsInZoomPane.y - 1;
       }
-      console.log("doZoomIN: returning true  wPane size =" + cellsInZoomPane.x);
+      console.log("doZoomIN: returning true  wPane size =" + this.cellsInZoomPane.x);
       darworms.theGame.zoomPane.canvasIsDirty = true;
-      darworms.theGame.zoomPane.setSize(new Point(cellsInZoomPane.x, cellsInZoomPane.y));
+      darworms.theGame.zoomPane.setSize(new Point(this.cellsInZoomPane.x, this.cellsInZoomPane.y));
       return true;
     }
     if (tapPoint.dist(new Point(0, -1.0)) < 0.2) {
-      if (cellsInZoomPane.x < darworms.theGame.grid.width) {
-        cellsInZoomPane.x = cellsInZoomPane.x + 1;
-        cellsInZoomPane.y = cellsInZoomPane.y + 1;
+      if (this.cellsInZoomPane.x < darworms.theGame.grid.width) {
+        this.cellsInZoomPane.x = this.cellsInZoomPane.x + 1;
+        this.cellsInZoomPane.y = this.cellsInZoomPane.y + 1;
 
-        console.log("doZoomOut: returning true  wPane size =" + cellsInZoomPane.x);
+        console.log("doZoomOut: returning true  wPane size =" + this.cellsInZoomPane.x);
         darworms.theGame.zoomPane.canvasIsDirty = true;
-        darworms.theGame.zoomPane.setSize(new Point(cellsInZoomPane.x, cellsInZoomPane.y));
-        // theGame.drawZoom(theGame.zoomPane.focus, theGame.cellsInZoomPane);
+        darworms.theGame.zoomPane.setSize(new Point(this.cellsInZoomPane.x, this.cellsInZoomPane.y));
+        // theGame.drawZoom(theGame.zoomPane.focus, theGame.this.cellsInZoomPane);
       }
       return true;
     }
@@ -2742,7 +2747,7 @@
       }
 
       if (darworms.theGame) {
-        darworms.theGame.reScale();
+        darworms.theGame.updateScale(xc.width(), xc.height());
       }
 
     };

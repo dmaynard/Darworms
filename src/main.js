@@ -696,7 +696,7 @@ darworms.main = (function() {
     }
 
     if (darworms.theGame) {
-      darworms.theGame.reScale();
+      darworms.theGame.updateScale(xc.width(), xc.height());
     }
 
   }

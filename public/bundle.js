@@ -1104,7 +1104,7 @@
 
       this.zoomPane = new WPane(this.grid, this.cellsInZoomPane, new Point(gridWidth >> 1, gridHeight >> 1), document.getElementById("wcanvas"));
 
-      this.scale = new Point(((gameCanvas.width) / (gridWidth + 1.5)), ((gameCanvas.height) / (gridHeight + 1)));
+      this.scale = new Point(((gameCanvas.width()) / (gridWidth + 1.5)), ((gameCanvas.height()) / (gridHeight + 1)));
       console.log(" new Game scale set to " + this.scale.format());
       this.origin = new Point(gridWidth >> 1, gridHeight >> 1);
       focusPoint = this.origin;
@@ -1144,7 +1144,7 @@
 
     Game.prototype.updateScale = function(width, height) {
       this.scale = new Point(((width) / (this.grid.width + 1.5)), ((height) / (this.grid.height + 1)));
-      this.gameCanvas = $('#wcanvas')[0];
+      this.gameCanvas = $('#wcanvas');
 
       console.log("updateScale " + this.scale.format());
     };
@@ -1152,7 +1152,7 @@
     Game.prototype.log = function() {
 
       console.log(" Game grid size  " + new Point(this.grid.width, this.grid.height).format());
-      console.log(" Game Canvas size  " + new Point(gameCanvas.width, gameCanvas.height).format());
+      console.log(" Game Canvas size  " + new Point(gameCanvas.width(), gameCanvas.height()).format());
       console.log(" Game scale " + this.scale.format());
       for (var i = 0; i < this.worms.length; i = i + 1) {
         console.log(" Game worm " + i + " :  " + this.worms[i].state + " at " + this.worms[i].pos.format() + " value:" + this.grid.hexValueAt(this.worms[i].pos));
@@ -1404,8 +1404,8 @@
       wGraphics.lineWidth = 4;
       wGraphics.setTransform(1.0, 0, 0, 1.0, 0, 0);
       wGraphics.beginPath();
-      var xloc = ((this.xPts[pickTarget.dir] * gameCanvas.width * .75) / 2) + (gameCanvas.width / 2);
-      var yloc = ((this.yPts[pickTarget.dir] * gameCanvas.height * .75) / 2) + (gameCanvas.height / 2);
+      var xloc = ((this.xPts[pickTarget.dir] * gameCanvas.width() * .75) / 2) + (gameCanvas.width() / 2);
+      var yloc = ((this.yPts[pickTarget.dir] * gameCanvas.height() * .75) / 2) + (gameCanvas.height() / 2);
 
       wGraphics.arc(xloc, yloc, 20, 0, Math.PI * 2, false);
       wGraphics.closePath();
@@ -1454,7 +1454,7 @@
         darworms.theGame.drawZoom();
       }
       wGraphics.save();
-      //    console.log( "drawSelectCell  canvas "  + gameCanvas.width + " height "  + gameCanvas.height);
+      //    console.log( "drawSelectCell  canvas "  + gameCanvas.width() + " height "  + gameCanvas.height());
       //    console.log( "drawSelectCell  grid "  + this.grid.width + " height "  + this.grid.height);
       //   setting this transform may not need to be done every anim frame
       //  it only changes on zoom in or zoom out I think
@@ -1470,13 +1470,13 @@
       }
       this.bullseyeoffset = new Point(hoffset, voffset);
       // console.log( "drawSelectCell  hoffset "  + hoffset + " scale.x = " + this.zoomPane.scale.x);
-      wGraphics.setTransform((gameCanvas.width - (this.scale.x / 2)) / 2, 0, 0, (gameCanvas.height - (this.scale.y / 2)) / 2,
-        (gameCanvas.width / 2) + hoffset, (gameCanvas.height) / 2 + voffset);
+      wGraphics.setTransform((gameCanvas.width() - (this.scale.x / 2)) / 2, 0, 0, (gameCanvas.height() - (this.scale.y / 2)) / 2,
+        (gameCanvas.width() / 2) + hoffset, (gameCanvas.height()) / 2 + voffset);
 
       if ((darworms.graphics.animFrame % 0xFF) == 0) {
         console.log(" drawSelectCell  hoffset " + hoffset);
         console.log(" drawSelectCell  voffset " + voffset);
-        console.log("  drawSelectCell pixel center is " + new Point((gameCanvas.width / 2) + hoffset, (gameCanvas.height) / 2 + voffset).format());
+        console.log("  drawSelectCell pixel center is " + new Point((gameCanvas.width() / 2) + hoffset, (gameCanvas.height()) / 2 + voffset).format());
       }
 
       var owner = this.grid.spokeAt(focusPoint, 7);
@@ -1493,7 +1493,7 @@
           // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + focusPoint.format());
           // wGraphics.strokeStyle  = "rgba(0,0,0,0.2)";
           wGraphics.strokeStyle = outSpokeColor;
-          wGraphics.lineWidth = 8 / gameCanvas.width;
+          wGraphics.lineWidth = 8 / gameCanvas.width();
           wGraphics.lineCap = 'round';
           wGraphics.beginPath();
           wGraphics.moveTo(0, 0);
@@ -1503,7 +1503,7 @@
         } else {
 
           wGraphics.strokeStyle = darworms.dwsettings.alphaColorTable[focusWorm.colorIndex];
-          wGraphics.lineWidth = 8 / gameCanvas.width;
+          wGraphics.lineWidth = 8 / gameCanvas.width();
           // wGraphics.moveTo(this.targetPts[i].x, this.targetPts[i].y);
           wGraphics.beginPath();
           wGraphics.arc(this.xPts[i] * .75, this.yPts[i] * .75, (0.250 / 64) * (darworms.graphics.animFrame & 0x3F), 0, Math.PI * 2, false);
@@ -1585,9 +1585,9 @@
 
       // Use the identity matrix while clearing the canvas
       wGraphics.setTransform(1, 0, 0, 1, 0, 0);
-      wGraphics.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      wGraphics.clearRect(0, 0, gameCanvas.width(), gameCanvas.height());
       wGraphics.fillStyle = darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme];
-      wGraphics.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+      wGraphics.fillRect(0, 0, gameCanvas.width(), gameCanvas.height());
 
       // Restore the transform
       wGraphics.restore();
@@ -1871,7 +1871,7 @@
 
     this.endx = (darworms.main.wCanvas.width / 2) + hoffset - coffset.x;
 
-    this.endy = (gameCanvas.height) / 2 - coffset.y;
+    this.endy = (gameCanvas.height()) / 2 - coffset.y;
     this.startScale = 1.0;
     this.endScale = 4.0;
     // three second zoom animation
@@ -1924,8 +1924,8 @@
 
 
   var reScale = function(gridWidth, gridHeight) {
-    this.scale = new Point(((gameCanvas.width) / (gridWidth + 1.5)), ((gameCanvas.height) / (gridHeight + 1)));
-    console.log(" reScaled to " + this.scale.format());
+    this.scale = new Point(((gameCanvas.width()) / (gridWidth + 1.5)), ((gameCanvas.height()) / (gridHeight + 1)));
+  console.log(" reScaled to " + this.scale.format());
   };
 
   // end of Module prototypes
@@ -2079,8 +2079,8 @@
   function init() {
     // used to initialize variables in this module's closure
     console.log(" darworms.main.wCanvas,width: " + darworms.main.wCanvas.width);
-    gameCanvas = darworms.main.wCanvas;
-    console.log(" gameCanvas.width " + darworms.main.wCanvas.width);
+    gameCanvas = $('#wcanvas');
+    console.log(" gameCanvas.width() " + darworms.main.wCanvas.width);
 
     wGraphics = darworms.main.wGraphics;
     nextToMove = 0;
@@ -2447,6 +2447,12 @@
       }
     };
     darworms.startgame = function(startNow) {
+      console.log(" Startgame start now = " + startNow );
+      if (darworms.theGme) {
+        console.log( "GameState is " +
+       darworms.theGame.gameState + ( darworms.gameStateNames[darworms.theGame.gameState]));
+       console.log ( "startgame Scale" + darworms.theGame.scale.format() );
+     }
       darworms.main.wCanvas.width = $('#wcanvas').width();
       darworms.main.wCanvas.height = $('#wcanvas').height(); // make it square
       darworms.dwsettings.isLargeScreen = darworms.main.wCanvas.width >= darworms.dwsettings.minLargeWidth;
@@ -2715,6 +2721,7 @@
     };
     var resizeCanvas = function() {
       var xc = $('#wcanvas');
+      var canvasElement = document.getElementById('wcanvas');
       var sc = $('#scorecanvas');
       var nc = $('#navcontainer');
       var fb = $('#footerbar');
@@ -2742,14 +2749,18 @@
         });
 
       }
+      canvasElement.height = h - 140;
+      canvasElement.width = w;
       if ($('#debug').slider().val() === "1") {
         alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val() + "arg " + nw);
       }
 
       if (darworms.theGame) {
-        darworms.theGame.updateScale(xc.width(), xc.height());
+        darworms.theGame.updateScale(canvasElement.width, canvasElement.height);
+        darworms.theGame.needsRedraw = true;
+        darworms.theGame.clearCanvas();
+        darworms.theGame.drawCells();
       }
-
     };
     var initPlayPage = function() {
       var mainbody = $('#myPages');
@@ -2976,15 +2987,19 @@
           }, 100);
         });
       }
-      $(window).bind('resize orientationchange', function(event) {
+      $(window).bind('throttledresize orientationchange', function(event) {
         window.scrollTo(1, 0);
+        console.log("resize event triggered");
+        if(darworms.theGame) {
+          darworms.theGame.clearCanvas();
+        }
         resizeCanvas();
         var heightSlider = Math.floor($("#gridsize").val());
         if ((heightSlider & 1) !== 0) {
           // height must be an even number because of toroid shape
           heightSlider = heightSlider + 1;
         }
-        darworms.gameModule.reScale(heightSlider, heightSlider);
+        darworms.gameModule.reScale(darworms.theGame.cellsInZoomPane.x, darworms.theGame.cellsInZoomPane.y);
       });
 
       gWorms.forEach(function(worm, i) {

@@ -36,6 +36,7 @@ export default function WPane ( grid, size, center, canvas) {
     //    (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
     this.scale = new Point((this.pWidth / this.cWidth) ,
         (this.pHeight/ this.cHeight ));
+    console.log("wpane scale " + this.scale.format());
     this.offset = new Point(center.x - (this.cWidth >> 1), center.y - (this.cHeight >>1));
     this.offset.wrap(this.grid.width, this.grid.height);
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -76,6 +77,7 @@ WPane.prototype.setCenter = function ( center, size ) {
 
     this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
         (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
+    console.log("setCenter scale " + this.scale.format());
     this.offset = new Point(center.x - Math.floor(this.cWidth /2), center.y - Math.floor(this.cHeight /2));
     this.offset.wrap(this.grid.width, this.grid.height);
     // console.log( "         WPane.prototype.setCenter  offset after wrap : "   + this.offset.format()  );

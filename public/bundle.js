@@ -2874,7 +2874,7 @@
         new AudioSample("sitar", "sounds/Sitar-C5.wav");
         new AudioSample("flute", "sounds/FluteC3Trimmed.wav");
         new AudioSample("clarinet", "sounds/ClarinetTrimmed.wav");
-        new AudioSample("death", "sounds/death.wav");
+        new AudioSample("death", "sounds/darworm-death.wav");
 
       }
       var twelfrootoftwo = 1.05946309436;

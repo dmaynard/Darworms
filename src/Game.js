@@ -485,6 +485,7 @@ darworms.gameModule = (function() {
   Game.prototype.drawDirtyCells = function() {
     var pt;
     // wGraphics.save();
+    // console.log(" Grawing dirty cells" + this.dirtyCells.length);
     while ((pt = this.dirtyCells.pop()) !== undefined) {
       this.drawCell(pt);
     }
@@ -550,6 +551,7 @@ darworms.gameModule = (function() {
   Game.prototype.initGame = function() {
     this.clearCanvas();
     this.grid.clear();
+    this.drawCells();
     this.elapsedTime = -new Date().getTime();
     this.frameTimes.length = 0;
     this.startFrameTimes.length = 0;
@@ -933,9 +935,11 @@ var makeMoves = function() {
 
     }
   }
-  darworms.theGame.drawDirtyCells();
-  darworms.theGame.animateDyingWorms();
-  darworms.theGame.getAvePos();
+  if (darworms.dwsettings.doAnimations) {
+    darworms.theGame.drawDirtyCells();
+    darworms.theGame.animateDyingWorms();
+    darworms.theGame.getAvePos();
+  }
   updateScores();
   var elapsed = new Date().getTime() - startTime;
   darworms.theGame.frameTimes.push(elapsed);

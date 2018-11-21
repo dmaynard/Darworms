@@ -70,7 +70,7 @@ darworms.gameModule = (function() {
       $('#pickDirectionUI').slider("refresh");
       darworms.dwsettings.pickDirectionUI = "1";
     }
-    console.log(" Scale: " + this.scale.format());
+    console.log(" Scale: " + this.scale.format() + "darworms.dwsettings.pickDirectionUI" + 1);
     this.zoomFrame = 0;
     this.startx = 0;
     this.starty = 0;
@@ -969,11 +969,11 @@ var selectLargeUIDirection = function(point) {
   var select = -1;
   for (var i = 0; i < 6; i = i + 1) {
     if ((outvec & darworms.outMask[i]) === 0) {
-      const target = new Point((darworms.theGame.xPts[i] * .75) * (gameCanvas.clientWidth / 2) +
-        darworms.theGame.bullseyeoffset.x + (gameCanvas.clientWidth / 2) + darworms.theGame.zoomPane.pMargin,
+      const target = new Point((darworms.theGame.xPts[i] * .75) * (gameCanvas.width() / 2) +
+        darworms.theGame.bullseyeoffset.x + (gameCanvas.width() / 2) + darworms.theGame.zoomPane.pMargin,
 
-        ((darworms.theGame.yPts[i] * .75) * (gameCanvas.clientHeight) / 2) +
-        darworms.theGame.bullseyeoffset.y + (gameCanvas.clientHeight) / 2 + darworms.theGame.zoomPane.pMargin);
+        ((darworms.theGame.yPts[i] * .75) * (gameCanvas.height()) / 2) +
+        darworms.theGame.bullseyeoffset.y + (gameCanvas.height()) / 2 + darworms.theGame.zoomPane.pMargin);
 
       // console.log(" direction: " + i + " target point " + target.format());
       // console.log("Touch Point: " + point.format());
@@ -986,7 +986,7 @@ var selectLargeUIDirection = function(point) {
       // console.log("selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
     }
   }
-  if ((minDist < gameCanvas.clientWidth / 8) && (select >= 0)) {
+  if ((minDist < gameCanvas.width() / 8) && (select >= 0)) {
     setDNAandResumeGame(select);
   }
 };

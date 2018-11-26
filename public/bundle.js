@@ -3016,7 +3016,9 @@
           // height must be an even number because of toroid shape
           heightSlider = heightSlider + 1;
         }
-        darworms.gameModule.reScale(darworms.theGame.cellsInZoomPane.x, darworms.theGame.cellsInZoomPane.y);
+        if(darworms.theGame) {
+          darworms.gameModule.reScale(darworms.theGame.cellsInZoomPane.x, darworms.theGame.cellsInZoomPane.y);
+        } 
       });
 
       gWorms.forEach(function(worm, i) {

@@ -593,10 +593,6 @@ darworms.main = (function() {
       }
 
     }
-    if (darworms.theGame.gameState === darworms.gameStates.animToUI ||
-      darworms.theGame.gameState === darworms.gameStates.animFromUI) {
-      darworms.theGame.animIn(darworms.theGame.gameState);
-    }
 
     if (darworms.theGame.gameState === darworms.gameStates.waiting) {
       darworms.graphics.now = Date.now();

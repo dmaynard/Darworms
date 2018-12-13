@@ -664,9 +664,7 @@ darworms.gameModule = (function() {
         active.nMoves = active.nMoves + 1;
         this.zoomPane.canvasIsDirty = true;
         this.drawDirtyCells();
-        if (darworms.dwsettings.panToSelectionUI == 0) {
-          this.initPickUI(active);
-        }
+        this.initPickUI(active);
         return (true);
       }
       if (true || graphicsOn) {
@@ -946,7 +944,7 @@ var makeMoves = function() {
 };
 // Called from user actions
 var selectDirection = function(point) {
-  ((darworms.dwsettings.panToSelectionUI == 1) || (darworms.dwsettings.pickDirectionUI == 1)) ? selectLargeUIDirection(point):
+  ((darworms.dwsettings.pickDirectionUI == 1)) ? selectLargeUIDirection(point):
     selectSmallUIDirection(point);
 }
 
@@ -1004,33 +1002,6 @@ var setDNAandResumeGame = function(direction) {
   darworms.theGame.clearCanvas();
   darworms.theGame.drawCells();
 }
-var doZoomOut = function(tapPoint) {
-  if (tapPoint.dist(new Point(0, 1.0)) < 0.2) {
-    if (this.cellsInZoomPane.x > 5) {
-      this.cellsInZoomPane.x = this.cellsInZoomPane.x - 1;
-      this.cellsInZoomPane.y = this.cellsInZoomPane.y - 1;
-    }
-    console.log("doZoomIN: returning true  wPane size =" + this.cellsInZoomPane.x);
-    darworms.theGame.zoomPane.canvasIsDirty = true;
-    darworms.theGame.zoomPane.setSize(new Point(this.cellsInZoomPane.x, this.cellsInZoomPane.y))
-    return true;
-  }
-  if (tapPoint.dist(new Point(0, -1.0)) < 0.2) {
-    if (this.cellsInZoomPane.x < darworms.theGame.grid.width) {
-      this.cellsInZoomPane.x = this.cellsInZoomPane.x + 1;
-      this.cellsInZoomPane.y = this.cellsInZoomPane.y + 1;
-
-      console.log("doZoomOut: returning true  wPane size =" + this.cellsInZoomPane.x);
-      darworms.theGame.zoomPane.canvasIsDirty = true;
-      darworms.theGame.zoomPane.setSize(new Point(this.cellsInZoomPane.x, this.cellsInZoomPane.y))
-      // theGame.drawZoom(theGame.zoomPane.focus, theGame.this.cellsInZoomPane);
-    }
-    return true;
-  }
-  return false;
-
-}
-
 
 function init() {
   // used to initialize variables in this module's closure
@@ -1057,7 +1028,6 @@ return {
   reScale: reScale,
   makeMoves: makeMoves,
   selectDirection: selectDirection,
-  doZoomOut: doZoomOut,
   updateScores: updateScores
 };
 

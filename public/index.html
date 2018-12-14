@@ -242,10 +242,7 @@
 
         </fieldset>
       </form>
-      <div data-role="fieldcontain">
-        <label for="gridsize">Grid Size:</label>
-        <input type="range" name="gridsize" id="gridsize" value="6" step="2" min="4" max="100" />
-      </div>
+
     </div>
     <div data-role=content id="realtimesettings">
 
@@ -253,10 +250,15 @@
         <label for="fps">Frames/Sec:</label>
         <input type="range" name="fps" id="fps" value="4" min="1" max="60" />
       </div>
+      <div data-role="fieldcontain" id="gridsizeslider">
+        <label for="gridsize">Grid Size:</label>
+        <input type="range" name="gridsize" id="gridsize" value="6" step="2" min="4" max="100" />
+      </div>
       <div data-role="fieldcontain">
         <label for="audiovol">Volume:</label>
         <input type="range" name="fps" id="audiovol" value="30" min="0" max="100" />
       </div>
+
     </div>
     <div data-role="controlgroup" data-type="horizontal">
       <fieldset data-role="controlgroup" data-type="horizontal">

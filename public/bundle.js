@@ -2233,9 +2233,11 @@
     var showSettings = function() {
       if (darworms.theGame && darworms.theGame.gameState !== darworms.gameStates.over) {
         $('#geometryradios').hide();
+        $('#gridsizeslider').hide();
         $('#abortgame').show();
       } else {
         $('#geometryradios').show();
+        $('#gridsizeslider').show();
         $('#abortgame').hide();
       }
       if (darworms.dwsettings.forceInitialGridSize) {

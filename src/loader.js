@@ -1,7 +1,7 @@
 import Point from "./Point.js";
 
 window.darworms = {
-  version: "0.9.0",
+  version: "0.9.1",
   compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
   gameStates: {
     "over": 0,
@@ -44,7 +44,6 @@ window.darworms = {
     uiThen: 0,
     elapsed: 0,
     uiElapsed: 0,
-    enableTransitionStates: false,
     vertex_x: [0.5, 0.5, 0, -0.5, -0.5, 0],
     vertex_fudge: 0.12,
     vertex_y: [0.3125, -0.3125, -0.6875, -0.3125, 0.3125, 0.6875],
@@ -85,7 +84,6 @@ window.darworms = {
     isLargeScreen: true,
     doAudio: true,
     fixedInitPos: true,
-    panToSelectionUI: 0,
     pickDirectionUI: 0,
     noWhere: undefined,
 
@@ -134,10 +132,7 @@ window.darworms = {
 };
 
 window.addEventListener("load", function() {
-
-
-    console.log(" stage 1 loading finished");
-
+    // console.log(" stage 1 loading finished");
     window.onerror = function(msg, url, line) {
       alert(msg + " " + url + " " + line);
     }

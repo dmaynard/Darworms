@@ -635,14 +635,8 @@ darworms.gameModule = (function() {
     } else {
       var direction = active.getMoveDir(currentState);
       if (direction === darworms.dwsettings.codons.unSet) {
-        this.gameState = darworms.graphics.enableTransitionStates ?
-          darworms.gameStates.animToUI : darworms.gameStates.waiting;
-        // console.log(this.grid.formatStateAt(active.pos));
-        if (this.gameState === darworms.gameStates.animToUI) {
-          this.initPanZoom(active);
-        }
-
-        console.log(" setting gamestate to  " + this.gameState);
+        this.gameState = darworms.gameStates.waiting;
+        // console.log(" setting gamestate to  " + this.gameState);
         focusPoint = active.pos;
         focusWorm = active;
         darworms.theGame.focusWorm = active;
@@ -664,9 +658,7 @@ darworms.gameModule = (function() {
         active.nMoves = active.nMoves + 1;
         this.zoomPane.canvasIsDirty = true;
         this.drawDirtyCells();
-        if (darworms.dwsettings.panToSelectionUI == 0) {
-          this.initPickUI(active);
-        }
+        this.initPickUI(active);
         return (true);
       }
       if (true || graphicsOn) {
@@ -834,41 +826,6 @@ Game.prototype.initPanZoom = function(activeWorm) {
   console.log(" end anim = " + new Point(this.endx, this.endy).format())
 }
 
-Game.prototype.animIn = function(gameState) {
-  if (darworms.theGame.gameState == darworms.gameStates.animToUI) {
-    this.zoomFrame++;
-  }
-  if (darworms.theGame.gameState == darworms.gameStates.animFromUI) {
-    this.zoomFrame--;
-    this.zoomFrame--;
-    this.zoomFrame--;
-    this.zoomFrame--;
-
-
-  }
-
-  if (this.zoomFrame >= this.targetZoomFrames) {
-    //  go to waiting for UI input state
-    this.gameState = darworms.gameStates.waiting;
-    console.log("     animIn " + this.zoomFrame + "   xoffset=" + xoffset + "  yoffset = " + yoffset + " scale = " + scl);
-  }
-  if (this.zoomFrame <= 0) {
-    //  go to waiting for UI input state
-    this.gameState = darworms.gameStates.running;
-    console.log("     animIn " + this.zoomFrame + "   xoffset=" + xoffset + "  yoffset = " + yoffset + " scale = " + scl);
-  }
-  var xoffset = this.startx - (this.endx - this.startx) * this.zoomFrame / this.targetZoomFrames;
-  var yoffset = this.starty - (this.endy - this.starty) * this.zoomFrame / this.targetZoomFrames;
-  var scl = this.startScale + (this.endScale - this.startScale) * this.zoomFrame / this.targetZoomFrames;
-  wGraphics.save();
-  this.clearCanvas();
-  wGraphics.setTransform(1, 0, 0, 1, 0, 0);
-  wGraphics.drawImage(this.gridImage, xoffset, yoffset, darworms.main.wCanvas.width, darworms.main.wCanvas.height,
-    0, 0, darworms.main.wCanvas.width, darworms.main.wCanvas.height);
-  wGraphics.restore();
-
-}
-
 // Converts canvas to an image
 Game.prototype.convertCanvasToImage = function(canvas) {
   var image = new Image();
@@ -946,7 +903,7 @@ var makeMoves = function() {
 };
 // Called from user actions
 var selectDirection = function(point) {
-  ((darworms.dwsettings.panToSelectionUI == 1) || (darworms.dwsettings.pickDirectionUI == 1)) ? selectLargeUIDirection(point):
+  ((darworms.dwsettings.pickDirectionUI == 1)) ? selectLargeUIDirection(point):
     selectSmallUIDirection(point);
 }
 
@@ -998,39 +955,10 @@ var selectLargeUIDirection = function(point) {
 var setDNAandResumeGame = function(direction) {
   focusWorm.dna[focusValue & 0x3F] = direction;
   focusWorm.numChoices += 1;
-  //  TODO setState to animFromUI
-  darworms.theGame.gameState = darworms.graphics.enableTransitionStates ?
-    darworms.gameStates.animFromUI : darworms.gameStates.running;
+  darworms.theGame.gameState = darworms.gameStates.running;
   darworms.theGame.clearCanvas();
   darworms.theGame.drawCells();
 }
-var doZoomOut = function(tapPoint) {
-  if (tapPoint.dist(new Point(0, 1.0)) < 0.2) {
-    if (this.cellsInZoomPane.x > 5) {
-      this.cellsInZoomPane.x = this.cellsInZoomPane.x - 1;
-      this.cellsInZoomPane.y = this.cellsInZoomPane.y - 1;
-    }
-    console.log("doZoomIN: returning true  wPane size =" + this.cellsInZoomPane.x);
-    darworms.theGame.zoomPane.canvasIsDirty = true;
-    darworms.theGame.zoomPane.setSize(new Point(this.cellsInZoomPane.x, this.cellsInZoomPane.y))
-    return true;
-  }
-  if (tapPoint.dist(new Point(0, -1.0)) < 0.2) {
-    if (this.cellsInZoomPane.x < darworms.theGame.grid.width) {
-      this.cellsInZoomPane.x = this.cellsInZoomPane.x + 1;
-      this.cellsInZoomPane.y = this.cellsInZoomPane.y + 1;
-
-      console.log("doZoomOut: returning true  wPane size =" + this.cellsInZoomPane.x);
-      darworms.theGame.zoomPane.canvasIsDirty = true;
-      darworms.theGame.zoomPane.setSize(new Point(this.cellsInZoomPane.x, this.cellsInZoomPane.y))
-      // theGame.drawZoom(theGame.zoomPane.focus, theGame.this.cellsInZoomPane);
-    }
-    return true;
-  }
-  return false;
-
-}
-
 
 function init() {
   // used to initialize variables in this module's closure
@@ -1057,7 +985,6 @@ return {
   reScale: reScale,
   makeMoves: makeMoves,
   selectDirection: selectDirection,
-  doZoomOut: doZoomOut,
   updateScores: updateScores
 };
 

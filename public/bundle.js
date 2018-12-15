@@ -48,7 +48,7 @@
   };
 
   window.darworms = {
-    version: "0.9.0",
+    version: "0.9.1",
     compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
     gameStates: {
       "over": 0,
@@ -91,7 +91,6 @@
       uiThen: 0,
       elapsed: 0,
       uiElapsed: 0,
-      enableTransitionStates: false,
       vertex_x: [0.5, 0.5, 0, -0.5, -0.5, 0],
       vertex_fudge: 0.12,
       vertex_y: [0.3125, -0.3125, -0.6875, -0.3125, 0.3125, 0.6875],
@@ -132,7 +131,6 @@
       isLargeScreen: true,
       doAudio: true,
       fixedInitPos: true,
-      panToSelectionUI: 0,
       pickDirectionUI: 0,
       noWhere: undefined,
 
@@ -181,10 +179,7 @@
   };
 
   window.addEventListener("load", function() {
-
-
-      console.log(" stage 1 loading finished");
-
+      // console.log(" stage 1 loading finished");
       window.onerror = function(msg, url, line) {
         alert(msg + " " + url + " " + line);
       };
@@ -1683,14 +1678,8 @@
       } else {
         var direction = active.getMoveDir(currentState);
         if (direction === darworms.dwsettings.codons.unSet) {
-          this.gameState = darworms.graphics.enableTransitionStates ?
-            darworms.gameStates.animToUI : darworms.gameStates.waiting;
-          // console.log(this.grid.formatStateAt(active.pos));
-          if (this.gameState === darworms.gameStates.animToUI) {
-            this.initPanZoom(active);
-          }
-
-          console.log(" setting gamestate to  " + this.gameState);
+          this.gameState = darworms.gameStates.waiting;
+          // console.log(" setting gamestate to  " + this.gameState);
           focusPoint = active.pos;
           focusWorm = active;
           darworms.theGame.focusWorm = active;
@@ -1712,9 +1701,7 @@
           active.nMoves = active.nMoves + 1;
           this.zoomPane.canvasIsDirty = true;
           this.drawDirtyCells();
-          if (darworms.dwsettings.panToSelectionUI == 0) {
-            this.initPickUI(active);
-          }
+          this.initPickUI(active);
           return (true);
         }
         {
@@ -1882,41 +1869,6 @@
     console.log(" end anim = " + new Point(this.endx, this.endy).format());
   };
 
-  Game.prototype.animIn = function(gameState) {
-    if (darworms.theGame.gameState == darworms.gameStates.animToUI) {
-      this.zoomFrame++;
-    }
-    if (darworms.theGame.gameState == darworms.gameStates.animFromUI) {
-      this.zoomFrame--;
-      this.zoomFrame--;
-      this.zoomFrame--;
-      this.zoomFrame--;
-
-
-    }
-
-    if (this.zoomFrame >= this.targetZoomFrames) {
-      //  go to waiting for UI input state
-      this.gameState = darworms.gameStates.waiting;
-      console.log("     animIn " + this.zoomFrame + "   xoffset=" + xoffset + "  yoffset = " + yoffset + " scale = " + scl);
-    }
-    if (this.zoomFrame <= 0) {
-      //  go to waiting for UI input state
-      this.gameState = darworms.gameStates.running;
-      console.log("     animIn " + this.zoomFrame + "   xoffset=" + xoffset + "  yoffset = " + yoffset + " scale = " + scl);
-    }
-    var xoffset = this.startx - (this.endx - this.startx) * this.zoomFrame / this.targetZoomFrames;
-    var yoffset = this.starty - (this.endy - this.starty) * this.zoomFrame / this.targetZoomFrames;
-    var scl = this.startScale + (this.endScale - this.startScale) * this.zoomFrame / this.targetZoomFrames;
-    wGraphics.save();
-    this.clearCanvas();
-    wGraphics.setTransform(1, 0, 0, 1, 0, 0);
-    wGraphics.drawImage(this.gridImage, xoffset, yoffset, darworms.main.wCanvas.width, darworms.main.wCanvas.height,
-      0, 0, darworms.main.wCanvas.width, darworms.main.wCanvas.height);
-    wGraphics.restore();
-
-  };
-
   // Converts canvas to an image
   Game.prototype.convertCanvasToImage = function(canvas) {
     var image = new Image();
@@ -1994,7 +1946,7 @@
   };
   // Called from user actions
   var selectDirection = function(point) {
-    ((darworms.dwsettings.panToSelectionUI == 1) || (darworms.dwsettings.pickDirectionUI == 1)) ? selectLargeUIDirection(point):
+    ((darworms.dwsettings.pickDirectionUI == 1)) ? selectLargeUIDirection(point):
       selectSmallUIDirection(point);
   };
 
@@ -2046,39 +1998,10 @@
   var setDNAandResumeGame = function(direction) {
     focusWorm.dna[focusValue & 0x3F] = direction;
     focusWorm.numChoices += 1;
-    //  TODO setState to animFromUI
-    darworms.theGame.gameState = darworms.graphics.enableTransitionStates ?
-      darworms.gameStates.animFromUI : darworms.gameStates.running;
+    darworms.theGame.gameState = darworms.gameStates.running;
     darworms.theGame.clearCanvas();
     darworms.theGame.drawCells();
   };
-  var doZoomOut = function(tapPoint) {
-    if (tapPoint.dist(new Point(0, 1.0)) < 0.2) {
-      if (this.cellsInZoomPane.x > 5) {
-        this.cellsInZoomPane.x = this.cellsInZoomPane.x - 1;
-        this.cellsInZoomPane.y = this.cellsInZoomPane.y - 1;
-      }
-      console.log("doZoomIN: returning true  wPane size =" + this.cellsInZoomPane.x);
-      darworms.theGame.zoomPane.canvasIsDirty = true;
-      darworms.theGame.zoomPane.setSize(new Point(this.cellsInZoomPane.x, this.cellsInZoomPane.y));
-      return true;
-    }
-    if (tapPoint.dist(new Point(0, -1.0)) < 0.2) {
-      if (this.cellsInZoomPane.x < darworms.theGame.grid.width) {
-        this.cellsInZoomPane.x = this.cellsInZoomPane.x + 1;
-        this.cellsInZoomPane.y = this.cellsInZoomPane.y + 1;
-
-        console.log("doZoomOut: returning true  wPane size =" + this.cellsInZoomPane.x);
-        darworms.theGame.zoomPane.canvasIsDirty = true;
-        darworms.theGame.zoomPane.setSize(new Point(this.cellsInZoomPane.x, this.cellsInZoomPane.y));
-        // theGame.drawZoom(theGame.zoomPane.focus, theGame.this.cellsInZoomPane);
-      }
-      return true;
-    }
-    return false;
-
-  };
-
 
   function init() {
     // used to initialize variables in this module's closure
@@ -2105,7 +2028,6 @@
     reScale: reScale,
     makeMoves: makeMoves,
     selectDirection: selectDirection,
-    doZoomOut: doZoomOut,
     updateScores: updateScores
   };
 
@@ -2311,9 +2233,11 @@
     var showSettings = function() {
       if (darworms.theGame && darworms.theGame.gameState !== darworms.gameStates.over) {
         $('#geometryradios').hide();
+        $('#gridsizeslider').hide();
         $('#abortgame').show();
       } else {
         $('#geometryradios').show();
+        $('#gridsizeslider').show();
         $('#abortgame').hide();
       }
       if (darworms.dwsettings.forceInitialGridSize) {
@@ -2365,7 +2289,7 @@
       darworms.dwsettings.doAnimations = $('#doanim').slider().val() == "true" ? true : false;
       darworms.dwsettings.doAudio = $('#audioon').slider().val();
       darworms.dwsettings.fixedInitPos = $('#fixedinitpos').slider().val();
-      darworms.dwsettings.panToSelectionUI = $('#panToSelectionUI').slider().val();
+
       darworms.dwsettings.pickDirectionUI = $('#pickDirectionUI').slider().val();
 
       console.log(" darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
@@ -2414,17 +2338,7 @@
       // console.log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
       // console.log (" wcanvas coord width " + darworms.main.wCanvas.width + " coord height "  + darworms.main.wCanvas.height  );
       if (darworms.theGame.gameState === darworms.gameStates.waiting) {
-        if (darworms.dwsettings.panToSelectionUI == 0) { //main screen small ui
-          darworms.gameModule.selectDirection(new Point(touchX, touchY));
-        } else {
-          if (darworms.gameModule.doZoomOut(new Point((touchX / cWidth) * 2.0 - 1.0, ((touchY) / cHeight) * 2.0 - 1.0))) {
-            console.log(" do zoomout here");
-          } else {
-            // console.log(" touch event at " + new Point(touchX, touchY).format);
-            darworms.gameModule.selectDirection(new Point(touchX, touchY));
-
-          }
-        }
+        darworms.gameModule.selectDirection(new Point(touchX, touchY));
       }
     };
     darworms.menuButton = function() {
@@ -2666,21 +2580,12 @@
         }
 
       }
-      if (darworms.theGame.gameState === darworms.gameStates.animToUI ||
-        darworms.theGame.gameState === darworms.gameStates.animFromUI) {
-        darworms.theGame.animIn(darworms.theGame.gameState);
-      }
 
       if (darworms.theGame.gameState === darworms.gameStates.waiting) {
         darworms.graphics.now = Date.now();
         darworms.graphics.uiElapsed = darworms.graphics.now - darworms.graphics.uiThen;
         if (darworms.graphics.uiElapsed > darworms.graphics.uiInterval) {
-          if (darworms.dwsettings.panToSelectionUI == 1) {
-            darworms.theGame.drawSelectCell(true);
-          } else {
-            darworms.theGame.drawPickCells();
-            // darworms.theGame.drawSelectCell(false);
-          }
+          darworms.theGame.drawPickCells();
           darworms.graphics.uiThen = darworms.graphics.now -
             (darworms.graphics.uiElapsed % darworms.graphics.uiInterval);
         }
@@ -2954,21 +2859,18 @@
       darworms.wCanvasPixelDim = new Point(1, 1);
       // window.onresize = doReSize;
       // doReSize();
-
+      $('#versionstring')[0].innerHTML = "Version " + window.darworms.version;
       darworms.main.wCanvas = document.getElementById("wcanvas");
       darworms.main.wGraphics = darworms.main.wCanvas.getContext("2d");
       // console.log ( " init wGraphics " + darworms.main.wGraphics);
       $('#wcanvas').bind('tap', wormEventHandler);
       // $('#wcanvas').on("tap", wormEventHandler);
       // $('#wcanvas').bind('vmousedown', wormEventHandler);
-      $('#panToSelectionUI').slider().val(0);
-      $('#panToSelectionUI').slider("refresh");
 
       // this should depend on scale factor.  On small screens
-      // we cshould set pickDirectionUI to true
+      // we should set pickDirectionUI to true
       $('#pickDirectionUI').slider().val(0);
       $('#pickDirectionUI').slider("refresh");
-
 
       darworms.wCanvasRef = $('#wcanvas');
 
@@ -3018,7 +2920,7 @@
         }
         if(darworms.theGame) {
           darworms.gameModule.reScale(darworms.theGame.cellsInZoomPane.x, darworms.theGame.cellsInZoomPane.y);
-        } 
+        }
       });
 
       gWorms.forEach(function(worm, i) {

@@ -82,6 +82,9 @@
     .ui-dialog-contain {
         max-width: 1200px;
     }
+    p.about {
+      padding-left: 10px;
+    }
     #scorecanvas {
       display: inline-block;
       padding-top: 0px;
@@ -201,7 +204,7 @@
       </div>
       <div data-role="popup" id="tutorialpopup" data-position-to="origin" data-theme="a"  data-overlay-theme='none' data-transition="turn">
         <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-        <p>Your Darworm has never seen this grid pattern cell before.
+        <p class="about">Your Darworm has never seen this grid pattern cell before.
           <br> Choose a direction to go in and your Darworm<br> will remember this choice each time it sees this grid<br> pattern cell.
         </p>
         <label>
@@ -642,39 +645,39 @@
       <h1>About Darworms</h1>
     </div>
     <div data-role="content">
-      <p> Darworms is a territory capture strategy game for one to four players.</p>
+      <p class="about"> Darworms is a territory capture strategy game for one to four players.</p>
 
-      <p> Darworms are creatures that crawl about on a hex grid eating the grid lines. Darworms exit a grid point by eating one of the six grid lines exiting the point. If all six grid lines are eaten the Darworm starves to death. Darworms each contain a
+      <p class="about"> Darworms are creatures that crawl about on a hex grid eating the grid lines. Darworms exit a grid point by eating one of the six grid lines exiting the point. If all six grid lines are eaten the Darworm starves to death. Darworms each contain a
         program instructing it which direction to go for each of the 64 possible grid line patterns (eaten or not) it can encounter. You train, or program, your Darworm by playing games. Each time your Darworm sees a new pattern of grid lines it stops
         and asks you which direction to go. It remembers this and adds it to its program. The next time it sees the same pattern of grid lines it will go in that same direction again without stopping to ask you which way to go. Soon your Darworm will
         take off on its own. It may take several games to completely train (program) your Darworm.</p>
 
-      <p> The Darworm that eats the sixth and last spoke in any grid point captures that grid point. You get one point for each grid point you capture. "The fact that you can rip off some other worm's territory just by being the last one to lay a trail in
+      <p class="about"> The Darworm that eats the sixth and last spoke in any grid point captures that grid point. You get one point for each grid point you capture. "The fact that you can rip off some other worm's territory just by being the last one to lay a trail in
         it gives <i>Worms?</i> all the strategic fascination of ancient, classic games like Go and Chess" William Michael Brown's game review from <a href=http:./pdfs/WilliamMichaelBrownReview.pdf>Electronic Fun with Computers and Games, September 1983</a></p>
 
-      <p> You can generate a Darworm with a preset randomly chosen program or train a new Darworm yourself. You can play the same Darworm in successive games.</p>
-      <p>The initial setup pits you against a Darworm that has been randomly pre-programmed in advance which direction to go given the pattern of its current grid cell. Your Darwin initially has no training. It doesn't know which way to go for any grid cell
+      <p class="about"> You can generate a Darworm with a preset randomly chosen program or train a new Darworm yourself. You can play the same Darworm in successive games.</p>
+      <p class="about">The initial setup pits you against a Darworm that has been randomly pre-programmed in advance which direction to go given the pattern of its current grid cell. Your Darwin initially has no training. It doesn't know which way to go for any grid cell
         pattern. So it asks you which direction to go every time it sees a grid pattern it hasn't seen before. Eventually your Darworm will be able to move on its own using the training you have given it. When a game ends the default it to use the "SAME"
         Darworm for the next game, that is to use the existing training and add new training as new configurations are seen in each new game.
 
-        <p> Or you can just set all four Darworms on "RANDOM" and watch and hear a game play that in all probability no one else has ever seen nor heard. </p>
+        <p class="about"> Or you can just set all four Darworms on "RANDOM" and watch and hear a game play that in all probability no one else has ever seen nor heard. </p>
 
-        <p> On the <a href=#settingspage data-transition="fade"> Settings Page </a> you can control many parameters pof the game such as grid size, and the default Darworm speed. </p>
-        <p> pushing one of the four large color buttons brings up page to select the type of Darworm (None, Random, Same, or New) as well as additional attributes for the Darworm</p>
+        <p class="about"> On the <a href=#settingspage data-transition="fade"> Settings Page </a> you can control many parameters of the game such as grid size, and the default Darworm speed. </p>
+        <p class="about"> Pushing one of the four large color buttons brings up page to select the type of Darworm (None, Random, Same, or New) as well as additional attributes for the Darworm including the instrument sample to use and the musical scale associated with the six different notes a darworm can produce based on the six different directions a darworm can move.</p>
 
-        <p> <a href=#red-darworm-page data-transition="fade"> Red   </a>
+        <p class="about"> <a href=#red-darworm-page data-transition="fade"> Red   </a>
           <a href=#green-darworm-page data-transition="fade"> Green   </a>
           <a href=#blue-darworm-page data-transition="fade"> Blue   </a>
           <a href=#yellow-darworm-page data-transition="fade"> Yellow </a>
         </p>
 
-        <p> Based on the 1983 Electron Arts Game <a href=https://en.wikipedia.org/wiki/Worms%3F> Worms? </a> By David S. Maynard</p>
+        <p class="about"> Based on the 1983 Electron Arts Game <a href=https://en.wikipedia.org/wiki/Worms%3F> Worms? </a> By David S. Maynard</p>
 
-        <p> Inspired by Martin Gardner's <b> Mathematical Games column </b> <i> Fantastic patterns traced by programmed "worms" </i>in the November 1973 issue of Scientific American</p>
-        <a href=https://en.wikipedia.org/wiki/Paterson%27s_worms> Paterson's worms</a>
-        <p id="versionstring">Darworms version 0.9.0</p>
-        <p> MIT License</p>
-        <p> Copyright (c) 2012-2018 David S. Maynard
+        <p class="about"> Inspired by Martin Gardner's <b> Mathematical Games column </b> <i> Fantastic patterns traced by programmed "worms" </i>in the November 1973 issue of Scientific American
+        <a href=https://en.wikipedia.org/wiki/Paterson%27s_worms> Paterson's worms</a></p>
+        <p class="about" id="versionstring">Darworms version 0.9.0</p>
+        <p class="about"> MIT License</p>
+        <p class="about"> Copyright (c) 2012-2018 David S. Maynard
           <davidsmaynard@gmail.com>
         </p>
         <div class="ui-grid-a ui-responsive">

@@ -1,6 +1,6 @@
 import "./loader.js";
 import AudioSample from "./AudioSample.js";
-import Point from "./Point.js";
+import { Point } from "./Point.js";
 import "./Grid.js";
 import Worm from "./Worm.js";
 import "./WPane.js";
@@ -20,7 +20,7 @@ import "./Game.js";
 /*  DarWorms
  Copyright BitBLT Studios inc
  Author: David S. Maynard
- Deployment:
+ Deployment to Rackspace:
  scp -r -P 12960 ~/projects/SumoWorms/www/*.* dmaynard@bitbltstudios.com:/var/www/darworms/
  git push bitbltstudios:~/repo/ master
 

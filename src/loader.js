@@ -1,4 +1,4 @@
-import Point from "./Point.js";
+import { Point } from "./Point.js";
 
 window.darworms = {
   version: "0.9.1",

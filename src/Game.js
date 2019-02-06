@@ -1,5 +1,5 @@
-import Point from "./Point.js";
-import WPane from "./WPane.js";
+import { Point } from "./Point.js";
+import { WPane } from "./WPane.js";
 
 /**
  * Created with JetBrains WebStorm.
@@ -459,6 +459,7 @@ darworms.gameModule = (function() {
         // wGraphics.moveTo(this.targetPts[i].x, this.targetPts[i].y);
         wGraphics.beginPath();
         wGraphics.arc(this.xPts[i] * .75, this.yPts[i] * .75, (0.250 / 64) * (darworms.graphics.animFrame & 0x3F), 0, Math.PI * 2, false);
+        console.log(".");
         wGraphics.closePath();
         wGraphics.stroke();
         wGraphics.moveTo(0, 0);
@@ -534,8 +535,6 @@ darworms.gameModule = (function() {
   Game.prototype.clearCanvas = function() {
     // Store the current transformation matrix
     wGraphics.save();
-    console.log(" Clear Canvas");
-
     // Use the identity matrix while clearing the canvas
     wGraphics.setTransform(1, 0, 0, 1, 0, 0);
     wGraphics.clearRect(0, 0, gameCanvas.width(), gameCanvas.height());

@@ -49,6 +49,7 @@ export class WPane {
     this.savedCanvas.width = this.canvas.width;
     this.savedCanvas.height = this.canvas.height;
   }
+  
   clear() {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     // background for user selct direction screen

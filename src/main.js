@@ -3,7 +3,6 @@ import AudioSample from "./AudioSample.js";
 import { Point } from "./Point.js";
 import "./Grid.js";
 import Worm from "./Worm.js";
-import "./WPane.js";
 import "./Game.js";
 
 /*
@@ -950,7 +949,7 @@ darworms.main = (function() {
         heightSlider = heightSlider + 1;
       }
       if(darworms.theGame) {
-        darworms.gameModule.reScale(darworms.theGame.cellsInZoomPane.x, darworms.theGame.cellsInZoomPane.y);
+        darworms.gameModule.reScale(darworms.theGame.grid.width, darworms.theGame.grid.height);
       }
     });
 

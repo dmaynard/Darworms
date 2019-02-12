@@ -1,5 +1,5 @@
 import { Point } from "./Point.js";
-
+import { darworms } from "./loader.js";
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard

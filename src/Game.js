@@ -1,5 +1,5 @@
 import { Point } from "./Point.js";
-
+import { darworms } from "./loader.js";
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -420,7 +420,7 @@ darworms.gameModule = (function() {
       // the first's/
 
       var whichWorm = ((i + darworms.graphics.uiFrames) & 0x3);
-      if (this.worms[whichWorm].state == wormStates.dying) {
+      if (this.worms[whichWorm].state == darworms.wormStates.dying) {
         this.animateDyingCell(this.worms[whichWorm]);
       }
     }
@@ -483,7 +483,7 @@ darworms.gameModule = (function() {
     w.pos = this.origin;
     w.nMoves = 0;
     w.score = 0;
-    w.state = wormStates.paused;
+    w.state = darworms.wormStates.paused;
     this.worms.push(w);
   };
   Game.prototype.getAvePos = function(w) {
@@ -493,7 +493,7 @@ darworms.gameModule = (function() {
 
     for (var i = 0; i < this.worms.length; i = i + 1) {
       var active = this.worms[i];
-      if (active.state === wormStates.moving) {
+      if (active.state === darworms.wormStates.moving) {
         this.avePos.x = this.avePos.x + active.pos.x;
         this.avePos.y = this.avePos.y + active.pos.y;
         nActiveAve = nActiveAve + 1;
@@ -516,11 +516,11 @@ darworms.gameModule = (function() {
     for (var i = nextToMove; i < this.worms.length; i = i + 1) {
       var active = this.worms[i];
       darworms.theGame.activeIndex = i;
-      // console.log (" GamemakeMove   for worm" + i + " :  " + wormStateNames[active.state] + " at "  + active.pos.format());
-      if (active.state === wormStates.sleeping) {
+      // console.log (" GamemakeMove   for worm" + i + " :  " + darwormd.wormStateNames[active.state] + " at "  + active.pos.format());
+      if (active.state === darworms.wormStates.sleeping) {
         continue;
       }
-      // active.state = wormStates.moving;
+      // active.state = darworms.wormStates.moving;
       // console.log (" Game  Before Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
       // active.log();
       // console.log ( "   Grid value =  ");
@@ -529,20 +529,20 @@ darworms.gameModule = (function() {
       // console.log (" Current State = " + currentState);
       if (currentState == 0x3F) {
         // last sample is death sound
-        if ((active.state != (wormStates.dead) && (active.state != wormStates.dying))) {
+        if ((active.state != (darworms.wormStates.dead) && (active.state != darworms.wormStates.dying))) {
           if (darworms.dwsettings.doAnimations) {
             if ((darworms.dwsettings.doAudio == 1) && darworms.audioSamples[darworms.audioSamples.length - 1]) {
               darworms.audioSamples[darworms.audioSamples.length - 1].playSample(1.0, 0.0);
             }
           }
-          active.state = (darworms.dwsettings.doAnimations)? wormStates.dying : wormStates.dead;
+          active.state = (darworms.dwsettings.doAnimations)? darworms.wormStates.dying : darworms.wormStates.dead;
           active.diedAtFrame = darworms.graphics.uiFrames;
           console.log(" darworm " + active.colorIndex + " dying at frame: " + darworms.graphics.animFrame);
         }
 
-      if (active.state == wormStates.dying) {
+      if (active.state == darworms.wormStates.dying) {
         if ((darworms.graphics.uiFrames - active.diedAtFrame) > darworms.graphics.dyningAnimationFrames) {
-          active.state = wormStates.dead;
+          active.state = darworms.wormStates.dead;
           console.log(" darworm " + active.colorIndex + " dead at frame: " + darworms.graphics.animFrame);
         }
       }
@@ -582,7 +582,7 @@ darworms.gameModule = (function() {
       // console.log (" Move Direction = " + direction);
       var next = this.grid.next(active.pos, direction);
       if (next.isEqualTo(darworms.dwsettings.noWhere)) { // fell of edge of world
-        active.state = wormStates.dead;
+        active.state = darworms.wormStates.dead;
         active.died = true;
       } else {
         var didScore = this.grid.move(active.pos, next, direction, active.colorIndex);
@@ -614,7 +614,7 @@ darworms.gameModule = (function() {
       }
 
     }
-    if ((active.state !== wormStates.dead)) {
+    if ((active.state !== darworms.wormStates.dead)) {
       nAlive = nAlive + 1;
     }
     //console.log (" Game  After Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());

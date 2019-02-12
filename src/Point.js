@@ -8,8 +8,12 @@
 
 export class  Point {
   constructor(x,y) {
+    const privateString = "(" + x + "," + y + ")";
     this.x = x;
     this.y = y;
+    this.testprint = function( ) {
+      console.log ( " Private class variable " + privateString);
+    }
   }
   isEqualTo (other) {
       return this.x == other.x && this.y == other.y;
@@ -39,4 +43,8 @@ export class  Point {
     format ( ) {
         return "(" + this.x + "," + this.y + ")";
     };
+
+    print ( ) {
+      console.log ( " Private class variable " + privateString);
+    }
 }

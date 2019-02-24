@@ -11,9 +11,6 @@ export class  Point {
     const privateString = "(" + x + "," + y + ")";
     this.x = x;
     this.y = y;
-    this.testprint = function( ) {
-      console.log ( " Private class variable " + privateString);
-    }
   }
   isEqualTo (other) {
       return this.x == other.x && this.y == other.y;

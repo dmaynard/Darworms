@@ -1,5 +1,6 @@
 import { Point } from "./Point.js";
 import { darworms } from "./loader.js";
+import { Grid } from "./Grid.js";
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -31,7 +32,7 @@ darworms.gameModule = (function() {
 
 
     this.gameState = darworms.gameStates.over;
-    this.grid = new darworms.gridModule.Grid(gridWidth, gridHeight);
+    this.grid = new Grid(gridWidth, gridHeight);
     this.canvas = gameCanvas;
 
     this.frameTimes = [];

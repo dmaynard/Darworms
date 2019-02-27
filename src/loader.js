@@ -1,6 +1,6 @@
-import Point from "./Point.js";
+import { Point } from "./Point.js";
 
-window.darworms = {
+export var darworms = {
   version: "0.9.1",
   compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
   gameStates: {
@@ -11,6 +11,16 @@ window.darworms = {
     "animToUI": 4,
     "animFromUI": 5
   },
+  wormStates: {
+    "dead": 0,
+    "moving": 1,
+    "paused": 2,
+    "sleeping": 3,
+    "dying": 4 //  dead but let the game keep going for a few frames to animate
+  },
+  wormStateNames: ["dead", "moving", "paused", "sleeping", "dying"],
+  initialWormStates: [3, 2, 2, 2],
+
   gameStateNames: ["over", "running", "waiting", "paused", "to_ui", "from_ui"],
 
   outMask: [1, 2, 4, 8, 16, 32],
@@ -75,7 +85,7 @@ window.darworms = {
     C2: 12
   },
 
-  dwsettings: {
+  dwsettings: {   //  User settings
     vgridsize: 1.0,
     forceInitialGridSize: true,
     largeGridSize: 18, // The original Atari 800 Character mode
@@ -89,7 +99,6 @@ window.darworms = {
 
     scoreCanvas: undefined,
     gridGeometry: "torus",
-    compassPts: ["e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"],
 
     codons: {
       "e": 0,
@@ -155,6 +164,7 @@ window.addEventListener("load", function() {
     });
     darworms.wCanvasPixelDim = new Point();
     console.log("Initial Screen Size " + darworms.wCanvasPixelDim.format());
+    window.darworms = darworms;  // So index.html onclick can find handlers
     darworms.main.init();
 
   }

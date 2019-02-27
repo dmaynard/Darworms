@@ -1,5 +1,5 @@
-import Point from "./Point.js";
-
+import { Point } from "./Point.js";
+import { darworms } from "./loader.js";
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -231,7 +231,7 @@ Worm.prototype.randomize = function() {
 };
 Worm.prototype.log = function() {
   var dir;
-  console.log(" Worm State: " + wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
+  console.log(" Worm State: " + darworms.wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
 };
 Worm.prototype.place = function(aState, aGame, pos) {
   this.pos = pos;
@@ -247,10 +247,10 @@ Worm.prototype.dump = function() {
     var spokes = [];
     for (var spoke = 0; spoke < 6; spoke = spoke + 1) {
       if ((i & darworms.outMask[spoke]) !== 0) {
-        spokes.push(compassPts[spoke]);
+        spokes.push(darworms.compassPts[spoke]);
       }
     }
-    console.log(" dna" + i + " " + spokes + " = " + compassPts[this.dna[i]]);
+    console.log(" dna" + i + " " + spokes + " = " + darworms.compassPts[this.dna[i]]);
   }
 
 };
@@ -269,7 +269,6 @@ Worm.prototype.toText = function() {
     if (this.dna[i] > 7) this.name += '#';
   };
 };
-var compassPts = ["e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"];
 
 Worm.prototype.fromText = function(dnastring) {
   var regx = /^[ABCDEF\?]{63}X$/;
@@ -305,7 +304,7 @@ Worm.prototype.fromText = function(dnastring) {
         return (false);
     }
     if (!(((1 << this.dna[i]) & i) === 0) && (this.dna[i] !== 6)) {
-      alert("illegal direction " + dnastring.charAt(i) + "(" + compassPts[this.dna[i]] +
+      alert("illegal direction " + dnastring.charAt(i) + "(" + darworms.compassPts[this.dna[i]] +
         ")" + "given for cell " + i);
       gooddna = false;
     }

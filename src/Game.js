@@ -1,6 +1,6 @@
-import Point from "./Point.js";
-import WPane from "./WPane.js";
-
+import { Point } from "./Point.js";
+import { darworms } from "./loader.js";
+import { Grid } from "./Grid.js";
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -32,7 +32,7 @@ darworms.gameModule = (function() {
 
 
     this.gameState = darworms.gameStates.over;
-    this.grid = new darworms.gridModule.Grid(gridWidth, gridHeight);
+    this.grid = new Grid(gridWidth, gridHeight);
     this.canvas = gameCanvas;
 
     this.frameTimes = [];
@@ -42,11 +42,6 @@ darworms.gameModule = (function() {
     this.numMoves = 0;
     this.timeInDraw = 0;
     this.activeIndex = 0;
-
-    // this.cellsInZoomPane = new Point(9,9);
-    this.cellsInZoomPane = new Point(gridWidth, gridHeight);
-
-    this.zoomPane = new WPane(this.grid, this.cellsInZoomPane, new Point(gridWidth >> 1, gridHeight >> 1), document.getElementById("wcanvas"))
 
     this.scale = new Point(((gameCanvas.width()) / (gridWidth + 1.5)), ((gameCanvas.height()) / (gridHeight + 1)));
     console.log(" new Game scale set to " + this.scale.format());
@@ -399,79 +394,6 @@ darworms.gameModule = (function() {
       darworms.theGame.highlightWorm(worm, index);
     }, darworms.theGame);
   }
-  Game.prototype.drawSelectCell = function(recenter) {
-    //  Draw the large direction selectors screen
-    //  A rectangle 2.0 x 2.0
-    if (recenter) {
-      darworms.theGame.drawZoom();
-    }
-    wGraphics.save();
-    //    console.log( "drawSelectCell  canvas "  + gameCanvas.width() + " height "  + gameCanvas.height());
-    //    console.log( "drawSelectCell  grid "  + this.grid.width + " height "  + this.grid.height);
-    //   setting this transform may not need to be done every anim frame
-    //  it only changes on zoom in or zoom out I think
-    var hoffset = -this.zoomPane.scale.x / 4;
-    var voffset = 0;
-    if ((focusPoint.y & 1) === 1 && (this.cellsInZoomPane.x > 1)) {
-      hoffset = this.zoomPane.scale.x / 4;
-      // console.log( "drawSelectCell  hoffset "  + hoffset);
-    }
-    if ((this.zoomPane.cHeight & 1) != 1) {
-      hoffset += this.zoomPane.scale.x / 2;
-      voffset += this.zoomPane.scale.y / 2;
-    }
-    this.bullseyeoffset = new Point(hoffset, voffset);
-    // console.log( "drawSelectCell  hoffset "  + hoffset + " scale.x = " + this.zoomPane.scale.x);
-    wGraphics.setTransform((gameCanvas.width() - (this.scale.x / 2)) / 2, 0, 0, (gameCanvas.height() - (this.scale.y / 2)) / 2,
-      (gameCanvas.width() / 2) + hoffset, (gameCanvas.height()) / 2 + voffset);
-
-    if ((darworms.graphics.animFrame % 0xFF) == 0) {
-      console.log(" drawSelectCell  hoffset " + hoffset);
-      console.log(" drawSelectCell  voffset " + voffset);
-      console.log("  drawSelectCell pixel center is " + new Point((gameCanvas.width() / 2) + hoffset, (gameCanvas.height()) / 2 + voffset).format());
-    }
-
-    var owner = this.grid.spokeAt(focusPoint, 7);
-    wGraphics.fillStyle = "rgba(0,0,0,0.8)";
-    wGraphics.beginPath();
-    wGraphics.arc(0, 0, 0.3 / darworms.theGame.zoomPane.cWidth, 0, Math.PI * 2, true);
-    wGraphics.closePath();
-    wGraphics.fill();
-
-    var outvec = this.grid.stateAt(focusPoint);
-    for (var i = 0; i < 6; i = i + 1) {
-      if ((outvec & darworms.outMask[i]) !== 0) {
-        var outSpokeColor = darworms.dwsettings.alphaColorTable[this.grid.spokeAt(focusPoint, i)];
-        // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + focusPoint.format());
-        // wGraphics.strokeStyle  = "rgba(0,0,0,0.2)";
-        wGraphics.strokeStyle = outSpokeColor;
-        wGraphics.lineWidth = 8 / gameCanvas.width();
-        wGraphics.lineCap = 'round';
-        wGraphics.beginPath();
-        wGraphics.moveTo(0, 0);
-        wGraphics.lineTo(this.xPts[i] / this.cellsInZoomPane.x * 2.0, this.yPts[i] / this.cellsInZoomPane.y * 2.0);
-        wGraphics.stroke();
-        wGraphics.closePath();
-      } else {
-
-        wGraphics.strokeStyle = darworms.dwsettings.alphaColorTable[focusWorm.colorIndex];
-        wGraphics.lineWidth = 8 / gameCanvas.width();
-        // wGraphics.moveTo(this.targetPts[i].x, this.targetPts[i].y);
-        wGraphics.beginPath();
-        wGraphics.arc(this.xPts[i] * .75, this.yPts[i] * .75, (0.250 / 64) * (darworms.graphics.animFrame & 0x3F), 0, Math.PI * 2, false);
-        wGraphics.closePath();
-        wGraphics.stroke();
-        wGraphics.moveTo(0, 0);
-        wGraphics.lineTo((this.xPts[i] * .75) / 64.0 * (darworms.graphics.animFrame & 0x3F),
-          (this.yPts[i] * .75) / 64.0 * (darworms.graphics.animFrame & 0x3F));
-        wGraphics.stroke();
-        wGraphics.closePath();
-      }
-    }
-    wGraphics.restore();
-    this.needsReDraw = true;
-
-  };
 
   Game.prototype.drawCells = function() {
     wGraphics.save();
@@ -499,7 +421,7 @@ darworms.gameModule = (function() {
       // the first's/
 
       var whichWorm = ((i + darworms.graphics.uiFrames) & 0x3);
-      if (this.worms[whichWorm].state == wormStates.dying) {
+      if (this.worms[whichWorm].state == darworms.wormStates.dying) {
         this.animateDyingCell(this.worms[whichWorm]);
       }
     }
@@ -534,8 +456,6 @@ darworms.gameModule = (function() {
   Game.prototype.clearCanvas = function() {
     // Store the current transformation matrix
     wGraphics.save();
-    console.log(" Clear Canvas");
-
     // Use the identity matrix while clearing the canvas
     wGraphics.setTransform(1, 0, 0, 1, 0, 0);
     wGraphics.clearRect(0, 0, gameCanvas.width(), gameCanvas.height());
@@ -564,7 +484,7 @@ darworms.gameModule = (function() {
     w.pos = this.origin;
     w.nMoves = 0;
     w.score = 0;
-    w.state = wormStates.paused;
+    w.state = darworms.wormStates.paused;
     this.worms.push(w);
   };
   Game.prototype.getAvePos = function(w) {
@@ -574,7 +494,7 @@ darworms.gameModule = (function() {
 
     for (var i = 0; i < this.worms.length; i = i + 1) {
       var active = this.worms[i];
-      if (active.state === wormStates.moving) {
+      if (active.state === darworms.wormStates.moving) {
         this.avePos.x = this.avePos.x + active.pos.x;
         this.avePos.y = this.avePos.y + active.pos.y;
         nActiveAve = nActiveAve + 1;
@@ -587,11 +507,7 @@ darworms.gameModule = (function() {
     }
     // console.log(this.avePos.format());
   };
-  Game.prototype.drawZoom = function() {
-    //   console.log (" drawZoom   "  + " at "  + aPos.format());
-    this.zoomPane.setCenter(focusPoint, this.cellsInZoomPane);
-    this.zoomPane.drawCells();
-  }
+
   Game.prototype.makeMove = function(graphicsOn) {
     var nAlive = 0;
     if (this.gameState === darworms.gameStates.waiting) {
@@ -601,11 +517,11 @@ darworms.gameModule = (function() {
     for (var i = nextToMove; i < this.worms.length; i = i + 1) {
       var active = this.worms[i];
       darworms.theGame.activeIndex = i;
-      // console.log (" GamemakeMove   for worm" + i + " :  " + wormStateNames[active.state] + " at "  + active.pos.format());
-      if (active.state === wormStates.sleeping) {
+      // console.log (" GamemakeMove   for worm" + i + " :  " + darwormd.wormStateNames[active.state] + " at "  + active.pos.format());
+      if (active.state === darworms.wormStates.sleeping) {
         continue;
       }
-      // active.state = wormStates.moving;
+      // active.state = darworms.wormStates.moving;
       // console.log (" Game  Before Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
       // active.log();
       // console.log ( "   Grid value =  ");
@@ -614,20 +530,20 @@ darworms.gameModule = (function() {
       // console.log (" Current State = " + currentState);
       if (currentState == 0x3F) {
         // last sample is death sound
-        if ((active.state != (wormStates.dead) && (active.state != wormStates.dying))) {
+        if ((active.state != (darworms.wormStates.dead) && (active.state != darworms.wormStates.dying))) {
           if (darworms.dwsettings.doAnimations) {
             if ((darworms.dwsettings.doAudio == 1) && darworms.audioSamples[darworms.audioSamples.length - 1]) {
               darworms.audioSamples[darworms.audioSamples.length - 1].playSample(1.0, 0.0);
             }
           }
-          active.state = (darworms.dwsettings.doAnimations)? wormStates.dying : wormStates.dead;
+          active.state = (darworms.dwsettings.doAnimations)? darworms.wormStates.dying : darworms.wormStates.dead;
           active.diedAtFrame = darworms.graphics.uiFrames;
           console.log(" darworm " + active.colorIndex + " dying at frame: " + darworms.graphics.animFrame);
         }
 
-      if (active.state == wormStates.dying) {
+      if (active.state == darworms.wormStates.dying) {
         if ((darworms.graphics.uiFrames - active.diedAtFrame) > darworms.graphics.dyningAnimationFrames) {
-          active.state = wormStates.dead;
+          active.state = darworms.wormStates.dead;
           console.log(" darworm " + active.colorIndex + " dead at frame: " + darworms.graphics.animFrame);
         }
       }
@@ -656,7 +572,6 @@ darworms.gameModule = (function() {
         nextToMove = i;
         this.numMoves = this.numMoves + 1;
         active.nMoves = active.nMoves + 1;
-        this.zoomPane.canvasIsDirty = true;
         this.drawDirtyCells();
         this.initPickUI(active);
         return (true);
@@ -668,7 +583,7 @@ darworms.gameModule = (function() {
       // console.log (" Move Direction = " + direction);
       var next = this.grid.next(active.pos, direction);
       if (next.isEqualTo(darworms.dwsettings.noWhere)) { // fell of edge of world
-        active.state = wormStates.dead;
+        active.state = darworms.wormStates.dead;
         active.died = true;
       } else {
         var didScore = this.grid.move(active.pos, next, direction, active.colorIndex);
@@ -700,7 +615,7 @@ darworms.gameModule = (function() {
       }
 
     }
-    if ((active.state !== wormStates.dead)) {
+    if ((active.state !== darworms.wormStates.dead)) {
       nAlive = nAlive + 1;
     }
     //console.log (" Game  After Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
@@ -795,36 +710,6 @@ Game.prototype.showTimes = function() {
 
 
 };
-
-Game.prototype.initPanZoom = function(activeWorm) {
-  //  save a copy of the current grid canvas
-  // to act as a backgroud for the selection UI
-
-  var coffset = this.getOffset(activeWorm.pos);
-
-  this.gridImage = this.convertCanvasToImage(darworms.main.wCanvas);
-  this.zoomFrame = 0;
-  this.startx = 0;
-  this.starty = 0;
-  this.endx = (darworms.main.wCanvas.width / 2) - coffset.x;
-
-  var hoffset = -this.zoomPane.scale.x / 4;
-
-  if ((activeWorm.pos.y & 1) === 1 && (this.cellsInZoomPane.x > 1)) {
-    hoffset = this.zoomPane.scale.x / 4;
-    // console.log( "drawSelectCell  hoffset "  + hoffset);
-  }
-
-  this.endx = (darworms.main.wCanvas.width / 2) + hoffset - coffset.x;
-
-  this.endy = (gameCanvas.height()) / 2 - coffset.y;
-  this.startScale = 1.0;
-  this.endScale = 4.0;
-  // three second zoom animation
-  this.targetZoomFrames = 120;
-  console.log(" Worm pos =" + activeWorm.pos.format());
-  console.log(" end anim = " + new Point(this.endx, this.endy).format())
-}
 
 // Converts canvas to an image
 Game.prototype.convertCanvasToImage = function(canvas) {
@@ -930,11 +815,9 @@ var selectLargeUIDirection = function(point) {
   var select = -1;
   for (var i = 0; i < 6; i = i + 1) {
     if ((outvec & darworms.outMask[i]) === 0) {
-      const target = new Point((darworms.theGame.xPts[i] * .75) * (gameCanvas.width() / 2) +
-        darworms.theGame.bullseyeoffset.x + (gameCanvas.width() / 2) + darworms.theGame.zoomPane.pMargin,
-
-        ((darworms.theGame.yPts[i] * .75) * (gameCanvas.height()) / 2) +
-        darworms.theGame.bullseyeoffset.y + (gameCanvas.height()) / 2 + darworms.theGame.zoomPane.pMargin);
+      const target = new Point(
+        (((darworms.theGame.xPts[i] * gameCanvas.width() * .75) / 2) + (gameCanvas.width() / 2)),
+        (((darworms.theGame.yPts[i] * gameCanvas.height() * .75) / 2) + (gameCanvas.height() / 2)));
 
       // console.log(" direction: " + i + " target point " + target.format());
       // console.log("Touch Point: " + point.format());

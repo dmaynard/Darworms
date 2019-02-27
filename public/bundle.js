@@ -6,48 +6,48 @@
    * User: dmaynard
    * Date: 9/21/13
    * Time: 11:37 PM
-   * To change this template use File | Settings | File Templates.
    */
 
-  function Point(x, y) {
+  class  Point {
+    constructor(x,y) {
       this.x = x;
       this.y = y;
+    }
+    isEqualTo (other) {
+        return this.x == other.x && this.y == other.y;
+    };
+    add (other) {
+    //    console.log (" adding (" + other.x + "," + other.y + " to (" + this.x + "," + this.y );
+        this.x = this.x + other.x;
+        this.y = this.y + other.y;
+      }
+    dist(other) {
+          //  console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
+          return Math.sqrt((this.x - other.x ) * (this.x - other.x) +  (this.y - other.y) * (this.y - other.y));
+      }
+    absDiff (other) {
+          //  console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
+          return new Point( Math.abs(this.x-other.x) , Math.abs(this.y-other.y));
+      }
+    wrap (wg, hg) {
+          if (this.x >= wg) this.x = this.x - wg;
+          if (this.x < 0) this.x = this.x + wg;
+          if (this.y >= hg) this.y = this.y - hg;
+          if (this.y < 0) {
+              this.y = this.y + hg;
+          }
+      };
+
+      format ( ) {
+          return "(" + this.x + "," + this.y + ")";
+      };
+
+      print ( ) {
+        console.log ( " Private class variable " + privateString);
+      }
   }
 
-  Point.prototype.isEqualTo = function(other) {
-      return this.x == other.x && this.y == other.y;
-  };
-
-  Point.prototype.add = function( other) {
-  //    console.log (" adding (" + other.x + "," + other.y + " to (" + this.x + "," + this.y );
-      this.x = this.x + other.x;
-      this.y = this.y + other.y;
-    };
-
-  Point.prototype.dist = function( other) {
-      //  console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
-      return Math.sqrt((this.x - other.x ) * (this.x - other.x) +  (this.y - other.y) * (this.y - other.y));
-  };
-
-  Point.prototype.absDiff = function( other) {
-      //  console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
-      return new Point( Math.abs(this.x-other.x) , Math.abs(this.y-other.y));
-
-  };
-
-  Point.prototype.wrap = function (wg, hg) {
-      if (this.x >= wg) this.x = this.x - wg;
-      if (this.x < 0) this.x = this.x + wg;
-      if (this.y >= hg) this.y = this.y - hg;
-      if (this.y < 0) {
-          this.y = this.y + hg;
-      }
-  };
-  Point.prototype.format = function( ) {
-      return "(" + this.x + "," + this.y + ")";
-  };
-
-  window.darworms = {
+  var darworms = {
     version: "0.9.1",
     compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
     gameStates: {
@@ -58,6 +58,16 @@
       "animToUI": 4,
       "animFromUI": 5
     },
+    wormStates: {
+      "dead": 0,
+      "moving": 1,
+      "paused": 2,
+      "sleeping": 3,
+      "dying": 4 //  dead but let the game keep going for a few frames to animate
+    },
+    wormStateNames: ["dead", "moving", "paused", "sleeping", "dying"],
+    initialWormStates: [3, 2, 2, 2],
+
     gameStateNames: ["over", "running", "waiting", "paused", "to_ui", "from_ui"],
 
     outMask: [1, 2, 4, 8, 16, 32],
@@ -122,7 +132,7 @@
       C2: 12
     },
 
-    dwsettings: {
+    dwsettings: {   //  User settings
       vgridsize: 1.0,
       forceInitialGridSize: true,
       largeGridSize: 18, // The original Atari 800 Character mode
@@ -136,7 +146,6 @@
 
       scoreCanvas: undefined,
       gridGeometry: "torus",
-      compassPts: ["e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"],
 
       codons: {
         "e": 0,
@@ -202,6 +211,7 @@
       });
       darworms.wCanvasPixelDim = new Point();
       console.log("Initial Screen Size " + darworms.wCanvasPixelDim.format());
+      window.darworms = darworms;  // So index.html onclick can find handlers
       darworms.main.init();
 
     }
@@ -272,17 +282,15 @@
    * To change this template use File | Settings | File Templates.
    */
   /*    Grid   */
-  darworms.gridModule = (function() {
-    var evenRowVec = [new Point(1, 0), new Point(0, 1), new Point(-1, 1),
-      new Point(-1, 0), new Point(-1, -1), new Point(0, -1)
-    ];
 
+    const evenRowVec = [ {x: 1,y: 0}, {x: 0,y: 1}, {x:-1,y: 1},
+                        {x:-1,y: 0}, {x:-1,y:-1}, {x: 0,y:-1}];
 
-    var oddRowVec = [new Point(1, 0), new Point(1, 1), new Point(0, 1),
-      new Point(-1, 0), new Point(0, -1), new Point(1, -1)
-    ];
+    const oddRowVec = [ {x: 1,y: 0}, {x: 1,y: 1}, {x:0,y: 1},
+                         {x:-1,y: 0}, {x: 0,y:-1}, {x: 1,y:-1}];
+
     //  although we reserve 4 bits for each direction we actually only use 3 bits
-    var spokeMask = [0xFFFFFFF0,
+    const spokeMask = [0xFFFFFFF0,
       0xFFFFFF0F,
       0xFFFFF0FF,
       0xFFFF0FFF,
@@ -292,9 +300,10 @@
       0x0FFFFFFF
     ];
     // sink mask is high bit of spoke 6
-    var sinkMask = 0x08000000;
+    const sinkMask = 0x08000000;
 
-    function Grid(width, height) {
+    class  Grid {
+    constructor (width, height) {
       this.width = Math.floor(width);
       this.height = Math.floor(height);
 
@@ -304,15 +313,15 @@
 
       //  7 * 4 bits of color index info for color of each spoke and center
       this.colors = new Array(width * height);
-      this.animFraction = new Array(width * height);
+      // this.animFraction = new Array(width * height);
       for (var i = 0; i < width * height; i = i + 1) {
         /* 6 bits of each of in, out, and taken hi-to-low */
         this.cells[i] = 0;
         this.colors[i] = 0;
-        this.animFraction = 0;
+      //   this.animFraction = 0;
       }
     }
-    Grid.prototype.clear = function() {
+    clear () {
       for (var i = 0; i < this.width * this.height; i = i + 1) {
         this.cells[i] = 0;
         this.colors[i] = 0;
@@ -364,52 +373,52 @@
         }
       }
     };
-    Grid.prototype.valueAt = function(point) {
+    valueAt (point) {
       return this.cells[point.y * this.width + point.x];
     };
-    Grid.prototype.hexValueAt = function(point) {
+    hexValueAt (point) {
       return (" 0x" + (this.valueAt(point)).toString(16));
     };
-    Grid.prototype.stateAt = function(point) {
+    stateAt (point) {
       return this.valueAt(point) & 0x3F;
     };
-    Grid.prototype.outVectorsAt = function(point) {
+    outVectorsAt (point) {
       return (this.valueAt(point) >> 8) & 0x3F;
     };
-    Grid.prototype.inVectorsAt = function(point) {
+    inVectorsAt (point) {
       return (this.valueAt(point) >> 16) & 0x3F;
     };
-    Grid.prototype.spokeAt = function(point, dir) {
+    spokeAt (point, dir) {
       return (this.colors[point.y * this.width + point.x] >>> (dir * 4)) & 0x07;
     };
-    Grid.prototype.colorsAt = function(point) {
+    colorsAt (point) {
       return (this.colors[point.y * this.width + point.x]);
-    };
+    }
 
-    Grid.prototype.setSpokeAt = function(point, dir, colorIndex) {
+    setSpokeAt (point, dir, colorIndex) {
       this.colors[point.y * this.width + point.x] =
         ((this.colors[point.y * this.width + point.x]) & spokeMask[dir]) |
         ((colorIndex & 0x0F) << (dir * 4));
 
     };
-    Grid.prototype.setValueAt = function(point, value) {
+    setValueAt (point, value) {
       this.cells[point.y * this.width + point.x] = value;
     };
 
-    Grid.prototype.setSinkAt = function(point) {
+    setSinkAt (point) {
       this.cells[point.y * this.width + point.x] =
           (this.cells[point.y * this.width + point.x] ^ sinkMask);
     };
 
-    Grid.prototype.isSink = function(point) {
+    isSink (point) {
       return ( (this.cells[point.y * this.width + point.x] & sinkMask) !== 0);
     };
 
-    Grid.prototype.isInside = function(point) {
+    isInside (point) {
       return point.x >= 0 && point.y >= 0 &&
         point.x < this.width && point.y < this.height;
     };
-    Grid.prototype.move = function(from, to, dir, colorIndex) {
+    move (from, to, dir, colorIndex) {
       if ((this.inVectorsAt(to) & darworms.inMask[dir]) !== 0) {
         alert(" Attempted to eat eaten spoke at " + to.format());
         console.log("  (" + to.x + "," + to.y + ") dir: " + dir + " value: ");
@@ -437,7 +446,7 @@
       return captures;
     };
     // Returns next x,y position
-    Grid.prototype.next = function(point, dir) {
+    next (point, dir) {
       var nP = new Point(point.x, point.y);
       // console.log ("  (" + point.x  + "," + point.y + ") dir: " + dir);
       if ((point.y & 1) === 0) {
@@ -464,7 +473,7 @@
       // console.log ("    next from: (" + point.format()  + " dir " + dir + " next:  " + nP.format());
       return nP;
     };
-    Grid.prototype.each = function(action) {
+    each (action) {
       for (var y = 0; y < this.height; y++) {
         for (var x = 0; x < this.width; x++) {
           var point = new Point(x, y);
@@ -472,23 +481,23 @@
         }
       }
     };
-    Grid.prototype.logSpokesAt = function(point) {
+    logSpokesAt (point) {
       console.log("[ " + point.x + "," + point.y + "] val = " + this.colorsAt(point).toString(16));
       for (var dir = 0; dir < 8; dir = dir + 1) {
         console.log("   spoke: " + dir + " colorindex" + this.spokeAt(point, dir));
 
       }
     };
-    Grid.prototype.logValueAt = function(point) {
+    logValueAt (point) {
       console.log("[ " + point.x + "," + point.y + "] val = 0x" + this.hexValueAt(point) +
         this.dirList(this.hexValueAt(point)) + " outVectors = 0x" +
         this.outVectorsAt(point).toString(16) + this.dirList(this.outVectorsAt(point)) +
         " inVectors = 0x" + this.inVectorsAt(point).toString(16));
     };
-    Grid.prototype.formatStateAt = function(point) {
+    formatStateAt (point) {
       return " x " + point.x + " y " + point.y + " state 0x" + this.stateAt(point).toString(16);
     };
-    Grid.prototype.dirList = function(state) {
+    dirList (state) {
       var list = " directions ";
       for (var dir = 0; dir < 6; dir = dir + 1) {
         if (((state & darworms.outMask[dir]) !== 0)) {
@@ -496,12 +505,10 @@
         }
       }
       return list;
-    };
-    return {
-      Grid: Grid
-    };
+    }
+  }
 
-  })();
+
   /* end Grid */
 
   /**
@@ -734,7 +741,7 @@
     this.toText();
   };
   Worm.prototype.log = function() {
-    console.log(" Worm State: " + wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
+    console.log(" Worm State: " + darworms.wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
   };
   Worm.prototype.place = function(aState, aGame, pos) {
     this.pos = pos;
@@ -750,10 +757,10 @@
       var spokes = [];
       for (var spoke = 0; spoke < 6; spoke = spoke + 1) {
         if ((i & darworms.outMask[spoke]) !== 0) {
-          spokes.push(compassPts[spoke]);
+          spokes.push(darworms.compassPts[spoke]);
         }
       }
-      console.log(" dna" + i + " " + spokes + " = " + compassPts[this.dna[i]]);
+      console.log(" dna" + i + " " + spokes + " = " + darworms.compassPts[this.dna[i]]);
     }
 
   };
@@ -771,7 +778,6 @@
       if (this.dna[i] === 7) this.name += 'X';
       if (this.dna[i] > 7) this.name += '#';
     }};
-  var compassPts = ["e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"];
 
   Worm.prototype.fromText = function(dnastring) {
     var regx = /^[ABCDEF\?]{63}X$/;
@@ -807,7 +813,7 @@
           return (false);
       }
       if (!(((1 << this.dna[i]) & i) === 0) && (this.dna[i] !== 6)) {
-        alert("illegal direction " + dnastring.charAt(i) + "(" + compassPts[this.dna[i]] +
+        alert("illegal direction " + dnastring.charAt(i) + "(" + darworms.compassPts[this.dna[i]] +
           ")" + "given for cell " + i);
         gooddna = false;
       }
@@ -819,238 +825,6 @@
   };
 
   /* end of Worm */
-
-  /**
-   * Created with JetBrains WebStorm.
-   * User: dmaynard
-   * Date: 9/22/13
-   * Time: 12:05 AM
-   * To change this template use File | Settings | File Templates.
-   */
-  /* WPane
-
-   an object containing grid a canvas a scale and an offset
-   * can draw the grid points inside the canvas
-   *
-   *  grid is the game grid
-   *  paneSize is the number of grid items to display w,h
-   *  centerPoint  the x,y coordinates of the
-   *  canvas
-   *  scale ?
-   *  margin ?
-   *
-   */
-  function WPane ( grid, size, center, canvas) {
-      this.grid = grid;
-      this.canvas = canvas;
-      this.pWidth = canvas.width;
-      this.pHeight = canvas.height;
-      this.savedCanvas = null;
-      this.canvasIsDirty = true;
-      this.focus = center;
-      this.ctx = canvas.getContext("2d");
-      this.cWidth = size.x;
-      this.cHeight =  size.y;
-      this.pMargin  = 10;
-      //this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
-      //    (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
-      this.scale = new Point((this.pWidth / this.cWidth) ,
-          (this.pHeight/ this.cHeight ));
-      console.log("wpane scale " + this.scale.format());
-      this.offset = new Point(center.x - (this.cWidth >> 1), center.y - (this.cHeight >>1));
-      this.offset.wrap(this.grid.width, this.grid.height);
-      this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-      this.ctx.scale(this.scale.x, this.scale.y);
-      this.savedCanvas = document.createElement('canvas');
-      this.savedCtx = this.savedCanvas.getContext('2d');
-      this.savedCanvas.width = this.canvas.width;
-      this.savedCanvas.height = this.canvas.height;
-
-
-
-  }
-  WPane.prototype.clear = function() {
-      this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-      // background for user selct direction screen
-      this.ctx.fillStyle =  darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme];
-
-      this.ctx.beginPath();
-      this.ctx.rect(0, 0, this.pWidth, this.pHeight);
-      this.ctx.closePath();
-      this.ctx.fill();
-  };
-
-
-  WPane.prototype.setCenter = function ( center, size ) {
-      // sets the scale, screen offset, and
-      // centers the focused point on the canvas
-      // should be called whenever the focus point changes
-      // or the user zooms in or out.
-      // console.log( " WPane.prototype.setCenter  center: "   + center.format() + " zoomSize: "  + size.format() );
-      // If we are changing scale we have to invalidate the cached background image
-      if ( size.x != this.cWidth || size.y != this.cHeight) {
-          this.savedCtx = null;
-      }    // console.log( "     WPane.prototype.setCenter  offset: "   + this.offset.format()  );
-      this.cWidth = size.x;
-      this.cHeight = size.y;
-
-      this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
-          (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
-      console.log("setCenter scale " + this.scale.format());
-      this.offset = new Point(center.x - Math.floor(this.cWidth /2), center.y - Math.floor(this.cHeight /2));
-      this.offset.wrap(this.grid.width, this.grid.height);
-      // console.log( "         WPane.prototype.setCenter  offset after wrap : "   + this.offset.format()  );
-
-  };
-  WPane.prototype.setSize = function ( size ) {
-      // sets the scale, screen offset, and
-
-      // console.log( " WPane.prototype.setCenter  center: "   + center.format() + " zoomSize: "  + size.format() );
-      // If we are changing scale we have to invalidate the cached background image
-      //if ( size.x != this.cWidth || size.y != this.cHeight) {
-      //    this.savedCtx = null;
-      //};
-      console.log( "     WPane.prototype.setSize  size: "   + size.format()  );
-      this.cWidth = size.x;
-      this.cHeight = size.y;
-
-      this.scale = new Point((this.pWidth - (2*this.pMargin))/(this.cWidth === 1 ? this.cWidth : this.cWidth+0.5),
-          (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
-      // console.log( "     WPane.prototype.setSize  scale.x: "   + this.scale.x  + " yscale " + this.scale.x);
-      // console.log(this.scale.format() );
-  };
-  WPane.prototype.drawCells = function () {
-      this.clear();
-      var gPos = new Point(this.offset.x,this.offset.y);
-      if (this.canvasIsDirty) {
-          for (var col = 0; col < this.cWidth ; col = col + 1) {
-              for (var row = 0; row < this.cHeight ; row = row + 1) {
-                  /* at this pane coordinate draw that grid cell content  */
-                  this.drawCell(new Point(col,row), gPos);
-                  gPos.y = gPos.y + 1;
-                  if (gPos.y >= this.grid.height ) {gPos.y = 0;}
-              }
-              gPos.y = this.offset.y;
-              gPos.x = gPos.x + 1;
-              if (gPos.x >= this.grid.width ) {gPos.x = 0;}
-          }
-          // TODO  this should be a backbuffer and should only be created once
-          // or created every time the canvas changes size
-          // it should not be created on every refresh of the selection screen
-          this.savedCtx.drawImage(this.canvas,0,0);
-          this.canvasIsDirty = false;
-          this.savedCtx.font = "bold 18px sans-serif";
-          this.savedCtx.fillStyle = darworms.dwsettings.colorTable[0];
-          this.savedCtx.shadowColor = "rgb(190, 190, 190)";
-          this.savedCtx.shadowOffsetX = 3;
-          this.savedCtx.shadowOffsetY = 3;
-          this.savedCtx.fillText("-",this.savedCanvas.width/2, 10);
-          this.savedCtx.fillText("+",this.savedCanvas.width/2, this.savedCanvas.height - 10);
-
-      }  else { // use the saved canvas background for this size
-
-          // offset is wrong
-          // this overwrites the previous image instead of being transparent
-          this.ctx.drawImage(this.savedCanvas,0,0);
-      }
-  };
-  WPane.prototype.pSetTransform = function (point) {
-      var xoff;
-      var yoff;
-      if (( (point.y+this.offset.y) & 1) === 0 || (this.cWidth == 1)) {
-          xoff = (point.x + 0.5 ) * this.scale.x + this.pMargin;
-      } else {
-          xoff = (point.x + 1.0 )  * this.scale.x  + this.pMargin;
-
-      }
-      // because screen is N+.5 cells wide and only N cells high
-      // we need extra vertical margins
-      yoff = (point.y + 0.5 ) * this.scale.y + this.pMargin + (this.scale.y/4.0);
-      this.ctx.setTransform(this.scale.x,0,0,this.scale.y,xoff,yoff);
-  };
-  /* WPane.drawCell(wPoint, gPoint)
-   *
-   * in the pane at Position WPoint draw the cell for global grid pointer gPoint
-   *
-   */
-  WPane.prototype.drawCell = function( wPoint,  gPoint) {
-      // console.log( " WPane.prototype.drawCell wPoint "   + wPoint.format() + "  gPoint "  + gPoint.format() );
-
-      this.pSetTransform(wPoint);
-      /*
-       this.ctx.fillStyle =  "rgba(080,222,222,0.5)";
-
-       this.ctx.beginPath();
-       this.ctx.rect(-0.5, -0.5, 1.0, 1.0);
-       this.ctx.closePath();
-       this.ctx.fill();
-       */
-      var owner = this.grid.spokeAt( gPoint, 7);
-      if (owner > 0 ) {
-          this.ctx.fillStyle = darworms.dwsettings.alphaColorTable[owner & 0xF];
-          this.ctx.beginPath();
-          this.ctx.moveTo(darworms.graphics.vertex_x[0],darworms.graphics.vertex_y[0]);
-          for (var j = 1; j < 6 ; j = j + 1) {
-              this.ctx.lineTo(darworms.graphics.vertex_x[j], darworms.graphics.vertex_y[j]);
-          }
-          // this.ctx.moveTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
-          this.ctx.stroke();
-          this.ctx.closePath();
-          this.ctx.fill();
-          this.ctx.stroke();    } else {
-          this.ctx.fillStyle = darworms.dwsettings.cellBackground[1-darworms.dwsettings.backGroundTheme];
-          this.ctx.lineWidth = 1.0/this.scale.x;
-          this.ctx.beginPath();
-          this.ctx.arc(0, 0, 0.1, 0, Math.PI*2, true);
-          this.ctx.closePath();
-          this.ctx.fill();
-
-      }
-
-      //  draw hex outline
-      this.ctx.strokeStyle = darworms.dwsettings.cellBackground[1-darworms.dwsettings.backGroundTheme];
-      this.ctx.beginPath();
-      this.ctx.moveTo(darworms.graphics.vertex_x[0],darworms.graphics.vertex_y[0]);
-      for (var j = 1; j < 6 ; j = j + 1) {
-          this.ctx.lineTo(darworms.graphics.vertex_x[j], darworms.graphics.vertex_y[j]);
-      }
-      this.ctx.lineTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
-      this.ctx.stroke();
-      this.ctx.closePath();
-
-
-      var outvec = this.grid.outVectorsAt(gPoint);
-      var invec = this.grid.inVectorsAt(gPoint);
-      // console.log (" drawCell at" +  gPoint.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
-
-      for (var i = 0; i < 6 ; i = i + 1) {
-          if ((outvec & darworms.outMask[i]) !== 0) {
-              var outSpokeColor = darworms.dwsettings.colorTable[this.grid.spokeAt(gPoint, i)];
-              // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + gPoint.format());
-              this.ctx.strokeStyle  = outSpokeColor;
-              this.ctx.lineWidth =   3.0/this.scale.x ;
-              this.ctx.lineCap = 'round';
-              this.ctx.beginPath();
-              this.ctx.moveTo(0,0);
-              this.ctx.lineTo(darworms.graphics.xPts[i], darworms.graphics.yPts[i]);
-              this.ctx.stroke();
-              this.ctx.closePath();
-          }
-          if ((invec & darworms.outMask[i]) !== 0) {
-              var inSpokeColor = darworms.dwsettings.colorTable[this.grid.spokeAt(gPoint, i)];
-              // console.log (" inSpokeColor " + i + " :  " + inSpokeColor + " at "  + gPoint.format());
-              this.ctx.strokeStyle  = inSpokeColor;
-              this.ctx.lineWidth = 3.0/this.scale.x;
-              this.ctx.lineCap = 'round';
-              this.ctx.beginPath();
-              this.ctx.moveTo(darworms.graphics.xPts[i], darworms.graphics.yPts[i]);
-              this.ctx.lineTo(0,0);
-              this.ctx.stroke();
-              this.ctx.closePath();
-          }
-      }
-  };
-  /*  End of wPane */
 
   /**
    * Created with JetBrains WebStorm.
@@ -1083,7 +857,7 @@
 
 
       this.gameState = darworms.gameStates.over;
-      this.grid = new darworms.gridModule.Grid(gridWidth, gridHeight);
+      this.grid = new Grid(gridWidth, gridHeight);
       this.canvas = gameCanvas;
 
       this.frameTimes = [];
@@ -1093,11 +867,6 @@
       this.numMoves = 0;
       this.timeInDraw = 0;
       this.activeIndex = 0;
-
-      // this.cellsInZoomPane = new Point(9,9);
-      this.cellsInZoomPane = new Point(gridWidth, gridHeight);
-
-      this.zoomPane = new WPane(this.grid, this.cellsInZoomPane, new Point(gridWidth >> 1, gridHeight >> 1), document.getElementById("wcanvas"));
 
       this.scale = new Point(((gameCanvas.width()) / (gridWidth + 1.5)), ((gameCanvas.height()) / (gridHeight + 1)));
       console.log(" new Game scale set to " + this.scale.format());
@@ -1442,79 +1211,6 @@
         darworms.theGame.highlightWorm(worm, index);
       }, darworms.theGame);
     };
-    Game.prototype.drawSelectCell = function(recenter) {
-      //  Draw the large direction selectors screen
-      //  A rectangle 2.0 x 2.0
-      if (recenter) {
-        darworms.theGame.drawZoom();
-      }
-      wGraphics.save();
-      //    console.log( "drawSelectCell  canvas "  + gameCanvas.width() + " height "  + gameCanvas.height());
-      //    console.log( "drawSelectCell  grid "  + this.grid.width + " height "  + this.grid.height);
-      //   setting this transform may not need to be done every anim frame
-      //  it only changes on zoom in or zoom out I think
-      var hoffset = -this.zoomPane.scale.x / 4;
-      var voffset = 0;
-      if ((focusPoint.y & 1) === 1 && (this.cellsInZoomPane.x > 1)) {
-        hoffset = this.zoomPane.scale.x / 4;
-        // console.log( "drawSelectCell  hoffset "  + hoffset);
-      }
-      if ((this.zoomPane.cHeight & 1) != 1) {
-        hoffset += this.zoomPane.scale.x / 2;
-        voffset += this.zoomPane.scale.y / 2;
-      }
-      this.bullseyeoffset = new Point(hoffset, voffset);
-      // console.log( "drawSelectCell  hoffset "  + hoffset + " scale.x = " + this.zoomPane.scale.x);
-      wGraphics.setTransform((gameCanvas.width() - (this.scale.x / 2)) / 2, 0, 0, (gameCanvas.height() - (this.scale.y / 2)) / 2,
-        (gameCanvas.width() / 2) + hoffset, (gameCanvas.height()) / 2 + voffset);
-
-      if ((darworms.graphics.animFrame % 0xFF) == 0) {
-        console.log(" drawSelectCell  hoffset " + hoffset);
-        console.log(" drawSelectCell  voffset " + voffset);
-        console.log("  drawSelectCell pixel center is " + new Point((gameCanvas.width() / 2) + hoffset, (gameCanvas.height()) / 2 + voffset).format());
-      }
-
-      var owner = this.grid.spokeAt(focusPoint, 7);
-      wGraphics.fillStyle = "rgba(0,0,0,0.8)";
-      wGraphics.beginPath();
-      wGraphics.arc(0, 0, 0.3 / darworms.theGame.zoomPane.cWidth, 0, Math.PI * 2, true);
-      wGraphics.closePath();
-      wGraphics.fill();
-
-      var outvec = this.grid.stateAt(focusPoint);
-      for (var i = 0; i < 6; i = i + 1) {
-        if ((outvec & darworms.outMask[i]) !== 0) {
-          var outSpokeColor = darworms.dwsettings.alphaColorTable[this.grid.spokeAt(focusPoint, i)];
-          // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + focusPoint.format());
-          // wGraphics.strokeStyle  = "rgba(0,0,0,0.2)";
-          wGraphics.strokeStyle = outSpokeColor;
-          wGraphics.lineWidth = 8 / gameCanvas.width();
-          wGraphics.lineCap = 'round';
-          wGraphics.beginPath();
-          wGraphics.moveTo(0, 0);
-          wGraphics.lineTo(this.xPts[i] / this.cellsInZoomPane.x * 2.0, this.yPts[i] / this.cellsInZoomPane.y * 2.0);
-          wGraphics.stroke();
-          wGraphics.closePath();
-        } else {
-
-          wGraphics.strokeStyle = darworms.dwsettings.alphaColorTable[focusWorm.colorIndex];
-          wGraphics.lineWidth = 8 / gameCanvas.width();
-          // wGraphics.moveTo(this.targetPts[i].x, this.targetPts[i].y);
-          wGraphics.beginPath();
-          wGraphics.arc(this.xPts[i] * .75, this.yPts[i] * .75, (0.250 / 64) * (darworms.graphics.animFrame & 0x3F), 0, Math.PI * 2, false);
-          wGraphics.closePath();
-          wGraphics.stroke();
-          wGraphics.moveTo(0, 0);
-          wGraphics.lineTo((this.xPts[i] * .75) / 64.0 * (darworms.graphics.animFrame & 0x3F),
-            (this.yPts[i] * .75) / 64.0 * (darworms.graphics.animFrame & 0x3F));
-          wGraphics.stroke();
-          wGraphics.closePath();
-        }
-      }
-      wGraphics.restore();
-      this.needsReDraw = true;
-
-    };
 
     Game.prototype.drawCells = function() {
       wGraphics.save();
@@ -1542,7 +1238,7 @@
         // the first's/
 
         var whichWorm = ((i + darworms.graphics.uiFrames) & 0x3);
-        if (this.worms[whichWorm].state == wormStates.dying) {
+        if (this.worms[whichWorm].state == darworms.wormStates.dying) {
           this.animateDyingCell(this.worms[whichWorm]);
         }
       }
@@ -1577,8 +1273,6 @@
     Game.prototype.clearCanvas = function() {
       // Store the current transformation matrix
       wGraphics.save();
-      console.log(" Clear Canvas");
-
       // Use the identity matrix while clearing the canvas
       wGraphics.setTransform(1, 0, 0, 1, 0, 0);
       wGraphics.clearRect(0, 0, gameCanvas.width(), gameCanvas.height());
@@ -1607,7 +1301,7 @@
       w.pos = this.origin;
       w.nMoves = 0;
       w.score = 0;
-      w.state = wormStates.paused;
+      w.state = darworms.wormStates.paused;
       this.worms.push(w);
     };
     Game.prototype.getAvePos = function(w) {
@@ -1617,7 +1311,7 @@
 
       for (var i = 0; i < this.worms.length; i = i + 1) {
         var active = this.worms[i];
-        if (active.state === wormStates.moving) {
+        if (active.state === darworms.wormStates.moving) {
           this.avePos.x = this.avePos.x + active.pos.x;
           this.avePos.y = this.avePos.y + active.pos.y;
           nActiveAve = nActiveAve + 1;
@@ -1630,11 +1324,7 @@
       }
       // console.log(this.avePos.format());
     };
-    Game.prototype.drawZoom = function() {
-      //   console.log (" drawZoom   "  + " at "  + aPos.format());
-      this.zoomPane.setCenter(focusPoint, this.cellsInZoomPane);
-      this.zoomPane.drawCells();
-    };
+
     Game.prototype.makeMove = function(graphicsOn) {
       var nAlive = 0;
       if (this.gameState === darworms.gameStates.waiting) {
@@ -1644,11 +1334,11 @@
       for (var i = nextToMove; i < this.worms.length; i = i + 1) {
         var active = this.worms[i];
         darworms.theGame.activeIndex = i;
-        // console.log (" GamemakeMove   for worm" + i + " :  " + wormStateNames[active.state] + " at "  + active.pos.format());
-        if (active.state === wormStates.sleeping) {
+        // console.log (" GamemakeMove   for worm" + i + " :  " + darwormd.wormStateNames[active.state] + " at "  + active.pos.format());
+        if (active.state === darworms.wormStates.sleeping) {
           continue;
         }
-        // active.state = wormStates.moving;
+        // active.state = darworms.wormStates.moving;
         // console.log (" Game  Before Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
         // active.log();
         // console.log ( "   Grid value =  ");
@@ -1657,20 +1347,20 @@
         // console.log (" Current State = " + currentState);
         if (currentState == 0x3F) {
           // last sample is death sound
-          if ((active.state != (wormStates.dead) && (active.state != wormStates.dying))) {
+          if ((active.state != (darworms.wormStates.dead) && (active.state != darworms.wormStates.dying))) {
             if (darworms.dwsettings.doAnimations) {
               if ((darworms.dwsettings.doAudio == 1) && darworms.audioSamples[darworms.audioSamples.length - 1]) {
                 darworms.audioSamples[darworms.audioSamples.length - 1].playSample(1.0, 0.0);
               }
             }
-            active.state = (darworms.dwsettings.doAnimations)? wormStates.dying : wormStates.dead;
+            active.state = (darworms.dwsettings.doAnimations)? darworms.wormStates.dying : darworms.wormStates.dead;
             active.diedAtFrame = darworms.graphics.uiFrames;
             console.log(" darworm " + active.colorIndex + " dying at frame: " + darworms.graphics.animFrame);
           }
 
-        if (active.state == wormStates.dying) {
+        if (active.state == darworms.wormStates.dying) {
           if ((darworms.graphics.uiFrames - active.diedAtFrame) > darworms.graphics.dyningAnimationFrames) {
-            active.state = wormStates.dead;
+            active.state = darworms.wormStates.dead;
             console.log(" darworm " + active.colorIndex + " dead at frame: " + darworms.graphics.animFrame);
           }
         }
@@ -1699,7 +1389,6 @@
           nextToMove = i;
           this.numMoves = this.numMoves + 1;
           active.nMoves = active.nMoves + 1;
-          this.zoomPane.canvasIsDirty = true;
           this.drawDirtyCells();
           this.initPickUI(active);
           return (true);
@@ -1711,7 +1400,7 @@
         // console.log (" Move Direction = " + direction);
         var next = this.grid.next(active.pos, direction);
         if (next.isEqualTo(darworms.dwsettings.noWhere)) { // fell of edge of world
-          active.state = wormStates.dead;
+          active.state = darworms.wormStates.dead;
           active.died = true;
         } else {
           var didScore = this.grid.move(active.pos, next, direction, active.colorIndex);
@@ -1743,7 +1432,7 @@
         }
 
       }
-      if ((active.state !== wormStates.dead)) {
+      if ((active.state !== darworms.wormStates.dead)) {
         nAlive = nAlive + 1;
       }
       //console.log (" Game  After Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
@@ -1837,36 +1526,6 @@
     document.getElementById('wormframetotaltime').innerHTML = this.timeInDraw / 1000;
 
 
-  };
-
-  Game.prototype.initPanZoom = function(activeWorm) {
-    //  save a copy of the current grid canvas
-    // to act as a backgroud for the selection UI
-
-    var coffset = this.getOffset(activeWorm.pos);
-
-    this.gridImage = this.convertCanvasToImage(darworms.main.wCanvas);
-    this.zoomFrame = 0;
-    this.startx = 0;
-    this.starty = 0;
-    this.endx = (darworms.main.wCanvas.width / 2) - coffset.x;
-
-    var hoffset = -this.zoomPane.scale.x / 4;
-
-    if ((activeWorm.pos.y & 1) === 1 && (this.cellsInZoomPane.x > 1)) {
-      hoffset = this.zoomPane.scale.x / 4;
-      // console.log( "drawSelectCell  hoffset "  + hoffset);
-    }
-
-    this.endx = (darworms.main.wCanvas.width / 2) + hoffset - coffset.x;
-
-    this.endy = (gameCanvas.height()) / 2 - coffset.y;
-    this.startScale = 1.0;
-    this.endScale = 4.0;
-    // three second zoom animation
-    this.targetZoomFrames = 120;
-    console.log(" Worm pos =" + activeWorm.pos.format());
-    console.log(" end anim = " + new Point(this.endx, this.endy).format());
   };
 
   // Converts canvas to an image
@@ -1973,11 +1632,9 @@
     var select = -1;
     for (var i = 0; i < 6; i = i + 1) {
       if ((outvec & darworms.outMask[i]) === 0) {
-        const target = new Point((darworms.theGame.xPts[i] * .75) * (gameCanvas.width() / 2) +
-          darworms.theGame.bullseyeoffset.x + (gameCanvas.width() / 2) + darworms.theGame.zoomPane.pMargin,
-
-          ((darworms.theGame.yPts[i] * .75) * (gameCanvas.height()) / 2) +
-          darworms.theGame.bullseyeoffset.y + (gameCanvas.height()) / 2 + darworms.theGame.zoomPane.pMargin);
+        const target = new Point(
+          (((darworms.theGame.xPts[i] * gameCanvas.width() * .75) / 2) + (gameCanvas.width() / 2)),
+          (((darworms.theGame.yPts[i] * gameCanvas.height() * .75) / 2) + (gameCanvas.height() / 2)));
 
         // console.log(" direction: " + i + " target point " + target.format());
         // console.log("Touch Point: " + point.format());
@@ -2047,7 +1704,7 @@
   /*  DarWorms
    Copyright BitBLT Studios inc
    Author: David S. Maynard
-   Deployment:
+   Deployment to Rackspace:
    scp -r -P 12960 ~/projects/SumoWorms/www/*.* dmaynard@bitbltstudios.com:/var/www/darworms/
    git push bitbltstudios:~/repo/ master
 
@@ -2123,21 +1780,9 @@
     var typeNames = [" None ", "Random", " Same ", " New  "];
     var textFields = ['#p1textfield', '#p2textfield', '#p3textfield', '#p4textfield'];
 
-    // var targetPts = [ new Point( 0.375,0), new Point( 0.25, 0.375), new Point( -0.25, 0.375),
-    //    new Point(-0.375,0), new Point(-0.25,-0.375), new Point(  0.25,-0.375)];
-    /* Worm  Constants */
 
-    window.compassPts = ["e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"];
-    window.wormStates = {
-      "dead": 0,
-      "moving": 1,
-      "paused": 2,
-      "sleeping": 3,
-      "dying": 4 //  dead but let the game keep going for a few frames to animate
-    };
-    window.wormStateNames = ["dead", "moving", "paused", "sleeping", "dying"];
-    window.initialWormStates = [3, 2, 2, 2];
-    var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused), new Worm(3, wormStates.paused), new Worm(4, wormStates.paused)];
+
+    var gWorms = [new Worm(1, darworms.wormStates.paused), new Worm(2, darworms.wormStates.paused), new Worm(3, darworms.wormStates.paused), new Worm(4, darworms.wormStates.paused)];
 
 
     var setTypes = function() {
@@ -2424,7 +2069,7 @@
               (Math.floor(Math.random() * darworms.theGame.grid.height))));
 
 
-          worm.place(initialWormStates[playerTypes[i]], darworms.theGame,
+          worm.place(darworms.initialWormStates[playerTypes[i]], darworms.theGame,
             startingPoint);
           if (playerTypes[i] !== 0) { //  not None
             darworms.theGame.grid.setSinkAt(startingPoint);
@@ -2721,7 +2366,6 @@
     };
 
     var loadAudio = function() {
-      darworms.audioContext;
 
       // Create Smart Audio Container
       if (typeof AudioContext !== "undefined") {
@@ -2859,7 +2503,7 @@
       darworms.wCanvasPixelDim = new Point(1, 1);
       // window.onresize = doReSize;
       // doReSize();
-      $('#versionstring')[0].innerHTML = "Version " + window.darworms.version;
+      $('#versionstring')[0].innerHTML = "Version " + darworms.version;
       darworms.main.wCanvas = document.getElementById("wcanvas");
       darworms.main.wGraphics = darworms.main.wCanvas.getContext("2d");
       // console.log ( " init wGraphics " + darworms.main.wGraphics);
@@ -2919,7 +2563,7 @@
           heightSlider = heightSlider + 1;
         }
         if(darworms.theGame) {
-          darworms.gameModule.reScale(darworms.theGame.cellsInZoomPane.x, darworms.theGame.cellsInZoomPane.y);
+          darworms.gameModule.reScale(darworms.theGame.grid.width, darworms.theGame.grid.height);
         }
       });
 

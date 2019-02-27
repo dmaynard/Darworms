@@ -1,6 +1,7 @@
 /**
  * Created by dmaynard on 1/19/15.
  */
+import { darworms } from "./loader.js";
 
 export default function AudioSample(name, location) {
     this.location = location;

@@ -1,9 +1,8 @@
-import "./loader.js";
+import { darworms } from "./loader.js";
 import AudioSample from "./AudioSample.js";
-import Point from "./Point.js";
+import { Point } from "./Point.js";
 import "./Grid.js";
 import Worm from "./Worm.js";
-import "./WPane.js";
 import "./Game.js";
 
 /*
@@ -20,7 +19,7 @@ import "./Game.js";
 /*  DarWorms
  Copyright BitBLT Studios inc
  Author: David S. Maynard
- Deployment:
+ Deployment to Rackspace:
  scp -r -P 12960 ~/projects/SumoWorms/www/*.* dmaynard@bitbltstudios.com:/var/www/darworms/
  git push bitbltstudios:~/repo/ master
 
@@ -103,21 +102,9 @@ darworms.main = (function() {
   var wGraphics;
   var wCanvas;
 
-  // var targetPts = [ new Point( 0.375,0), new Point( 0.25, 0.375), new Point( -0.25, 0.375),
-  //    new Point(-0.375,0), new Point(-0.25,-0.375), new Point(  0.25,-0.375)];
-  /* Worm  Constants */
 
-  window.compassPts = ["e", "ne", "nw", "w", "sw", "se", "unSet", "isTrapped"];
-  window.wormStates = {
-    "dead": 0,
-    "moving": 1,
-    "paused": 2,
-    "sleeping": 3,
-    "dying": 4 //  dead but let the game keep going for a few frames to animate
-  };
-  window.wormStateNames = ["dead", "moving", "paused", "sleeping", "dying"];
-  window.initialWormStates = [3, 2, 2, 2];
-  var gWorms = [new Worm(1, wormStates.paused), new Worm(2, wormStates.paused), new Worm(3, wormStates.paused), new Worm(4, wormStates.paused)];
+
+  var gWorms = [new Worm(1, darworms.wormStates.paused), new Worm(2, darworms.wormStates.paused), new Worm(3, darworms.wormStates.paused), new Worm(4, darworms.wormStates.paused)];
 
 
   var setTypes = function() {
@@ -438,7 +425,7 @@ darworms.main = (function() {
             (Math.floor(Math.random() * darworms.theGame.grid.height))));
 
 
-        worm.place(initialWormStates[playerTypes[i]], darworms.theGame,
+        worm.place(darworms.initialWormStates[playerTypes[i]], darworms.theGame,
           startingPoint);
         if (playerTypes[i] !== 0) { //  not None
           darworms.theGame.grid.setSinkAt(startingPoint);
@@ -888,7 +875,7 @@ darworms.main = (function() {
     darworms.wCanvasPixelDim = new Point(1, 1);
     // window.onresize = doReSize;
     // doReSize();
-    $('#versionstring')[0].innerHTML = "Version " + window.darworms.version;
+    $('#versionstring')[0].innerHTML = "Version " + darworms.version;
     darworms.main.wCanvas = document.getElementById("wcanvas");
     darworms.main.wGraphics = darworms.main.wCanvas.getContext("2d");
     // console.log ( " init wGraphics " + darworms.main.wGraphics);
@@ -950,7 +937,7 @@ darworms.main = (function() {
         heightSlider = heightSlider + 1;
       }
       if(darworms.theGame) {
-        darworms.gameModule.reScale(darworms.theGame.cellsInZoomPane.x, darworms.theGame.cellsInZoomPane.y);
+        darworms.gameModule.reScale(darworms.theGame.grid.width, darworms.theGame.grid.height);
       }
     });
 

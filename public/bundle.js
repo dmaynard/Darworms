@@ -6,17 +6,12 @@
    * User: dmaynard
    * Date: 9/21/13
    * Time: 11:37 PM
-   * To change this template use File | Settings | File Templates.
    */
 
   class  Point {
     constructor(x,y) {
-      const privateString = "(" + x + "," + y + ")";
       this.x = x;
       this.y = y;
-      this.testprint = function( ) {
-        console.log ( " Private class variable " + privateString);
-      };
     }
     isEqualTo (other) {
         return this.x == other.x && this.y == other.y;
@@ -287,17 +282,15 @@
    * To change this template use File | Settings | File Templates.
    */
   /*    Grid   */
-  darworms.gridModule = (function() {
-    var evenRowVec = [new Point(1, 0), new Point(0, 1), new Point(-1, 1),
-      new Point(-1, 0), new Point(-1, -1), new Point(0, -1)
-    ];
 
+    const evenRowVec = [ {x: 1,y: 0}, {x: 0,y: 1}, {x:-1,y: 1},
+                        {x:-1,y: 0}, {x:-1,y:-1}, {x: 0,y:-1}];
 
-    var oddRowVec = [new Point(1, 0), new Point(1, 1), new Point(0, 1),
-      new Point(-1, 0), new Point(0, -1), new Point(1, -1)
-    ];
+    const oddRowVec = [ {x: 1,y: 0}, {x: 1,y: 1}, {x:0,y: 1},
+                         {x:-1,y: 0}, {x: 0,y:-1}, {x: 1,y:-1}];
+
     //  although we reserve 4 bits for each direction we actually only use 3 bits
-    var spokeMask = [0xFFFFFFF0,
+    const spokeMask = [0xFFFFFFF0,
       0xFFFFFF0F,
       0xFFFFF0FF,
       0xFFFF0FFF,
@@ -307,9 +300,10 @@
       0x0FFFFFFF
     ];
     // sink mask is high bit of spoke 6
-    var sinkMask = 0x08000000;
+    const sinkMask = 0x08000000;
 
-    function Grid(width, height) {
+    class  Grid {
+    constructor (width, height) {
       this.width = Math.floor(width);
       this.height = Math.floor(height);
 
@@ -319,15 +313,15 @@
 
       //  7 * 4 bits of color index info for color of each spoke and center
       this.colors = new Array(width * height);
-      this.animFraction = new Array(width * height);
+      // this.animFraction = new Array(width * height);
       for (var i = 0; i < width * height; i = i + 1) {
         /* 6 bits of each of in, out, and taken hi-to-low */
         this.cells[i] = 0;
         this.colors[i] = 0;
-        this.animFraction = 0;
+      //   this.animFraction = 0;
       }
     }
-    Grid.prototype.clear = function() {
+    clear () {
       for (var i = 0; i < this.width * this.height; i = i + 1) {
         this.cells[i] = 0;
         this.colors[i] = 0;
@@ -379,52 +373,52 @@
         }
       }
     };
-    Grid.prototype.valueAt = function(point) {
+    valueAt (point) {
       return this.cells[point.y * this.width + point.x];
     };
-    Grid.prototype.hexValueAt = function(point) {
+    hexValueAt (point) {
       return (" 0x" + (this.valueAt(point)).toString(16));
     };
-    Grid.prototype.stateAt = function(point) {
+    stateAt (point) {
       return this.valueAt(point) & 0x3F;
     };
-    Grid.prototype.outVectorsAt = function(point) {
+    outVectorsAt (point) {
       return (this.valueAt(point) >> 8) & 0x3F;
     };
-    Grid.prototype.inVectorsAt = function(point) {
+    inVectorsAt (point) {
       return (this.valueAt(point) >> 16) & 0x3F;
     };
-    Grid.prototype.spokeAt = function(point, dir) {
+    spokeAt (point, dir) {
       return (this.colors[point.y * this.width + point.x] >>> (dir * 4)) & 0x07;
     };
-    Grid.prototype.colorsAt = function(point) {
+    colorsAt (point) {
       return (this.colors[point.y * this.width + point.x]);
-    };
+    }
 
-    Grid.prototype.setSpokeAt = function(point, dir, colorIndex) {
+    setSpokeAt (point, dir, colorIndex) {
       this.colors[point.y * this.width + point.x] =
         ((this.colors[point.y * this.width + point.x]) & spokeMask[dir]) |
         ((colorIndex & 0x0F) << (dir * 4));
 
     };
-    Grid.prototype.setValueAt = function(point, value) {
+    setValueAt (point, value) {
       this.cells[point.y * this.width + point.x] = value;
     };
 
-    Grid.prototype.setSinkAt = function(point) {
+    setSinkAt (point) {
       this.cells[point.y * this.width + point.x] =
           (this.cells[point.y * this.width + point.x] ^ sinkMask);
     };
 
-    Grid.prototype.isSink = function(point) {
+    isSink (point) {
       return ( (this.cells[point.y * this.width + point.x] & sinkMask) !== 0);
     };
 
-    Grid.prototype.isInside = function(point) {
+    isInside (point) {
       return point.x >= 0 && point.y >= 0 &&
         point.x < this.width && point.y < this.height;
     };
-    Grid.prototype.move = function(from, to, dir, colorIndex) {
+    move (from, to, dir, colorIndex) {
       if ((this.inVectorsAt(to) & darworms.inMask[dir]) !== 0) {
         alert(" Attempted to eat eaten spoke at " + to.format());
         console.log("  (" + to.x + "," + to.y + ") dir: " + dir + " value: ");
@@ -452,7 +446,7 @@
       return captures;
     };
     // Returns next x,y position
-    Grid.prototype.next = function(point, dir) {
+    next (point, dir) {
       var nP = new Point(point.x, point.y);
       // console.log ("  (" + point.x  + "," + point.y + ") dir: " + dir);
       if ((point.y & 1) === 0) {
@@ -479,7 +473,7 @@
       // console.log ("    next from: (" + point.format()  + " dir " + dir + " next:  " + nP.format());
       return nP;
     };
-    Grid.prototype.each = function(action) {
+    each (action) {
       for (var y = 0; y < this.height; y++) {
         for (var x = 0; x < this.width; x++) {
           var point = new Point(x, y);
@@ -487,23 +481,23 @@
         }
       }
     };
-    Grid.prototype.logSpokesAt = function(point) {
+    logSpokesAt (point) {
       console.log("[ " + point.x + "," + point.y + "] val = " + this.colorsAt(point).toString(16));
       for (var dir = 0; dir < 8; dir = dir + 1) {
         console.log("   spoke: " + dir + " colorindex" + this.spokeAt(point, dir));
 
       }
     };
-    Grid.prototype.logValueAt = function(point) {
+    logValueAt (point) {
       console.log("[ " + point.x + "," + point.y + "] val = 0x" + this.hexValueAt(point) +
         this.dirList(this.hexValueAt(point)) + " outVectors = 0x" +
         this.outVectorsAt(point).toString(16) + this.dirList(this.outVectorsAt(point)) +
         " inVectors = 0x" + this.inVectorsAt(point).toString(16));
     };
-    Grid.prototype.formatStateAt = function(point) {
+    formatStateAt (point) {
       return " x " + point.x + " y " + point.y + " state 0x" + this.stateAt(point).toString(16);
     };
-    Grid.prototype.dirList = function(state) {
+    dirList (state) {
       var list = " directions ";
       for (var dir = 0; dir < 6; dir = dir + 1) {
         if (((state & darworms.outMask[dir]) !== 0)) {
@@ -511,12 +505,10 @@
         }
       }
       return list;
-    };
-    return {
-      Grid: Grid
-    };
+    }
+  }
 
-  })();
+
   /* end Grid */
 
   /**
@@ -865,7 +857,7 @@
 
 
       this.gameState = darworms.gameStates.over;
-      this.grid = new darworms.gridModule.Grid(gridWidth, gridHeight);
+      this.grid = new Grid(gridWidth, gridHeight);
       this.canvas = gameCanvas;
 
       this.frameTimes = [];

@@ -21,6 +21,11 @@ darworms.gameModule = (function() {
   var focusWorm;
   var focusValue;
   var scorectx;
+  // the jump from full pan left (-1.0) to full pan right (+1.0)
+  // is too jaring. This limits pan to [-.8 , +.8]
+  // Could be a setting  (pan effect 0 - 1)
+  const maxpan = 0.8;
+
 
 
 
@@ -596,11 +601,12 @@ darworms.gameModule = (function() {
         if (true || graphicsOn) {
           this.dirtyCells.push(next);
           if (darworms.dwsettings.doAudio == 1  && graphicsOn) {
+            let panValue = maxpan * ((active.pos.x - (darworms.theGame.grid.width / 2)) / (darworms.theGame.grid.width / 2));
             if ((active.audioSamplesPtrs[direction] !== undefined) && (active.audioSamplesPtrs[direction] >= 0)) {
               darworms.audioSamples[active.audioSamplesPtrs[direction]].
               playSample(
                 darworms.audioPlaybackRates[active.MusicScale[(didScore == 1) ? 6 : direction]],
-                (active.pos.x - (darworms.theGame.grid.width / 2)) / (darworms.theGame.grid.width / 2));
+                panValue);
             }
           }
 

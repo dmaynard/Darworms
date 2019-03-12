@@ -10,10 +10,10 @@ import { darworms } from "./loader.js";
 /*    Grid   */
 
   const evenRowVec = [ {x: 1,y: 0}, {x: 0,y: 1}, {x:-1,y: 1},
-                      {x:-1,y: 0}, {x:-1,y:-1}, {x: 0,y:-1}]
+                       {x:-1,y: 0}, {x:-1,y:-1}, {x: 0,y:-1}]
 
   const oddRowVec = [ {x: 1,y: 0}, {x: 1,y: 1}, {x:0,y: 1},
-                       {x:-1,y: 0}, {x: 0,y:-1}, {x: 1,y:-1}]
+                      {x:-1,y: 0}, {x: 0,y:-1}, {x: 1,y:-1}]
 
   //  although we reserve 4 bits for each direction we actually only use 3 bits
   const spokeMask = [0xFFFFFFF0,

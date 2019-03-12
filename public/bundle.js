@@ -284,10 +284,10 @@
   /*    Grid   */
 
     const evenRowVec = [ {x: 1,y: 0}, {x: 0,y: 1}, {x:-1,y: 1},
-                        {x:-1,y: 0}, {x:-1,y:-1}, {x: 0,y:-1}];
+                         {x:-1,y: 0}, {x:-1,y:-1}, {x: 0,y:-1}];
 
     const oddRowVec = [ {x: 1,y: 0}, {x: 1,y: 1}, {x:0,y: 1},
-                         {x:-1,y: 0}, {x: 0,y:-1}, {x: 1,y:-1}];
+                        {x:-1,y: 0}, {x: 0,y:-1}, {x: 1,y:-1}];
 
     //  although we reserve 4 bits for each direction we actually only use 3 bits
     const spokeMask = [0xFFFFFFF0,
@@ -519,7 +519,86 @@
    * To change this template use File | Settings | File Templates.
    */
   /* Worm Object */
-  function Worm(colorIndex, state) {
+
+  const musicalkeys = {
+    "AMajor": [
+      darworms.notes.A,
+      darworms.notes.B,
+      darworms.notes.CS,
+      darworms.notes.D,
+      darworms.notes.E,
+      darworms.notes.FS,
+      darworms.notes.GS
+    ],
+    "BMajor": [
+      darworms.notes.B,
+      darworms.notes.CS,
+      darworms.notes.DS,
+      darworms.notes.E,
+      darworms.notes.FS,
+      darworms.notes.GS,
+      darworms.notes.AS
+    ],
+    "CMajor": [
+      darworms.notes.C1,
+      darworms.notes.D,
+      darworms.notes.E,
+      darworms.notes.F,
+      darworms.notes.G,
+      darworms.notes.A,
+      darworms.notes.B
+    ],
+    "CMinor": [
+      darworms.notes.C1,
+      darworms.notes.D,
+      darworms.notes.EF,
+      darworms.notes.F,
+      darworms.notes.G,
+      darworms.notes.AF,
+      darworms.notes.BF
+    ],
+
+    "DMajor": [
+      darworms.notes.D,
+      darworms.notes.E,
+      darworms.notes.FS,
+      darworms.notes.G,
+      darworms.notes.A,
+      darworms.notes.B,
+      darworms.notes.CS
+    ],
+
+    "EMajor": [
+      darworms.notes.E,
+      darworms.notes.FS,
+      darworms.notes.GS,
+      darworms.notes.A,
+      darworms.notes.B,
+      darworms.notes.CS,
+      darworms.notes.DS
+    ],
+    "FMajor": [
+      darworms.notes.F,
+      darworms.notes.G,
+      darworms.notes.A,
+      darworms.notes.BF,
+      darworms.notes.C2,
+      darworms.notes.D,
+      darworms.notes.E
+    ],
+    "GMajor": [
+      darworms.notes.G,
+      darworms.notes.A,
+      darworms.notes.B,
+      darworms.notes.C2,
+      darworms.notes.D,
+      darworms.notes.E,
+      darworms.notes.FS
+    ]
+  };
+
+  class Worm {
+    constructor (colorIndex, state) {
     this.colorIndex = colorIndex;
     this.dna = new Array(64);
     this.state = state;
@@ -534,82 +613,7 @@
     this.diedAtFrame = 0;
     this.showTutorial = true;
 
-    this.musicalkeys = {
-      "AMajor": [
-        darworms.notes.A,
-        darworms.notes.B,
-        darworms.notes.CS,
-        darworms.notes.D,
-        darworms.notes.E,
-        darworms.notes.FS,
-        darworms.notes.GS
-      ],
-      "BMajor": [
-        darworms.notes.B,
-        darworms.notes.CS,
-        darworms.notes.DS,
-        darworms.notes.E,
-        darworms.notes.FS,
-        darworms.notes.GS,
-        darworms.notes.AS
-      ],
-      "CMajor": [
-        darworms.notes.C1,
-        darworms.notes.D,
-        darworms.notes.E,
-        darworms.notes.F,
-        darworms.notes.G,
-        darworms.notes.A,
-        darworms.notes.B
-      ],
-      "CMinor": [
-        darworms.notes.C1,
-        darworms.notes.D,
-        darworms.notes.EF,
-        darworms.notes.F,
-        darworms.notes.G,
-        darworms.notes.AF,
-        darworms.notes.BF
-      ],
 
-      "DMajor": [
-        darworms.notes.D,
-        darworms.notes.E,
-        darworms.notes.FS,
-        darworms.notes.G,
-        darworms.notes.A,
-        darworms.notes.B,
-        darworms.notes.CS
-      ],
-
-      "EMajor": [
-        darworms.notes.E,
-        darworms.notes.FS,
-        darworms.notes.GS,
-        darworms.notes.A,
-        darworms.notes.B,
-        darworms.notes.CS,
-        darworms.notes.DS
-      ],
-      "FMajor": [
-        darworms.notes.F,
-        darworms.notes.G,
-        darworms.notes.A,
-        darworms.notes.BF,
-        darworms.notes.C2,
-        darworms.notes.D,
-        darworms.notes.E
-      ],
-      "GMajor": [
-        darworms.notes.G,
-        darworms.notes.A,
-        darworms.notes.B,
-        darworms.notes.C2,
-        darworms.notes.D,
-        darworms.notes.E,
-        darworms.notes.FS
-      ]
-    };
 
     this.MusicScale = [],
 
@@ -631,11 +635,11 @@
     this.toText();
   }
 
-  Worm.prototype.init = function(wType) {
+  init (wType) {
     this.nMoves = 0;
     this.score = 0;
     this.prevScore = 0;
-    this.MusicScale = this.musicalkeys["CMajor"];
+    this.MusicScale = musicalkeys["CMajor"];
     if (wType === 0) { // none   asleep
       this.state = 3; // sleeping
     }
@@ -671,19 +675,19 @@
     this.toText();
   };
 
-  Worm.prototype.setNotes = function(index) {
+  setNotes (index) {
     this.audioSamplesPtrs.length = 0;
     for (var j = 0; j < 7; j = j + 1) {
       this.audioSamplesPtrs.push(index); // c2,wav
     }
 
-  };
-  Worm.prototype.setKey = function(keyName) {
+  }
+  setKey (keyName) {
     console.log(" keyname: " + keyName);
-    this.MusicScale = this.musicalkeys[keyName];
-  };
+    this.MusicScale = musicalkeys[keyName];
+  }
 
-  Worm.prototype.playScale = function() {
+  playScale () {
     for (var j = 0; j < 7; j = j + 1) {
       darworms.directionIndex = j;
       var sorted = this.MusicScale;
@@ -697,8 +701,8 @@
       }, 500 * j, this, j, sorted);
 
     }
-  };
-  Worm.prototype.getMoveDir = function(value) {
+  }
+  getMoveDir (value) {
     if (value === 0x3F) { // trapped
       this.state = wormStates.dead;
       this.died = true;
@@ -706,7 +710,7 @@
     }
     return this.dna[value & 0x3F];
   };
-  Worm.prototype.shouldDrawScore = function() {
+  shouldDrawScore () {
     if (this.score !== this.prevScore || (this.nMoves <= 2)) {
       this.prevScore = this.score;
       return true;
@@ -717,7 +721,7 @@
     }
     return false;
   };
-  Worm.prototype.randomize = function() {
+  randomize () {
     var dir;
     for (var i = 0; i < 63; i = i + 1) {
       // console.log(" randomize loop start  i = " + i + " dna[i] = " + this.dna[i]);
@@ -740,17 +744,17 @@
     }
     this.toText();
   };
-  Worm.prototype.log = function() {
+  log () {
     console.log(" Worm State: " + darworms.wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
   };
-  Worm.prototype.place = function(aState, aGame, pos) {
+  place (aState, aGame, pos) {
     this.pos = pos;
     this.nMoves = 0;
     this.score = 0;
     this.state = aState;
     console.log(" placing worm   i = " + this.colorIndex + " state " + aState + " " + this.numChoices + " of 64 possible moves defined");
   };
-  Worm.prototype.dump = function() {
+  dump () {
     this.log();
     for (var i = 0; i < 64; i = i + 1) {
       console.log(" dna" + i + " = " + darworms.compassPts[this.dna[i]]);
@@ -764,7 +768,7 @@
     }
 
   };
-  Worm.prototype.toText = function() {
+  toText () {
     this.name = "";
 
     for (var i = 0; i < 64; i = i + 1) {
@@ -779,7 +783,7 @@
       if (this.dna[i] > 7) this.name += '#';
     }};
 
-  Worm.prototype.fromText = function(dnastring) {
+  fromText (dnastring) {
     var regx = /^[ABCDEF\?]{63}X$/;
     if (!(regx.test(dnastring))) {
       return false;
@@ -823,8 +827,7 @@
     }
     return gooddna;
   };
-
-  /* end of Worm */
+  }/* end of Worm */
 
   /**
    * Created with JetBrains WebStorm.
@@ -846,6 +849,11 @@
     var focusWorm;
     var focusValue;
     var scorectx;
+    // the jump from full pan left (-1.0) to full pan right (+1.0)
+    // is too jaring. This limits pan to [-.8 , +.8]
+    // Could be a setting  (pan effect 0 - 1)
+    const maxpan = 0.8;
+
 
 
 
@@ -1413,11 +1421,12 @@
           {
             this.dirtyCells.push(next);
             if (darworms.dwsettings.doAudio == 1  && graphicsOn) {
+              let panValue = maxpan * ((active.pos.x - (darworms.theGame.grid.width / 2)) / (darworms.theGame.grid.width / 2));
               if ((active.audioSamplesPtrs[direction] !== undefined) && (active.audioSamplesPtrs[direction] >= 0)) {
                 darworms.audioSamples[active.audioSamplesPtrs[direction]].
                 playSample(
                   darworms.audioPlaybackRates[active.MusicScale[(didScore == 1) ? 6 : direction]],
-                  (active.pos.x - (darworms.theGame.grid.width / 2)) / (darworms.theGame.grid.width / 2));
+                  panValue);
               }
             }
 
@@ -1719,6 +1728,7 @@
    AEF?AB?FB??F?FE?C??C?FA??BA?A??FD??D?EEE?EA?E??E?CA?D??DC??C?BAX
    //  nice   almost perfect worm (316)
    AEF?AE?FB??C?FE?C??D?DF??CA?AF?FD??E?BA??BA?A??E?DD?A??DC??C?BAX
+
    // perfect
    DFADAFEEFBCEBFEFDDCDBDADCBAFBBAFEDCEBEDEAEECAEAEDDADDBDDBBACABAX
 
@@ -1728,7 +1738,7 @@
    // nice score  297
    AEF?AF?FB??E?FA?C??F?DD??CA?F??FD??E?BAE?EE?E??E?BD?D??DA??C?BAX
 
-   // 116 
+   // 116
    AEF?AE?FB??C?BE?C??F?DD??FA?BF?FD??E??A??CC?B??E?D??D??DC??C?BAX
 
 
@@ -2444,8 +2454,8 @@
 
       }
       var twelfrootoftwo = 1.05946309436;
-      var noteRate = 0.5; // lowest note
-      var noteFrequency = 261.626;
+      var noteRate = 0.5; // lowest note  C3
+      var noteFrequency = 261.626; // Middle C   (C4)
       do {
         darworms.audioPlaybackRates.push(noteRate);
         darworms.audioFrequencies.push(noteFrequency * noteRate);

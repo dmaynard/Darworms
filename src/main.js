@@ -2,7 +2,7 @@ import { darworms } from "./loader.js";
 import AudioSample from "./AudioSample.js";
 import { Point } from "./Point.js";
 import "./Grid.js";
-import Worm from "./Worm.js";
+import {Worm} from "./Worm.js";
 import "./Game.js";
 
 /*
@@ -14,6 +14,7 @@ import "./Game.js";
   <script src="scripts/WPane.js"></script>
   <script src="scripts/Game.js"></script>
   <script src="scripts/main.js"></script>
+
 */
 
 /*  DarWorms
@@ -46,7 +47,6 @@ import "./Game.js";
 
  // 116
  AEF?AE?FB??C?BE?C??F?DD??FA?BF?FD??E??A??CC?B??E?D??D??DC??C?BAX
-
 
  //  short  score 10
  //  short score 42

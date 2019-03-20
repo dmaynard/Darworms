@@ -9,8 +9,8 @@ export default {
 	input: 'src/main.js',
 	output: {
 		file: 'public/bundle.js',
-		format: 'es6', // immediately-invoked function expression — suitable for <script> tags
-		sourcemap: false
+		format: 'es', 
+	  sourcemap: true
 	},
 	plugins: [
 		resolve(), // tells Rollup how to find date-fns in node_modules

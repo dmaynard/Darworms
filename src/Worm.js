@@ -86,7 +86,7 @@ const musicalkeys = {
   ]
 };
 
-export default class Worm {
+export class Worm {
   constructor (colorIndex, state) {
   this.colorIndex = colorIndex;
   this.dna = new Array(64);

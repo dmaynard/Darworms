@@ -8,11 +8,7 @@ import { Grid } from "./Grid.js";
  * Time: 12:15 AM
  * To change this template use File | Settings | File Templates.
  */
-/*    gameModule
-   Anonymous function that returns Game Object
-   to be used as
-   var gameObject - new darworms.gameModule.Game()
- *     */
+
 darworms.gameModule = (function() {
   var gameCanvas;
   var wGraphics;

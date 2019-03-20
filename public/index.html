@@ -83,8 +83,10 @@
         max-width: 1200px;
     }
     p.about {
-      padding-left: 10px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
+
     #scorecanvas {
       display: inline-block;
       padding-top: 0px;
@@ -170,7 +172,7 @@
       <a href=#playpage data-role=button data-transition="fade"> Play </a>
       <a href=#settingspage data-role=button data-transition="fade"> Settings </a>
       <a href=#debugpage data-role=button data-transition="fade"> Peformance </a>
-      <a href=#aboutpage data-role=button data-transition="flip" data-rel="dialog"> About </a>
+      <a href=#aboutpage data-role=button data-transition="flip"> About </a>
     </div>
   </div>
   <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true scroll="no" style="overflow: hidden">
@@ -333,8 +335,9 @@
     </div>
   </div>
   <div data-role="page" data-theme="a" id=debugpage data-add-back-btn=true data-back-btn-text=Menu>
-    <div data-role="header">
-      <h1>PERFORMANCE</h1>
+      <div data-role="header">
+      <a href="#menupage">Back</a>
+      <h1>Performance</h1>
     </div>
     <div data-role=content>
       <div data-role="collapsible">
@@ -640,8 +643,9 @@
   </div>
 
 
-  <div data-role="page" data-theme="a" id=aboutpage data-add-back-btn=true data-back-btn-text=Menu>
+  <div data-role="page" data-theme="a" id=aboutpage>
     <div data-role="header">
+      <a href="#menupage">Back</a>
       <h1>About Darworms</h1>
     </div>
     <div data-role="content">

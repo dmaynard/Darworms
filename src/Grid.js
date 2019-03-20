@@ -33,25 +33,20 @@ import { darworms } from "./loader.js";
     this.width = Math.floor(width);
     this.height = Math.floor(height);
 
-
     //  Cell Format   8 bits each:  in-spoke eaten, out-spoke eaten, spoke eaten
     this.cells = new Array(width * height);
 
     //  7 * 4 bits of color index info for color of each spoke and center
     this.colors = new Array(width * height);
-    // this.animFraction = new Array(width * height);
-    for (var i = 0; i < width * height; i = i + 1) {
-      /* 6 bits of each of in, out, and taken hi-to-low */
-      this.cells[i] = 0;
-      this.colors[i] = 0;
-    //   this.animFraction = 0;
-    }
+    this.clear();
   }
+
   clear () {
-    for (var i = 0; i < this.width * this.height; i = i + 1) {
-      this.cells[i] = 0;
-      this.colors[i] = 0;
-    }
+    for (var i = 0; i < this.cells.length; i++) this.cells[i] = 0;
+    for (var i = 0; i < this.colors.length; i++) this.colors[i] = 0;
+    // We implement reflecting at grid edges by
+    // filling all of the spokes that would leave
+    // the grid or wrap
     if (darworms.dwsettings.gridGeometry == 'reflect') {
       for (var i = 0; i < this.width; i = i + 1) {
         var topPoint = new Point(i, 0);

@@ -3,7 +3,8 @@ import AudioSample from "./AudioSample.js";
 import { Point } from "./Point.js";
 import "./Grid.js";
 import {Worm} from "./Worm.js";
-import "./Game.js";
+import { Game, gameInit, reScale,  makeMoves, selectDirection,
+        updateScores } from "./Game.js";
 
 /*
   <script src="scripts/loader.js"></script>
@@ -293,7 +294,7 @@ darworms.main = (function() {
     darworms.graphics.animFrame = darworms.graphics.animFrame + 1;
     if (darworms.theGame.gameState === darworms.gameStates.running) {
       // console.log("R");
-      if (darworms.dwsettings.doAnimations) darworms.gameModule.makeMoves();
+      if (darworms.dwsettings.doAnimations) makeMoves();
 
     }
     if (darworms.theGame.gameState === darworms.gameStates.waiting) {
@@ -340,7 +341,7 @@ darworms.main = (function() {
     // console.log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
     // console.log (" wcanvas coord width " + darworms.main.wCanvas.width + " coord height "  + darworms.main.wCanvas.height  );
     if (darworms.theGame.gameState === darworms.gameStates.waiting) {
-      darworms.gameModule.selectDirection(new Point(touchX, touchY));
+      selectDirection(new Point(touchX, touchY));
     }
   };
   darworms.menuButton = function() {
@@ -402,7 +403,7 @@ darworms.main = (function() {
           " css " + $('#wcanvas').width() + " x " + $('#wcanvas').height() +
           " window " + window.innerWidth + " x " + window.innerHeight);
       }
-      darworms.theGame = new darworms.gameModule.Game(heightSlider, heightSlider);
+      darworms.theGame = new Game(heightSlider, heightSlider);
     }
     if (darworms.theGame.gameState === darworms.gameStates.over) {
       darworms.theGame.initGame();
@@ -433,7 +434,7 @@ darworms.main = (function() {
         }
       })
     }
-    darworms.gameModule.updateScores();
+    updateScores();
     if (startNow === false) return;
     console.log(" NEW in startgame darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
     if (darworms.theGame.gameState === darworms.gameStates.running) {
@@ -558,7 +559,7 @@ darworms.main = (function() {
         darworms.graphics.elapsed = darworms.graphics.now - darworms.graphics.then;
         if (darworms.graphics.elapsed > darworms.graphics.frameInterval) {
           darworms.graphics.uiFrames = darworms.graphics.uiFrames + 1;
-          darworms.gameModule.makeMoves();
+          makeMoves();
           darworms.graphics.then = darworms.graphics.now -
             (darworms.graphics.elapsed % darworms.graphics.frameInterval)
         }
@@ -570,12 +571,12 @@ darworms.main = (function() {
         while ((nMoves < movesPerFrame) && (darworms.theGame.gameState != darworms.gameStates.over) &&
           (darworms.theGame.gameState !== darworms.gameStates.waiting)) {
           nMoves = nMoves + 1;;
-          darworms.gameModule.makeMoves();
+          makeMoves();
         }
         console.log("Compute time: " + (Date.now() - startTime));
 
         var startTime = Date.now();
-        darworms.gameModule.updateScores();
+        updateScores();
         darworms.theGame.drawDirtyCells();
         console.log("Draw time: " + (Date.now() - startTime));
 
@@ -901,12 +902,12 @@ darworms.main = (function() {
 
 
     darworms.dwsettings.scoreCanvas = document.getElementById("scorecanvas");
-    darworms.gameModule.init(); // needed to init local data in the gameModule closure
+    gameInit(); // needed to init local data in the gameModule closure
     //  These values are needed by both mainModule and gameModule
     //  so for now we keep them as globals
     //  Perhaps the time routines should all be moved into the gameModule closure
     // and we can make some or all of these private to the gameModule closure
-    // darworms.theGame = new darworms.gameModule.Game ( darworms.dwsettings.forceInitialGridSize, darworms.dwsettings.forceInitialGridSize);
+    // darworms.theGame = new Game ( darworms.dwsettings.forceInitialGridSize, darworms.dwsettings.forceInitialGridSize);
     // darworms.startgame(false);
     darworms.dwsettings.noWhere = new Point(-1, -1);
 
@@ -938,7 +939,7 @@ darworms.main = (function() {
         heightSlider = heightSlider + 1;
       }
       if(darworms.theGame) {
-        darworms.gameModule.reScale(darworms.theGame.grid.width, darworms.theGame.grid.height);
+        reScale(darworms.theGame.grid.width, darworms.theGame.grid.height);
       }
     });
 

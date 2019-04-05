@@ -15,7 +15,6 @@ import { Game, gameInit, reScale,  makeMoves, selectDirection,
   <script src="scripts/WPane.js"></script>
   <script src="scripts/Game.js"></script>
   <script src="scripts/main.js"></script>
-
 */
 
 /*  DarWorms
@@ -80,8 +79,6 @@ FBCFEFFFBEEFBEEEFDCDFDAFACFCFFFFDDCCEDEDCBCEBBEEABDDBDDDCCACBBAX
 //  new worm filled completly via game play
 EBCCDBADECCCBBEEFBCCDBFFFFFCFFFFEBCCDEADCECCEBEEDBACDBDDABCCBBAX
 */
-
-
 
 darworms.main = (function() {
 

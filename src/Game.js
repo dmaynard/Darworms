@@ -7,6 +7,9 @@ import {
 import {
   Grid
 } from "./Grid.js";
+import {
+  drawdna
+} from "./drawdna.js";
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -14,6 +17,7 @@ import {
  * Time: 12:15 AM
  * To change this template use File | Settings | File Templates.
  */
+
 // This module needs to separated into separate  UI(graphics) and game logic modules
 var gameCanvas;
 var wGraphics;
@@ -564,6 +568,8 @@ export class Game {
             $('#tutorialpopup').popup("option", "theme", themes[darworms.theGame.activeIndex]);
             // this makes the popup background transparent, but it looks reall bad
             // $('#tutorialpopup').popup( "option","theme", 'none' );
+            console.log (" init popup here");
+            drawdna(document.getElementById('popupcanvas'), active, currentState );
             $('#tutorialpopup').popup("open", {
               positionTo: btns[darworms.theGame.activeIndex]
             });

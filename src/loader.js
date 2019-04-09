@@ -92,7 +92,7 @@ export var darworms = {
     smallGridSize: 10, // so cells can be selected with touch
     minLargeWidth: 400, //
     isLargeScreen: true,
-    doAudio: true,
+    doAudio: 1,
     fixedInitPos: true,
     pickDirectionUI: 0,
     noWhere: undefined,
@@ -162,8 +162,7 @@ window.addEventListener("load", function() {
           }
         }
     });
-    darworms.wCanvasPixelDim = new Point();
-    console.log("Initial Screen Size " + darworms.wCanvasPixelDim.format());
+    console.log("About to call darworms.main.init()");
     window.darworms = darworms;  // So index.html onclick can find handlers
     darworms.main.init();
 

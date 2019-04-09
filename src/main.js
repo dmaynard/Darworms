@@ -261,7 +261,7 @@ darworms.main = (function() {
     darworms.dwsettings.pickDirectionUI = $('#pickDirectionUI').slider().val();
 
     console.log(" darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
-    console.log(" darworms.dwsettings.doAudio " + darworms.doAudio);
+    console.log(" darworms.dwsettings.doAudio " + darworms.dwsettings.doAudio);
     darworms.masterAudioVolume = $("#audiovol").val() / 100;
     darworms.graphics.fps = $("#fps").val();
     darworms.graphics.frameInterval = 1000 / darworms.graphics.fps;
@@ -730,19 +730,26 @@ darworms.main = (function() {
     $("body").css("overflow", "auto");
   }
 
-  var loadAudio = function() {
-    darworms.audioContext;
+  function unlockAudioContext(audioCtx) {
+    if (audioCtx.state !== 'suspended') return;
+    const b = document.body;
+    const events = ['touchstart','touchend', 'mousedown','keydown'];
+    events.forEach(e => b.addEventListener(e, unlock, false));
+    function unlock() { audioCtx.resume().then(clean); }
+    function clean() { events.forEach(e => b.removeEventListener(e, unlock)); }
+}
 
+  var loadAudio = function() {
     // Create Smart Audio Container
-    if (typeof AudioContext !== "undefined") {
-      darworms.audioContext = new AudioContext();
-    } else if (typeof webkitAudioContext !== "undefined") {
-      darworms.audioContext = new webkitAudioContext();
-    } else {
+    darworms.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    if ( darworms.audioContext == null)  {
       darworms.dwsettings.doAudio = false;
       alert(" Could not load webAudio... muting game");
       $('#doAudio').hide();
     }
+    unlockAudioContext(darworms.audioContext);
+    console.log("audio is " + darworms.dwsettings.doAudio + "  Context state is " + darworms.audioContext.state);
 
     if (darworms.dwsettings.doAudio) {
       if (darworms.audioContext.createGain !== undefined) {
@@ -873,13 +880,12 @@ darworms.main = (function() {
     // This may be needed when we actually build a phoneGap app
     // in this case delay initialization until we get the deviceready event
     document.addEventListener("deviceready", deviceInfo, true);
-    darworms.wCanvasPixelDim = new Point(1, 1);
     // window.onresize = doReSize;
     // doReSize();
     $('#versionstring')[0].innerHTML = "Version " + darworms.version;
     darworms.main.wCanvas = document.getElementById("wcanvas");
     darworms.main.wGraphics = darworms.main.wCanvas.getContext("2d");
-    // console.log ( " init wGraphics " + darworms.main.wGraphics);
+    darworms.wCanvasPixelDim = new Point(darworms.main.wCanvas.clientWidth, darworms.main.wCanvas.clientHeight);// console.log ( " init wGraphics " + darworms.main.wGraphics);
     $('#wcanvas').bind('tap', wormEventHandler);
     // $('#wcanvas').on("tap", wormEventHandler);
     // $('#wcanvas').bind('vmousedown', wormEventHandler);

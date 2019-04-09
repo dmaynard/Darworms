@@ -136,7 +136,7 @@ var darworms = {
     smallGridSize: 10, // so cells can be selected with touch
     minLargeWidth: 400, //
     isLargeScreen: true,
-    doAudio: true,
+    doAudio: 1,
     fixedInitPos: true,
     pickDirectionUI: 0,
     noWhere: undefined,
@@ -206,8 +206,7 @@ window.addEventListener("load", function() {
           }
         }
     });
-    darworms.wCanvasPixelDim = new Point();
-    console.log("Initial Screen Size " + darworms.wCanvasPixelDim.format());
+    console.log("About to call darworms.main.init()");
     window.darworms = darworms;  // So index.html onclick can find handlers
     darworms.main.init();
 
@@ -831,34 +830,10 @@ const xPts = [0.8, 0.4, -0.4, -0.8, -0.4, 0.4];
     pGraphics = canvas.getContext("2d");
     // I have NO IDEA why this scale factor is needed
     // but experiment proves it IS needed to make circles round
-    // and to fill the canvasIsDirty// this may be a JQuery mobile bug?
+    // and to fill the canvasIsDirty
+    // this may be a JQuery mobile bug?
     pGraphics.setTransform( 1.5*width/2.0, 0, 0, .75*height/2, 1.5*width/2.0, .75*height/2);
-    /* pGraphics.strokeStyle = '#00FF00';
-    circle( width/2, height/2, width/2);
-    pGraphics.beginPath();
-    pGraphics.rect(10, 10, 100, 100);
-    pGraphics.closePath();
-    pGraphics.fill();
-      pGraphics.strokeStyle = '#00FF00';
-      pGraphics.rect(100, 100, 100, 100);
-      pGraphics.stroke();
 
-    // pGraphics.setTransform( width/2.0, 0, 0, height/2.0, width/2.0, height/2.0);
-    // pGraphics.scale(100,100);
-    pGraphics.strokeStyle = 0; // black
-    pGraphics.fillStyle = darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme];
-    pGraphics.lineWidth = 0.05;
-
-    circle (100, 100, 20, '#FF0000');
-    circle (100, 100, 30, '#FFFF00');
-
-    circle (100, 100, 40, '#FF00FF');
-
-
-    pGraphics.rect(-1.0, -1.0, 2.0, 2.0);
-
-    pGraphics.fill();
-    */
     pGraphics.fillStyle = darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme];
     pGraphics.strokeStyle = 'black'; // black
     pGraphics.lineWidth = 0.02;
@@ -882,8 +857,6 @@ const xPts = [0.8, 0.4, -0.4, -0.8, -0.4, 0.4];
       pGraphics.stroke();
     }
     pGraphics.setLineDash([]);
-
-    console.log(" drawdna");
   }
 
 /**
@@ -1991,7 +1964,7 @@ darworms.main = (function() {
     darworms.dwsettings.pickDirectionUI = $('#pickDirectionUI').slider().val();
 
     console.log(" darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
-    console.log(" darworms.dwsettings.doAudio " + darworms.doAudio);
+    console.log(" darworms.dwsettings.doAudio " + darworms.dwsettings.doAudio);
     darworms.masterAudioVolume = $("#audiovol").val() / 100;
     darworms.graphics.fps = $("#fps").val();
     darworms.graphics.frameInterval = 1000 / darworms.graphics.fps;
@@ -2418,18 +2391,26 @@ darworms.main = (function() {
     $("body").css("overflow", "auto");
   };
 
-  var loadAudio = function() {
+  function unlockAudioContext(audioCtx) {
+    if (audioCtx.state !== 'suspended') return;
+    const b = document.body;
+    const events = ['touchstart','touchend', 'mousedown','keydown'];
+    events.forEach(e => b.addEventListener(e, unlock, false));
+    function unlock() { audioCtx.resume().then(clean); }
+    function clean() { events.forEach(e => b.removeEventListener(e, unlock)); }
+}
 
+  var loadAudio = function() {
     // Create Smart Audio Container
-    if (typeof AudioContext !== "undefined") {
-      darworms.audioContext = new AudioContext();
-    } else if (typeof webkitAudioContext !== "undefined") {
-      darworms.audioContext = new webkitAudioContext();
-    } else {
+    darworms.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    if ( darworms.audioContext == null)  {
       darworms.dwsettings.doAudio = false;
       alert(" Could not load webAudio... muting game");
       $('#doAudio').hide();
     }
+    unlockAudioContext(darworms.audioContext);
+    console.log("audio is " + darworms.dwsettings.doAudio + "  Context state is " + darworms.audioContext.state);
 
     if (darworms.dwsettings.doAudio) {
       if (darworms.audioContext.createGain !== undefined) {
@@ -2553,13 +2534,12 @@ darworms.main = (function() {
     // This may be needed when we actually build a phoneGap app
     // in this case delay initialization until we get the deviceready event
     document.addEventListener("deviceready", deviceInfo, true);
-    darworms.wCanvasPixelDim = new Point(1, 1);
     // window.onresize = doReSize;
     // doReSize();
     $('#versionstring')[0].innerHTML = "Version " + darworms.version;
     darworms.main.wCanvas = document.getElementById("wcanvas");
     darworms.main.wGraphics = darworms.main.wCanvas.getContext("2d");
-    // console.log ( " init wGraphics " + darworms.main.wGraphics);
+    darworms.wCanvasPixelDim = new Point(darworms.main.wCanvas.clientWidth, darworms.main.wCanvas.clientHeight);// console.log ( " init wGraphics " + darworms.main.wGraphics);
     $('#wcanvas').bind('tap', wormEventHandler);
     // $('#wcanvas').on("tap", wormEventHandler);
     // $('#wcanvas').bind('vmousedown', wormEventHandler);

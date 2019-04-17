@@ -5,7 +5,9 @@ import "./Grid.js";
 import {Worm} from "./Worm.js";
 import { Game, gameInit, reScale,  makeMoves, selectDirection,
         updateScores } from "./Game.js";
-
+import { graphicsInit, wCanvas, wGraphics,
+        drawPickCells, drawCells, drawDirtyCells, clearCanvas, setScale
+       } from "./graphics.js";
 /*
   <script src="scripts/loader.js"></script>
   <script src="scripts/AudioSample.js"></script>
@@ -100,8 +102,7 @@ darworms.main = (function() {
   ];
   var typeNames = [" None ", "Random", " Same ", " New  "];
   var textFields = ['#p1textfield', '#p2textfield', '#p3textfield', '#p4textfield'];
-  var wGraphics;
-  var wCanvas;
+
 
 
 
@@ -250,8 +251,8 @@ darworms.main = (function() {
     if (darworms.dwsettings.backGroundTheme !== $('#backg').slider().val()) {
       darworms.dwsettings.backGroundTheme = $('#backg').slider().val();
       if (darworms.theGame) {
-        darworms.theGame.clearCanvas();
-        darworms.theGame.drawCells();
+        clearCanvas();
+        drawCells();
       }
     }
     darworms.dwsettings.doAnimations = $('#doanim').slider().val() == "true" ? true : false;
@@ -338,7 +339,7 @@ darworms.main = (function() {
     var cHeight = $('#wcanvas').height();
     console.log(" Tap Event at x: " + touchX + " y: " + touchY);
     // console.log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
-    // console.log (" wcanvas coord width " + darworms.main.wCanvas.width + " coord height "  + darworms.main.wCanvas.height  );
+    // console.log (" wcanvas coord width " + wCanvas.width + " coord height "  + wCanvas.height  );
     if (darworms.theGame.gameState === darworms.gameStates.waiting) {
       selectDirection(new Point(touchX, touchY));
     }
@@ -350,7 +351,7 @@ darworms.main = (function() {
       darworms.theGame.gameState = darworms.gameStates.paused;
       $.mobile.changePage("#settingspage");
       darworms.theGame.needsRedraw = true;
-      darworms.theGame.drawCells();
+      drawCells();
       $("#startpause").text("Resume Game");
     } else {
       if (darworms.theGame.gameState == darworms.gameStates.waiting) {
@@ -379,10 +380,10 @@ darworms.main = (function() {
         darworms.theGame.gameState + (darworms.gameStateNames[darworms.theGame.gameState]));
       console.log("startgame Scale" + darworms.theGame.scale.format());
     }
-    darworms.main.wCanvas.width = $('#wcanvas').width();
-    darworms.main.wCanvas.height = $('#wcanvas').height(); // make it square
-    darworms.dwsettings.isLargeScreen = darworms.main.wCanvas.width >= darworms.dwsettings.minLargeWidth;
-    var curScreen = new Point(darworms.main.wCanvas.width, darworms.main.wCanvas.height);
+    wCanvas.width = $('#wcanvas').width();
+    wCanvas.height = $('#wcanvas').height(); // make it square
+    darworms.dwsettings.isLargeScreen = wCanvas.width >= darworms.dwsettings.minLargeWidth;
+    var curScreen = new Point(wCanvas.width, wCanvas.height);
     darworms.wCanvasPixelDim = curScreen;
     var heightSlider = darworms.dwsettings.forceInitialGridSize ? (darworms.dwsettings.isLargeScreen ?
         darworms.dwsettings.largeGridSize : darworms.dwsettings.smallGridSize) :
@@ -398,7 +399,7 @@ darworms.main = (function() {
       }
 
       if ($('#debug').slider().val() === 1) {
-        alert(" wCanvas " + darworms.main.wCanvas.width + " x " + darworms.main.wCanvas.height +
+        alert(" wCanvas " + wCanvas.width + " x " + wCanvas.height +
           " css " + $('#wcanvas').width() + " x " + $('#wcanvas').height() +
           " window " + window.innerWidth + " x " + window.innerHeight);
       }
@@ -408,7 +409,7 @@ darworms.main = (function() {
       darworms.theGame.initGame();
       $("#startpause").text("Start Game");
       darworms.theGame.needsRedraw = true;
-      darworms.theGame.drawCells();
+      drawCells();
       darworms.theGame.worms = gWorms;
       console.log(" init gridsize: " + $("#gridsize").val() + " gHeight" + heightSlider);
 
@@ -443,7 +444,7 @@ darworms.main = (function() {
       $("#startpause").text("Resume Game");
       darworms.theGame.gameState = darworms.gameStates.paused;
       darworms.theGame.needsRedraw = true;
-      darworms.theGame.drawCells();
+      drawCells();
       return;
     }
     if (darworms.theGame.gameState === darworms.gameStates.paused) {
@@ -475,12 +476,12 @@ darworms.main = (function() {
       // playfield
       console.log('darworms.dwsettings.doAnimations == "false"')
       darworms.theGame.gameState = darworms.gameStates.running;
-      darworms.theGame.clearCanvas();
-      darworms.theGame.drawCells();
+      clearCanvas();
+      drawCells();
 
       console.log(" Game Running");
       $("#startpause").text("Running");
-      /*  busy loop maling moves.  Freezes the javascript engine
+      /*  busy loop making moves.  Freezes the javascript engine!
         while (darworms.theGame.gameState != darworms.gameStates.over) {
          if (darworms.theGame.gameState === darworms.gameStates.waiting) {
            break;
@@ -494,7 +495,7 @@ darworms.main = (function() {
            // wGraphics.restore();
          }
        }
-       darworms.theGame.drawCells();
+       drawCells();
        darworms.gameModule.updateScores();
 
        $("#startpause").text("Start Game");
@@ -576,7 +577,7 @@ darworms.main = (function() {
 
         var startTime = Date.now();
         updateScores();
-        darworms.theGame.drawDirtyCells();
+        drawDirtyCells();
         console.log("Draw time: " + (Date.now() - startTime));
 
         console.log(".");
@@ -588,7 +589,7 @@ darworms.main = (function() {
       darworms.graphics.now = Date.now();
       darworms.graphics.uiElapsed = darworms.graphics.now - darworms.graphics.uiThen;
       if (darworms.graphics.uiElapsed > darworms.graphics.uiInterval) {
-        darworms.theGame.drawPickCells();
+        drawPickCells();
         darworms.graphics.uiThen = darworms.graphics.now -
           (darworms.graphics.uiElapsed % darworms.graphics.uiInterval)
       }
@@ -688,10 +689,10 @@ darworms.main = (function() {
     }
 
     if (darworms.theGame) {
-      darworms.theGame.updateScale(canvasElement.width, canvasElement.height);
+      setScale(this.grid.width , this.grid.height);
       darworms.theGame.needsRedraw = true;
-      darworms.theGame.clearCanvas();
-      darworms.theGame.drawCells();
+      clearCanvas();
+      drawCells();
     }
   }
   var initPlayPage = function() {
@@ -883,9 +884,10 @@ darworms.main = (function() {
     // window.onresize = doReSize;
     // doReSize();
     $('#versionstring')[0].innerHTML = "Version " + darworms.version;
-    darworms.main.wCanvas = document.getElementById("wcanvas");
-    darworms.main.wGraphics = darworms.main.wCanvas.getContext("2d");
-    darworms.wCanvasPixelDim = new Point(darworms.main.wCanvas.clientWidth, darworms.main.wCanvas.clientHeight);// console.log ( " init wGraphics " + darworms.main.wGraphics);
+    // wCanvas = document.getElementById("wcanvas");
+    // darworms.main.wGraphics = wCanvas.getContext("2d");
+    graphicsInit();
+    darworms.wCanvasPixelDim = new Point(wCanvas.clientWidth, wCanvas.clientHeight);// console.log ( " init wGraphics " + darworms.main.wGraphics);
     $('#wcanvas').bind('tap', wormEventHandler);
     // $('#wcanvas').on("tap", wormEventHandler);
     // $('#wcanvas').bind('vmousedown', wormEventHandler);
@@ -935,7 +937,7 @@ darworms.main = (function() {
       window.scrollTo(1, 0);
       console.log("resize event triggered");
       if (darworms.theGame) {
-        darworms.theGame.clearCanvas();
+        clearCanvas();
       }
       resizeCanvas();
       var heightSlider = Math.floor($("#gridsize").val());

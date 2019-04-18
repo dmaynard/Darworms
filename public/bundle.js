@@ -1384,7 +1384,53 @@ function showTimes() {
 
   }
 
+// scorecanvas.js
+
+var scoreCanvas;
+var scorectx;
+
+function scoreCanvasInit(game) {
+  scoreCanvas = document.getElementById("scorecanvas");
+  scorectx = scoreCanvas.getContext("2d");
+  scorectx.font = "bold 18px sans-serif";
+  scorectx.shadowColor = "rgb(190, 190, 190)";
+  scorectx.shadowOffsetX = 3;
+  scorectx.shadowOffsetY = 3;
+}
+
+function clearScore(segmentIndex, totalSegments) {
+  var segWidth = darworms.dwsettings.scoreCanvas.width / totalSegments;
+  scorectx.fillStyle = "rgba(222,222,222, 1.0)";
+  scorectx.shadowOffsetX = 0;
+  scorectx.shadowOffsetY = 0;
+
+  scorectx.fillRect(segWidth * segmentIndex, 0, segWidth, darworms.dwsettings.scoreCanvas.height);
+}
+
+
+
+function scoreStartx(segmentIndex, totalSegments, text) {
+  var segWidth = darworms.dwsettings.scoreCanvas.width / totalSegments;
+  var twidth = scorectx.measureText(text).width;
+  return ((segWidth * segmentIndex) + (segWidth / 2) - (twidth / 2));
+
+}
+
+function updateScores() {
+  var i;
+  for (i = 0; i < 4; i++) {
+    if (darworms.theGame.worms[i] !== undefined && darworms.theGame.worms[i].shouldDrawScore()) {
+      clearScore(i, 4);
+      scorectx.fillStyle = darworms.dwsettings.colorTable[i + 1];
+      // scorectx.shadowOffsetX = 3;
+      // scorectx.shadowOffsetY = 3;
+      scorectx.fillText(darworms.theGame.worms[i].score, scoreStartx(i, 4, darworms.theGame.worms[i].score.toString()), 15);
+    }
+  }
+}
+
 //  Game.js
+
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -1397,7 +1443,7 @@ function showTimes() {
 
 var nextToMove;
 var focusPoint;
-var scorectx;
+
 // the jump from full pan left (-1.0) to full pan right (+1.0)
 // is too jaring. This limits pan to [-.8 , +.8]
 // Could be a setting  (pan effect 0 - 1)
@@ -1666,34 +1712,6 @@ class Game {
 
 //  Called from Timer Loop
 
-function clearScore(segmentIndex, totalSegments) {
-  var segWidth = darworms.dwsettings.scoreCanvas.width / totalSegments;
-  scorectx.fillStyle = "rgba(222,222,222, 1.0)";
-  scorectx.shadowOffsetX = 0;
-  scorectx.shadowOffsetY = 0;
-
-  scorectx.fillRect(segWidth * segmentIndex, 0, segWidth, darworms.dwsettings.scoreCanvas.height);
-}
-
-function scoreStartx(segmentIndex, totalSegments, text) {
-  var segWidth = darworms.dwsettings.scoreCanvas.width / totalSegments;
-  var twidth = scorectx.measureText(text).width;
-  return ((segWidth * segmentIndex) + (segWidth / 2) - (twidth / 2));
-
-}
-
-function updateScores() {
-  var i;
-  for (i = 0; i < 4; i++) {
-    if (darworms.theGame.worms[i] !== undefined && darworms.theGame.worms[i].shouldDrawScore()) {
-      clearScore(i, 4);
-      scorectx.fillStyle = darworms.dwsettings.colorTable[i + 1];
-      // scorectx.shadowOffsetX = 3;
-      // scorectx.shadowOffsetY = 3;
-      scorectx.fillText(darworms.theGame.worms[i].score, scoreStartx(i, 4, darworms.theGame.worms[i].score.toString()), 15);
-    }
-  }
-}
 function makeMoves() {
   // console.log(" makeMoves theGameOver " + theGameOver +  "  gameState " + gameStateNames[theGame.gameState] );
   var startTime = new Date().getTime();
@@ -1730,15 +1748,8 @@ function gameInit() {
   // used to initialize variables in this module's closure
   console.log(" wCanvas,width: " + wCanvas.width);
   graphicsInit(this);
+  scoreCanvasInit();
   nextToMove = 0;
-  window.scoreCanvas = document.getElementById("scorecanvas");
-  scorectx = darworms.dwsettings.scoreCanvas.getContext("2d");
-  scorectx.font = "bold 18px sans-serif";
-  scorectx.shadowColor = "rgb(190, 190, 190)";
-  scorectx.shadowOffsetX = 3;
-  scorectx.shadowOffsetY = 3;
-
-
 
 }
 /* end of Game */
@@ -2031,8 +2042,6 @@ darworms.main = (function() {
     // alert( event.toString() + " tap event x:" + touchX + "  y:" + touchY)
     */
 
-    var cWidth = $('#wcanvas').width();
-    var cHeight = $('#wcanvas').height();
     console.log(" Tap Event at x: " + touchX + " y: " + touchY);
     // console.log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
     // console.log (" wcanvas coord width " + wCanvas.width + " coord height "  + wCanvas.height  );
@@ -2076,15 +2085,15 @@ darworms.main = (function() {
         darworms.theGame.gameState + (darworms.gameStateNames[darworms.theGame.gameState]));
       console.log("startgame Scale" + darworms.theGame.scale.format());
     }
-    wCanvas.width = $('#wcanvas').width();
-    wCanvas.height = $('#wcanvas').height(); // make it square
+    // wCanvas.width = $('#wcanvas').width();
+    // wCanvas.height = $('#wcanvas').height(); // make it square
     darworms.dwsettings.isLargeScreen = wCanvas.width >= darworms.dwsettings.minLargeWidth;
     var curScreen = new Point(wCanvas.width, wCanvas.height);
     darworms.wCanvasPixelDim = curScreen;
     var heightSlider = darworms.dwsettings.forceInitialGridSize ? (darworms.dwsettings.isLargeScreen ?
         darworms.dwsettings.largeGridSize : darworms.dwsettings.smallGridSize) :
       Math.floor($("#gridsize").val());
-    var curScreen = new Point($('#wcanvas').width(), $('#wcanvas').height());
+    var curScreen = new Point(wCanvas.width, wCanvas.height);
     if (darworms.theGame === undefined || darworms.theGame === null || darworms.theGame.grid.height != heightSlider ||
       !(darworms.wCanvasPixelDim.isEqualTo(curScreen))) {
       console.log(" theGame size has changed Screen is" + curScreen.format() + " grid = " + heightSlider + " x " +

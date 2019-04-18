@@ -335,8 +335,6 @@ darworms.main = (function() {
     // alert( event.toString() + " tap event x:" + touchX + "  y:" + touchY)
     */
 
-    var cWidth = $('#wcanvas').width();
-    var cHeight = $('#wcanvas').height();
     console.log(" Tap Event at x: " + touchX + " y: " + touchY);
     // console.log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
     // console.log (" wcanvas coord width " + wCanvas.width + " coord height "  + wCanvas.height  );
@@ -380,15 +378,15 @@ darworms.main = (function() {
         darworms.theGame.gameState + (darworms.gameStateNames[darworms.theGame.gameState]));
       console.log("startgame Scale" + darworms.theGame.scale.format());
     }
-    wCanvas.width = $('#wcanvas').width();
-    wCanvas.height = $('#wcanvas').height(); // make it square
+    // wCanvas.width = $('#wcanvas').width();
+    // wCanvas.height = $('#wcanvas').height(); // make it square
     darworms.dwsettings.isLargeScreen = wCanvas.width >= darworms.dwsettings.minLargeWidth;
     var curScreen = new Point(wCanvas.width, wCanvas.height);
     darworms.wCanvasPixelDim = curScreen;
     var heightSlider = darworms.dwsettings.forceInitialGridSize ? (darworms.dwsettings.isLargeScreen ?
         darworms.dwsettings.largeGridSize : darworms.dwsettings.smallGridSize) :
       Math.floor($("#gridsize").val());
-    var curScreen = new Point($('#wcanvas').width(), $('#wcanvas').height());
+    var curScreen = new Point(wCanvas.width, wCanvas.height);
     if (darworms.theGame === undefined || darworms.theGame === null || darworms.theGame.grid.height != heightSlider ||
       !(darworms.wCanvasPixelDim.isEqualTo(curScreen))) {
       console.log(" theGame size has changed Screen is" + curScreen.format() + " grid = " + heightSlider + " x " +

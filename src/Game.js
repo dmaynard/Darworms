@@ -38,7 +38,8 @@ import {
   pushDirtyCell,
   animateDyingWorms,
   clearCanvas,
-  initPickUI
+  initPickUI,
+  selectDirection
 } from "./graphics.js";
 /**
  * Created with JetBrains WebStorm.
@@ -49,12 +50,10 @@ import {
  */
 
 // This module needs to separated into separate  UI(graphics) and game logic modules
-var gameCanvas;
 
 var nextToMove;
 var focusPoint;
-var focusWorm;
-var focusValue;
+var focusWorm
 var scorectx;
 // the jump from full pan left (-1.0) to full pan right (+1.0)
 // is too jaring. This limits pan to [-.8 , +.8]
@@ -76,7 +75,6 @@ export class Game {
     this.numMoves = 0;
     this.activeIndex = 0;
 
-    // this.scale = new Point(((gameCanvas.width()) / (gridWidth + 1.5)), ((gameCanvas.height()) / (gridHeight + 1)));
     setScale(gridWidth, gridHeight);
     console.log(" new Game scale set to " + scale.format());
     this.origin = new Point(gridWidth >> 1, gridHeight >> 1);
@@ -85,6 +83,8 @@ export class Game {
     this.needsRedraw = true;
     this.avePos = new Point(0, 0);
     // worm index of zero means unclaimed.
+    this.focusWorm = null;
+    this.focusValure = null;
 
     this.xPts = [1.0, 0.5, -0.5, -1.0, -0.5, 0.5];
     this.yPts = [0.0, 1.0, 1.0, 0.0, -1.0, -1.0];
@@ -124,7 +124,7 @@ export class Game {
   log() {
 
     console.log(" Game grid size  " + new Point(this.grid.width, this.grid.height).format());
-    console.log(" Game Canvas size  " + new Point(gameCanvas.width(), gameCanvas.height()).format());
+    console.log(" Game Canvas size  " + new Point(wCanvas.width, wCanvas.height).format());
     console.log(" Game scale " + scale.format());
     for (var i = 0; i < this.worms.length; i = i + 1) {
       console.log(" Game worm " + i + " :  " + this.worms[i].state + " at " + this.worms[i].pos.format() + " value:" + this.grid.hexValueAt(this.worms[i].pos));
@@ -235,7 +235,7 @@ export class Game {
           focusPoint = active.pos;
           focusWorm = active;
           darworms.theGame.focusWorm = active;
-          focusValue = currentState;
+          darworms.theGame.focusValue = currentState;
           if (darworms.theGame.focusWorm.showTutorial) {
             $("input[type='checkbox']").attr("checked", false);
             var themes = ["c", "d", "e", "f"];
@@ -328,11 +328,6 @@ export function binToRGB(bin) {
   };
 }
 
-function reScale(gridWidth, gridHeight) {
-  setScale(gridWidth, gridHeight);
-  console.log(" reScaled to " + scale.format());
-};
-
 // end of Module prototypes
 
 //  Called from Timer Loop
@@ -373,8 +368,6 @@ function makeMoves() {
   if (darworms.theGame.needsRedraw) {
     drawCells();
     darworms.theGame.needsRedraw = false;
-    // wGraphics.drawImage(localImage, 10, 10);
-
   }
   if (darworms.theGame.gameState != darworms.gameStates.over) {
     if (darworms.theGame.makeMove(darworms.dwsettings.doAnimations) === false) {
@@ -399,69 +392,12 @@ function makeMoves() {
   frameTimes.push(elapsed);
 };
 // Called from user actions
-function selectDirection(point) {
-  ((darworms.dwsettings.pickDirectionUI == 1)) ? selectLargeUIDirection(point):
-    selectSmallUIDirection(point);
-}
 
-function selectSmallUIDirection(touchPoint) {
-  // we should be able to bind the forEach to this instead using darworms.theGame
-  darworms.pickCells.forEach(function(pickTarget) {
-    var screenCoordinates = getOffset(pickTarget.pos);
-    var absdiff = touchPoint.absDiff(screenCoordinates);
-    var diff = new Point(touchPoint.x - screenCoordinates.x, touchPoint.y - screenCoordinates.y);
-    if ((absdiff.x < (scale.x / 2)) && (absdiff.y < (scale.y / 2)) &&
-      this.gameState === darworms.gameStates.waiting) {
-      console.log(" target hit delta: " + diff.format());
-      setDNAandResumeGame(pickTarget.dir);
-    }
-  }, darworms.theGame);
-
-}
-
-function selectLargeUIDirection(point) {
-  // console.log( "selectDirection: " + point.format());
-  var outvec = darworms.theGame.grid.stateAt(focusPoint);
-  var minDist = 100000;
-  var dist;
-  var select = -1;
-  for (var i = 0; i < 6; i = i + 1) {
-    if ((outvec & darworms.outMask[i]) === 0) {
-      const target = new Point(
-        (((darworms.theGame.xPts[i] * gameCanvas.width() * .75) / 2) + (gameCanvas.width() / 2)),
-        (((darworms.theGame.yPts[i] * gameCanvas.height() * .75) / 2) + (gameCanvas.height() / 2)));
-
-      // console.log(" direction: " + i + " target point " + target.format());
-      // console.log("Touch Point: " + point.format());
-      dist = target.dist(point);
-      //  Actual pixel coordinates
-      if (dist < minDist) {
-        minDist = dist;
-        select = i;
-      }
-      // console.log("selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
-    }
-  }
-  if ((minDist < gameCanvas.width() / 8) && (select >= 0)) {
-    setDNAandResumeGame(select);
-  }
-};
-
-function setDNAandResumeGame(direction) {
-  focusWorm.dna[focusValue & 0x3F] = direction;
-  focusWorm.numChoices += 1;
-  darworms.theGame.gameState = darworms.gameStates.running;
-  clearCanvas();
-  drawCells();
-}
 
 function gameInit() {
   // used to initialize variables in this module's closure
   console.log(" wCanvas,width: " + wCanvas.width);
-  gameCanvas = $('#wcanvas');
-  console.log(" gameCanvas.width() " + wCanvas.width);
   graphicsInit(this);
-  // wGraphics = darworms.main.wGraphics;
   nextToMove = 0;
   window.scoreCanvas = document.getElementById("scorecanvas");
   scorectx = darworms.dwsettings.scoreCanvas.getContext("2d");

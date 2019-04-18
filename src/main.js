@@ -3,9 +3,9 @@ import AudioSample from "./AudioSample.js";
 import { Point } from "./Point.js";
 import "./Grid.js";
 import {Worm} from "./Worm.js";
-import { Game, gameInit, reScale,  makeMoves, selectDirection,
+import { Game, gameInit, makeMoves, selectDirection,
         updateScores } from "./Game.js";
-import { graphicsInit, wCanvas, wGraphics,
+import { graphicsInit, reScale, wCanvas, wGraphics,
         drawPickCells, drawCells, drawDirtyCells, clearCanvas, setScale
        } from "./graphics.js";
 /*

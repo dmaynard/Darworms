@@ -193,20 +193,20 @@
       <!-- div data-role="controlgroup" data-type="horizontal" -->
       <div id="navcontainer" class="ui-grid-c" data-role=navbar>
         <ul>
-          <li> <a href="#red-darworm-page" id="p1button" data-theme="c"> Red  </a> </li>
-          <li> <a href="#green-darworm-page" id="p2button" data-theme="d"> Green   </a> </li>
-          <li> <a href="#blue-darworm-page" id="p3button" data-theme="e"> Blue  </a> </li>
-          <li> <a href="#yellow-darworm-page" id="p4button" data-theme="f"> Yellow  </a> </li>
+          <li> <a href="#edit-darworm-page" id="p1button" data-theme="c" data-transition="slideup"> Red  </a> </li>
+          <li> <a href="#edit-darworm-page" id="p2button" data-theme="d" data-transition="slideup"> Green   </a> </li>
+          <li> <a href="#edit-darworm-page" id="p3button" data-theme="e" data-transition="slideup"> Blue  </a> </li>
+          <li> <a href="#edit-darworm-page" id="p4button" data-theme="f" data-transition="slideup"> Yellow  </a> </li>
 
         </ul>
       </div>
       <div id="landnavcontainer">
         <div data-role="controlgroup">
           <ul>
-            <a href="#red-darworm-page" id="p1Lbutton" data-role="button" data-theme="c"> Red  </a>
-            <a href="#green-darworm-page" id="p2Lbutton" data-role="button" data-theme="d"> Green  </a>
-            <a href="#blue-darworm-page" id="p3Lbutton" data-role="button" data-theme="e"> Blue  </a>
-            <a href="#yellow-darworm-page" id="p4Lbutton" data-role="button" data-theme="f"> Yellow  </a>
+            <a href="#edit-darworm-page" id="p1Lbutton" data-role="button" data-theme="c" data-transition="flip"> Red  </a>
+            <a href="#edit-darworm-page" id="p2Lbutton" data-role="button" data-theme="d" data-transition="flip"> Green  </a>
+            <a href="#edit-darworm-page" id="p3Lbutton" data-role="button" data-theme="e" data-transition="flip"> Blue  </a>
+            <a href="#edit-darworm-page" id="p4Lbutton" data-role="button" data-theme="f" data-transition="flip"> Yellow  </a>
 
           </ul>
         </div>
@@ -387,6 +387,73 @@
       </div>
     </div>
   </div>
+
+  <div data-role="page" data-theme="a" data-darworm="selector" id="edit-darworm-page" data-selecteddarworm=0>
+    <div data-role="header">
+      <a href="#playpage">Back</a>
+
+      <h1>Select Darworm Type</h1>
+      <button  id='nextbutton'>Next</button>
+    </div>
+    <div data-role="content" class="darwormTypeRadioButtons">
+      <form>
+        <fieldset data-role="controlgroup" id="wTypeRadioButtons">
+          <legend>Choose Darworm type for next game:</legend>
+          <input type="radio" name="edit-radio-choice" id="edit-radio-choice-1" value="none">
+          <label for="edit-radio-choice-1">None</label>
+
+          <input type="radio" name="edit-radio-choice" id="edit-radio-choice-2" value="random">
+          <label for="edit-radio-choice-2">Random</label>
+
+          <input type="radio" name="edit-radio-choice" id="edit-radio-choice-3" value="same">
+          <label for="edit-radio-choice-3">Same</label>
+
+          <input type="radio" name="edit-radio-choice" id="edit-radio-choice-4" value="new">
+          <label for="edit-radio-choice-4">New</label>
+        </fieldset>
+      </form>
+      <div role="main" class="ui-content">
+        <label for="edittextfield">Darworm Definition:</label>
+        <input type="text" name="edit-textname" id="edittextfield" value="">
+      </div>
+    </div>
+    <div data-role="content">
+      <form>
+        <div class="ui-field-contain">
+          <label for="select-instrument">Instrument:</label>
+          <select name="select-instrument" onchange="darworms.setInstrumentVal(0)" id="select-native-edit">
+        <option value="0" selected="selected">Piano </option>
+        <option value="1">Guitar</option>
+        <option value="2">Kalimba</option>
+        <option value="3">Sitar</option>
+        <option value="4">Flute</option>
+        <option value="5">Clarinet</option>
+        <option value="-1">Muted</option>
+    </select>
+        </div>
+
+
+        <div class="ui-field-contain">
+          <label for="select-key">Key:</label>
+          <select name="select-key" onchange="darworms.setKeyVal(0)" data-inline="true" id="select-native-key">
+        <option value="AMajor">A Major</option>
+        <option value="BMajor">B Major</option>
+        <option value="CMajor" selected="selected">C Major</option>
+        <option value="CMinor">C Minor</option>
+        <option value="DMajor">D Major</option>
+        <option value="EMajor">E Major</option>
+        <option value="FMajor">F Major</option>
+        <option value="GMajor">G Major</option>
+
+    </select>
+
+          <a id="playButton" class="playKeyNotes" data-role=button data-inline="true" onclick='darworms.playScale(0)'>Play Key Notes</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
 
   <div data-role="page" data-theme="c" data-darworm="selector" id="red-darworm-page" data-selecteddarworm=0>
     <div data-role="header">

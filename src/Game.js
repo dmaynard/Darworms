@@ -17,7 +17,6 @@ import {
   setGrid
 } from "./graphics.js"
 import {
-  wGraphics,
   wCanvas,
   setScale,
   scale,
@@ -245,12 +244,11 @@ export class Game {
           darworms.theGame.focusValue = currentState;
           if (darworms.theGame.focusWorm.showTutorial) {
             $("input[type='checkbox']").attr("checked", false);
-            var themes = ["c", "d", "e", "f"];
             var btns = ['#p1button', '#p2button', '#p3buton', '#p4button'];
             // ToDo  set proper theme for popup   red green blue ye
             // Setter
             // $('#tutorialpopup' ).popup( "option", "overlayTheme", "d" );
-            $('#tutorialpopup').popup("option", "theme", themes[darworms.theGame.activeIndex]);
+            $('#tutorialpopup').popup("option", "theme", darworms.themes[darworms.theGame.activeIndex]);
             // this makes the popup background transparent, but it looks reall bad
             // $('#tutorialpopup').popup( "option","theme", 'none' );
             console.log(" init popup here");

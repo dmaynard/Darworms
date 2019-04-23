@@ -103,6 +103,7 @@ export class Worm {
   this.showTutorial = true;
 
 
+  this.musickeyName = "CMajor";
 
   this.MusicScale = [],
 
@@ -165,6 +166,7 @@ init (wType) {
 };
 
 setNotes (index) {
+  this.instrument = index;
   this.audioSamplesPtrs.length = 0;
   for (var j = 0; j < 7; j = j + 1) {
     this.audioSamplesPtrs.push(index); // c2,wav
@@ -173,6 +175,7 @@ setNotes (index) {
 }
 setKey (keyName) {
   console.log(" keyname: " + keyName)
+  this.musickeyName = keyName;
   this.MusicScale = musicalkeys[keyName];
 }
 

@@ -20,13 +20,15 @@ export var darworms = {
   },
   wormStateNames: ["dead", "moving", "paused", "sleeping", "dying"],
   initialWormStates: [3, 2, 2, 2],
-
+  themes: ["c", "d", "e", "f"],
+  selectedIdx: 0,
   gameStateNames: ["over", "running", "waiting", "paused", "to_ui", "from_ui"],
-
   outMask: [1, 2, 4, 8, 16, 32],
   inMask: [8, 16, 32, 1, 2, 4],
   colorNames: ['red', 'green', 'blue', 'yellow'],
-  inDir: [3, 4, 5, 0, 1, 2],
+  buttonSelectors: ['#p1button', '#p2button', '#p3button', '#p4button'],
+  buttonLSelectors: ['#p1Lbutton', '#p2Lbutton', '#p3Lbutton', '#p4Lbutton'],
+inDir: [3, 4, 5, 0, 1, 2],
   wCanvasPixelDim: [0, 0],
   playPageIitialized: false,
   wCanvasRef: undefined,
@@ -145,14 +147,15 @@ window.addEventListener("load", function() {
     window.onerror = function(msg, url, line) {
       alert(msg + " " + url + " " + line);
     }
-    $("[data-darworm='selector']").on('pageshow', darworms.main.setupRadioButtons);
+    $("[data-darworm='selector']").on('pageshow', darworms.main.setupEditPage);
     $("[data-darworm='selector']").on('pagehide', darworms.main.setSelectedDarwormType);
     $("#settingspage").on('pageshow', darworms.main.showSettings);
     $("#settingspage").on('pagebeforeshow', darworms.main.setupGridGeometry);
     $("#settingspage").on('pagehide', darworms.main.applySettings);
     $("#playpage").on('pageshow', darworms.main.initPlayPage);
-
     $("#playpage").on('pagehide', darworms.main.leavePlayPage);
+    $("#edit-darworm-page").on('pageshow', darworms.main.initEditPage);
+    $("#edit-darworm-page").on('pagehide', darworms.main.leaveditPage);
 
     $( "#tutorialpopup" ).popup({
         afterclose: function( event, ui ) {

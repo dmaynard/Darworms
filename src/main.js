@@ -152,17 +152,16 @@ darworms.main = (function() {
     });
   };
 
-
   var setupEditPage = function() {
-    // darworms.selectedDarwormIdx = $.mobile.activePage.attr("data-selecteddarworm");
+    // darworms.selectedIdx = $.mobile.activePage.attr("data-selecteddarworm");
     if (darworms.theGame && darworms.theGame.gameState !== darworms.gameStates.over) {
       $('.darwormTypeRadioButtons').hide();
       $('.playKeyNotes').hide();
     } else {
       $('.darwormTypeRadioButtons').show();
       $('.playKeyNotes').show();
-      var darwormType = playerTypes[darworms.selectedDarwormIdx];
-      var color = darworms.colorNames[darworms.selectedDarwormIdx];
+      var darwormType = playerTypes[darworms.selectedIdx];
+      var color = darworms.colorNames[darworms.selectedIdx];
       switch (darwormType) {
         case 0:
           $('#' + 'edit' + '-radio-choice-1').prop("checked", true).checkboxradio("refresh");
@@ -184,7 +183,10 @@ darworms.main = (function() {
       $(selectinput).checkboxradio("refresh");
       // gWorms.forEach(function(worm, i) {
       //  worm.toText();
-      $(textFields[4]).val(playerTypes[darworms.selectedDarwormIdx] == 0 ? "" : gWorms[darworms.selectedDarwormIdx].name);
+      $("input[name='edit-textname']").textinput({
+        theme: darworms.themes[darworms.selectedIdx]
+      });
+      $(textFields[4]).val(playerTypes[darworms.selectedIdx] == 0 ? "" : gWorms[darworms.selectedIdx].name);
     //  })
     }
   }
@@ -194,21 +196,21 @@ darworms.main = (function() {
     if (darworms.theGame && darworms.theGame.gameState !== darworms.gameStates.over) {
       return;
     }
-    var color = darworms.colorNames[darworms.selectedDarwormIdx];
+    var color = darworms.colorNames[darworms.selectedIdx];
     var selectinput = 'input[name=' + 'edit' + '-radio-choice]';
     var selectedType = $(selectinput + ':checked').val();
     switch (selectedType) {
       case "none":
-        playerTypes[darworms.selectedDarwormIdx] = 0;
+        playerTypes[darworms.selectedIdx] = 0;
         break;
       case "random":
-        playerTypes[darworms.selectedDarwormIdx] = 1;
+        playerTypes[darworms.selectedIdx] = 1;
         break;
       case "same":
-        playerTypes[darworms.selectedDarwormIdx] = 2;
+        playerTypes[darworms.selectedIdx] = 2;
         break;
       case "new":
-        playerTypes[darworms.selectedDarwormIdx] = 3;
+        playerTypes[darworms.selectedIdx] = 3;
         break
 
       default:
@@ -381,14 +383,14 @@ darworms.main = (function() {
   darworms.setKeyVal = function(index) {
     var selectedKeyInput = $('#select-native-key');
     if (selectedKeyInput.length == 1) {
-      gWorms[darworms.selectedDarwormIdx].setKey(selectedKeyInput.val());
+      gWorms[darworms.selectedIdx].setKey(selectedKeyInput.val());
     }
   }
   darworms.setInstrumentVal = function(index) {
     var selectedInstrumentInput = $('#select-native-edit');
     if (selectedInstrumentInput.length == 1) {
       var instrument = parseInt(selectedInstrumentInput.val());
-      gWorms[darworms.selectedDarwormIdx].setNotes(instrument);
+      gWorms[darworms.selectedIdx].setNotes(instrument);
 
     }
   }
@@ -755,15 +757,15 @@ darworms.main = (function() {
     selector.page("option", "theme", newTheme);
   }
   var initEditPage = function(foo) {
-    console.log(" initEditPage " + darworms.selectedDarwormIdx)
-    swapTheme($('#edit-darworm-page'), darworms.themes[darworms.selectedDarwormIdx]);
-    $('#edittextfield').val(gWorms[darworms.selectedDarwormIdx].wType == 0 ? "" : gWorms[darworms.selectedDarwormIdx].name);
+    console.log(" initEditPage " + darworms.selectedIdx)
+    swapTheme($('#edit-darworm-page'), darworms.themes[darworms.selectedIdx]);
+    $('#edittextfield').val(gWorms[darworms.selectedIdx].wType == 0 ? "" : gWorms[darworms.selectedIdx].name);
     // $('#edit-darworm-page').page.refresh();
 
-    $('[name=select-instrument]').val(gWorms[darworms.selectedDarwormIdx].instrument);
+    $('[name=select-instrument]').val(gWorms[darworms.selectedIdx].instrument);
     $('[name=select-instrument]').selectmenu("refresh");
 
-    $('[name=select-key]').val(gWorms[darworms.selectedDarwormIdx].musickeyName);
+    $('[name=select-key]').val(gWorms[darworms.selectedIdx].musickeyName);
     $('[name=select-key]').selectmenu("refresh");
     // $('[name=select-instrument]').refresh();
     $('#edit-darworm-page').trigger("create");
@@ -1002,160 +1004,57 @@ darworms.main = (function() {
     })
     resizeCanvas();
     $("#p1button").click(function() {
-      darworms.selectedDarwormIdx = 0;
+      darworms.selectedIdx = 0;
     });
     $("#p2button").click(function() {
-      darworms.selectedDarwormIdx = 1;
+      darworms.selectedIdx = 1;
     });
     $("#p3button").click(function() {
-      darworms.selectedDarwormIdx = 2;
+      darworms.selectedIdx = 2;
     });
     $("#p4button").click(function() {
-      darworms.selectedDarwormIdx = 3;
+      darworms.selectedIdx = 3;
     });
     $("#nextbutton").click(function() {
       console.log(" nextbutton clicked");
       $.mobile.changePage( "#edit-darworm-page", { allowSamePageTransition: true } );
-      darworms.selectedDarwormIdx = ((darworms.selectedDarwormIdx + 1) % gWorms.length);
-      initEditPage(darworms.selectedDarwormIdx);
+      darworms.selectedIdx = ((darworms.selectedIdx + 1) % gWorms.length);
+      initEditPage(darworms.selectedIdx);
       // $.mobile.changePage( "#edit-darworm-page", { allowSamePageTransition: true } );
     });
     $("input[name='edit-radio-choice']").on("change", function() {
       console.log(" edit-radio-choice on change function");
       var type = ($("input[name='edit-radio-choice']:checked").val());
-      playerTypes[darworms.selectedDarwormIdx] = typeFromName(type);
-      gWorms[darworms.selectedDarwormIdx].init(typeFromName(type));
-      $('#edittextfield').val(typeFromName(type) == 0 ? "" : gWorms[darworms.selectedDarwormIdx].name);
+      playerTypes[darworms.selectedIdx] = typeFromName(type);
+      gWorms[darworms.selectedIdx].init(typeFromName(type));
+      $('#edittextfield').val(typeFromName(type) == 0 ? "" : gWorms[darworms.selectedIdx].name);
     });
-    $("input[name='red-radio-choice']").on("change", function() {
-      console.log(" red-radio-choice on change function")
-      var type = ($("input[name='red-radio-choice']:checked").val());
-      gWorms[0].init(typeFromName(type));
-      $(textFields[0]).val(typeFromName(type) == 0 ? "" : gWorms[0].name);
 
-    });
-    $("input[name='green-radio-choice']").on("change", function() {
-      console.log(" green-radio-choice on change function")
-      var type = ($("input[name='green-radio-choice']:checked").val());
-      gWorms[1].init(typeFromName(type));
-      $(textFields[1]).val(typeFromName(type) == 0 ? "" : gWorms[1].name);
-
-    });
-    $("input[name='blue-radio-choice']").on("change", function() {
-      console.log(" blue-radio-choice on change function")
-      var type = ($("input[name='blue-radio-choice']:checked").val());
-      gWorms[2].init(typeFromName(type));
-      $(textFields[2]).val(typeFromName(type) == 0 ? "" : gWorms[2].name);
-
-    });
-    $("input[name='yellow-radio-choice']").on("change", function() {
-      console.log(" yellow-radio-choice on change function")
-      var type = ($("input[name='yellow-radio-choice']:checked").val());
-      gWorms[3].init(typeFromName(type));
-      $(textFields[3]).val(typeFromName(type) == 0 ? "" : gWorms[3].name);
-
-    });
     //  These four handlers should be combined into one parameterized one or
     //  generated closures for each one
-    $("input[name='red-textname']").on("change", function() {
-      console.log(" red-textname")
-      var dnastring = ($("input[name='red-textname']").val());
+    $("input[name='edit-textname']").on("change", function() {
+      console.log(" edit-textname")
+      var dnastring = ($("input[name='edit-textname']").val());
       var regx = /^[ABCDEF\?]{63}X$/;
       if (regx.test(dnastring)) {
-        if (gWorms[0].fromText(dnastring)) {
-          gWorms[0].wType = 2; // Same
-          playerTypes[0] = 2;
+        if (gWorms[darworms.selectedIdx].fromText(dnastring)) {
+          gWorms[darworms.selectedIdx].wType = 2; // Same
+          playerTypes[darworms.selectedIdx] = 2;
           setupEditPage();
 
 
-          $("#p1button").text(typeNames[playerTypes[0]]);
-          $("#p1Lbutton").text(typeNames[playerTypes[0]]);
-          gWorms[0].toText();
-          $("input[name='red-textname']").textinput({
-            theme: "c"
+          $(darworms.buttonSelectors[darworms.selectedIdx]).text(typeNames[playerTypes[darworms.selectedIdx]]);
+          $(darworms.buttonLSelectors[darworms.selectedIdx]).text(typeNames[playerTypes[darworms.selectedIdx]]);
+          gWorms[darworms.selectedIdx].toText();
+          $("input[name='edit-textname']").textinput({
+            theme: darworms.themes[darworms.selectedIdx]
           });
         };
       } else {
-        $("input[name='red-textname']").textinput({
+        $("input[name='edit-textname']").textinput({
           theme: "a"
         });
       }
-    });
-    $("input[name='green-textname']").on("change", function() {
-      console.log(" green-textname")
-      var dnastring = ($("input[name='green-textname']").val());
-      var regx = /^[ABCDEF\?]{63}X$/;
-      if (regx.test(dnastring)) {
-        if (gWorms[1].fromText(dnastring)) {
-          gWorms[1].wType = 2; // Same
-          playerTypes[1] = 2;
-          setupEditPage();
-
-
-          $("#p2button").text(typeNames[playerTypes[1]]);
-          $("#p2Lbutton").text(typeNames[playerTypes[1]]);
-          gWorms[1].toText();
-          $("input[name='green-textname']").textinput({
-            theme: "d"
-          });
-        };
-      } else {
-        $("input[name='green-textname']").textinput({
-          theme: "a"
-        });
-      }
-    });
-    $("input[name='blue-textname']").on("change", function() {
-      console.log(" blue-textname")
-      var dnastring = ($("input[name='blue-textname']").val());
-      var regx = /^[ABCDEF\?]{63}X$/;
-      if (regx.test(dnastring)) {
-        if (gWorms[2].fromText(dnastring)) {
-          gWorms[2].wType = 2; // Same
-          playerTypes[2] = 2;
-          setupEditPage();
-
-
-          $("#p3button").text(typeNames[playerTypes[2]]);
-          $("#p3Lbutton").text(typeNames[playerTypes[2]]);
-          gWorms[2].toText();
-          $("input[name='blue-textname']").textinput({
-            theme: "e"
-          });
-        };
-      } else {
-        $("input[name='green-textname']").textinput({
-          theme: "a"
-        });
-      }
-    });
-    $("input[name='yellow-textname']").on("change", function() {
-      console.log(" yellow-textname")
-      var dnastring = ($("input[name='yellow-textname']").val());
-      var regx = /^[ABCDEF\?]{63}X$/;
-      if (regx.test(dnastring)) {
-        if (gWorms[3].fromText(dnastring)) {
-          gWorms[3].wType = 2; // Same
-          playerTypes[3] = 2;
-          setupEditPage();
-
-
-          $("#p4button").text(typeNames[playerTypes[2]]);
-          $("#p4Lbutton").text(typeNames[playerTypes[2]]);
-          gWorms[2].toText();
-          $("input[name='yellow-textname']").textinput({
-            theme: "f"
-          });
-        };
-      } else {
-        $("input[name='green-textname']").textinput({
-          theme: "a"
-        });
-      }
-    });
-    $("input[name='select-native-key-red']").on("change", function() {
-      console.log(" select-key-red")
-
     });
   }
 

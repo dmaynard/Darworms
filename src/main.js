@@ -567,7 +567,6 @@ darworms.main = (function() {
         playerTypes[ig] = gWorms[ig].wType;
       }
       setButtonNames();
-      setupEditPage();
       return;
     }
     requestAnimationFrame(doGameLoop);

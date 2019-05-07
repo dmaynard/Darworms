@@ -628,11 +628,17 @@ darworms.main = (function() {
   }
 
   darworms.playScale = function(index) {
-    console.log("playScale called");
-    gWorms[index].playScale();
+    console.log("playScale called on darworm: " + darworms.selectedIdx);
+    gWorms[darworms.selectedIdx].playScale();
 
 
   }
+
+  darworms.emailDarworm = function(index) {
+    console.log("emailDarworm called on darworm: " + darworms.selectedIdx);
+      gWorms[darworms.selectedIdx].emailDarworm();
+  }
+
   darworms.yesabortgame = function() {
     console.log("Abort Game called");
     $.mobile.changePage('#playpage');
@@ -928,6 +934,7 @@ darworms.main = (function() {
   var init = function() {
     // This may be needed when we actually build a phoneGap app
     // in this case delay initialization until we get the deviceready event
+    console.log(" init called window.location.href: " + window.location.href);
     document.addEventListener("deviceready", deviceInfo, true);
     // window.onresize = doReSize;
     // doReSize();

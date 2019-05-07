@@ -28,7 +28,7 @@ export var darworms = {
   colorNames: ['red', 'green', 'blue', 'yellow'],
   buttonSelectors: ['#p1button', '#p2button', '#p3button', '#p4button'],
   buttonLSelectors: ['#p1Lbutton', '#p2Lbutton', '#p3Lbutton', '#p4Lbutton'],
-inDir: [3, 4, 5, 0, 1, 2],
+  inDir: [3, 4, 5, 0, 1, 2],
   wCanvasPixelDim: [0, 0],
   playPageIitialized: false,
   wCanvasRef: undefined,
@@ -87,7 +87,7 @@ inDir: [3, 4, 5, 0, 1, 2],
     C2: 12
   },
 
-  dwsettings: {   //  User settings
+  dwsettings: {   //  User adjustable settings
     vgridsize: 1.0,
     forceInitialGridSize: true,
     largeGridSize: 18, // The original Atari 800 Character mode

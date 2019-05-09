@@ -603,6 +603,7 @@ class Worm {
     this.died = false;
     this.name = "";
     this.wType = 0; // None (asleep)
+    this.typeName = "";
     this.directionIndex = 0;
     this.diedAtFrame = 0;
     this.showTutorial = true;
@@ -614,6 +615,7 @@ class Worm {
 
       this.audioSamplesPtrs = [];
     this.pos = new Point(-1, -1);
+    this.startingPos = new Point(-1, -1);
 
     for (var i = 0; i < 64; i = i + 1) {
       this.dna[i] = darworms.dwsettings.codons.unSet;
@@ -748,6 +750,7 @@ class Worm {
   };
   place(aState, aGame, pos) {
     this.pos = pos;
+    this.startingPos = pos;
     this.nMoves = 0;
     this.score = 0;
     this.state = aState;
@@ -829,19 +832,19 @@ class Worm {
   };
 
   emailDarworm() {
-    console.log( "Emailing: " + this.toText());
-    var mailtourl = "mailto:?subject="
-         + encodeURIComponent("Check out this cool Darworm")
-         + "&body="
-         + encodeURIComponent("Darworms is a free web game available at \n")
-         + encodeURIComponent("https://dmaynard.github.io/Darworms/public\n")
-         + encodeURIComponent("You can copy the darworm string below and then go to the game and paste the text into one of the players\n")
-         + encodeURIComponent(this.toText());
-    console.log( "url: "  + mailtourl);
+    console.log("Emailing: " + this.toText());
+    var mailtourl = "mailto:?subject=" +
+      encodeURIComponent("Check out this cool Darworm") +
+      "&body=" +
+      encodeURIComponent("Darworms is a free web game available at \n") +
+      encodeURIComponent("https://dmaynard.github.io/Darworms/public\n") +
+      // encodeURIComponent('<a href ="https://dmaynard.github.io/Darworms/public> Darworms" </a>') +
+      encodeURIComponent("You can copy the darworm string below and then go to the game and paste the text into one of the players\n") +
+      encodeURIComponent(this.toText());
+    console.log("url: " + mailtourl);
 
     // document.location.href = mailtourl;
     window.open(mailtourl);
-
 
   }
 
@@ -1456,6 +1459,55 @@ function updateScores() {
   }
 }
 
+let gameObj =  {};
+let gameTxt = "";
+let gameUrl = "";
+
+
+function pick(o, ...fields) {
+    return fields.reduce((a, x) => {
+        if(o.hasOwnProperty(x)) a[x] = o[x];
+        return a;
+    }, {});
+}
+
+function addPick(a, o, ...fields) {
+    return Object.assign(a,pick(o, ...fields))
+}
+
+function encodeGame( game, settings, graphics, version) {
+    console.log (" encodeGame 0 ");
+    gameObj = { version: version};
+    gameObj = addPick( gameObj, game,"numMoves", "numTurns");
+    gameObj = addPick( gameObj, game.grid, "width");
+    gameObj = addPick( gameObj, settings, "backGroundTheme", "doAnimations", "doAudiog", "gridGeometry");
+    gameObj = addPick( gameObj, graphics, "fps");
+
+    gameObj.players = [];
+    game.worms.forEach ( function (aworm) {
+      var wrm = pick(aworm, "typeName", "startingPos", "name", "score", "instrument", "musickeyName", "MusicScale");
+      gameObj.players.push(wrm);
+    });
+    now = new Date();
+    gameObj.createdAt = now.toString();
+    gameTxt = JSON.stringify(gameObj);
+    gameUrl = encodeURIComponent(gameTxt);
+    let testOne = decodeURIComponent(gameUrl);
+    let testTwo = JSON.parse(testOne);
+    let testThree = JSON.stringify(testTwo);
+    console.log("before: " + gameTxt);
+    console.log("after:  " + testThree);
+    return (gameTxt)
+
+}
+
+function decodeGame( gameTxt ) {
+  console.log (" decodeGame ");
+  let gameObj = JSON.parse(gameTxt);
+  darworms.dwsettings.gridGeometry = gameObj.gridGeometry;
+  darworms.main.setupGridGeometry();
+}
+
 //  Game.js
 
 /**
@@ -1756,7 +1808,8 @@ function makeMoves() {
       showTimes();
       updateScores();
       darworms.theGame.gameState = darworms.gameStates.over;
-
+      var gameTxt = encodeGame( darworms.theGame, darworms.dwsettings, darworms.graphics, darworms.version);
+      decodeGame(gameTxt);
     }
   }
   if (darworms.dwsettings.doAnimations) {
@@ -1892,6 +1945,7 @@ darworms.main = (function() {
 
     gWorms.forEach(function(worm, i) {
       worm.wType = playerTypes[i];
+      worm.typeName = typeNames[worm.wType];
       // worm.setNotes(i);
       $(buttonNames[i]).removeClass(
         playerTypes[i] === 0 ? "ui-opaque" : "ui-grayed-out");
@@ -2110,10 +2164,9 @@ darworms.main = (function() {
   };
   darworms.startgame = function(startNow) {
     console.log(" Startgame start now = " + startNow);
-    if (darworms.theGme) {
+    if (darworms.theGame) {
       console.log("GameState is " +
         darworms.theGame.gameState + (darworms.gameStateNames[darworms.theGame.gameState]));
-      console.log("startgame Scale" + darworms.theGame.scale.format());
     }
     // wCanvas.width = $('#wcanvas').width();
     // wCanvas.height = $('#wcanvas').height(); // make it square
@@ -2341,17 +2394,11 @@ darworms.main = (function() {
   };
 
   darworms.playScale = function(index) {
-    console.log("playScale called on darworm: " + darworms.selectedIdx);
-    gWorms[darworms.selectedIdx].playScale();
+    console.log("playScale called");
+    gWorms[index].playScale();
 
 
   };
-
-  darworms.emailDarworm = function(index) {
-    console.log("emailDarworm called on darworm: " + darworms.selectedIdx);
-      gWorms[darworms.selectedIdx].emailDarworm();
-  };
-
   darworms.yesabortgame = function() {
     console.log("Abort Game called");
     $.mobile.changePage('#playpage');
@@ -2628,7 +2675,6 @@ darworms.main = (function() {
   var init = function() {
     // This may be needed when we actually build a phoneGap app
     // in this case delay initialization until we get the deviceready event
-    console.log(" init called window.location.href: " + window.location.href);
     document.addEventListener("deviceready", deviceInfo, true);
     // window.onresize = doReSize;
     // doReSize();

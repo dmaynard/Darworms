@@ -144,6 +144,7 @@ darworms.main = (function() {
 
     gWorms.forEach(function(worm, i) {
       worm.wType = playerTypes[i];
+      worm.typeName = typeNames[worm.wType];
       // worm.setNotes(i);
       $(buttonNames[i]).removeClass(
         playerTypes[i] === 0 ? "ui-opaque" : "ui-grayed-out");
@@ -396,10 +397,9 @@ darworms.main = (function() {
   }
   darworms.startgame = function(startNow) {
     console.log(" Startgame start now = " + startNow);
-    if (darworms.theGme) {
+    if (darworms.theGame) {
       console.log("GameState is " +
         darworms.theGame.gameState + (darworms.gameStateNames[darworms.theGame.gameState]));
-      console.log("startgame Scale" + darworms.theGame.scale.format());
     }
     // wCanvas.width = $('#wcanvas').width();
     // wCanvas.height = $('#wcanvas').height(); // make it square
@@ -628,17 +628,11 @@ darworms.main = (function() {
   }
 
   darworms.playScale = function(index) {
-    console.log("playScale called on darworm: " + darworms.selectedIdx);
-    gWorms[darworms.selectedIdx].playScale();
+    console.log("playScale called");
+    gWorms[index].playScale();
 
 
   }
-
-  darworms.emailDarworm = function(index) {
-    console.log("emailDarworm called on darworm: " + darworms.selectedIdx);
-      gWorms[darworms.selectedIdx].emailDarworm();
-  }
-
   darworms.yesabortgame = function() {
     console.log("Abort Game called");
     $.mobile.changePage('#playpage');
@@ -934,7 +928,6 @@ darworms.main = (function() {
   var init = function() {
     // This may be needed when we actually build a phoneGap app
     // in this case delay initialization until we get the deviceready event
-    console.log(" init called window.location.href: " + window.location.href);
     document.addEventListener("deviceready", deviceInfo, true);
     // window.onresize = doReSize;
     // doReSize();

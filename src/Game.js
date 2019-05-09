@@ -47,6 +47,11 @@ import {
   updateScores
 } from "./scorecanvas.js";
 
+import {
+  encodeGame,
+  decodeGame,
+} from "./gameio.js"
+
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -355,7 +360,8 @@ function makeMoves() {
       showTimes();
       updateScores();
       darworms.theGame.gameState = darworms.gameStates.over;
-
+      var gameTxt = encodeGame( darworms.theGame, darworms.dwsettings, darworms.graphics, darworms.version);
+      decodeGame(gameTxt);
     }
   }
   if (darworms.dwsettings.doAnimations) {

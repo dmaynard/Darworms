@@ -1,9 +1,5 @@
-import {
-  darworms
-} from "./loader.js";
-import {
-  setupGridGeometry
-} from "./main.js"
+// gameio.js
+
 let jsongame = {
 
 }
@@ -36,19 +32,22 @@ export function emailGame( game, settings) {
 
 export function encodeGame( game, settings, graphics, version) {
     console.log (" encodeGame 0 ");
+    now = new Date();
     gameObj = { version: version};
+    gameObj.createdAt = now.toString();
     gameObj = addPick( gameObj, game,"numMoves", "numTurns");
     gameObj = addPick( gameObj, game.grid, "width");
-    gameObj = addPick( gameObj, settings, "backGroundTheme", "doAnimations", "doAudiog", "gridGeometry");
+    gameObj = addPick( gameObj, settings, "backGroundTheme", "doAnimations",
+     "doAudio", "gridGeometry", "fixedInitPos", "pickDirectionUI", "masterAudioVolume");
     gameObj = addPick( gameObj, graphics, "fps");
 
     gameObj.players = [];
-    game.worms.forEach ( function (aworm) {
-      var wrm = pick(aworm, "typeName", "startingPos", "name", "score", "instrument", "musickeyName", "MusicScale");
+    game.worms.forEach ( function (aworm, i) {
+      var wrm = { index: i};
+     wrm = addPick(wrm, aworm, "typeName", "startingPos", "name", "score", "instrument", "musickeyName", "MusicScale");
       gameObj.players.push(wrm);
     });
-    now = new Date();
-    gameObj.createdAt = now.toString();
+
     gameTxt = JSON.stringify(gameObj);
     gameUrl = encodeURIComponent(gameTxt)
     let testOne = decodeURIComponent(gameUrl);

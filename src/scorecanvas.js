@@ -19,18 +19,18 @@ export function scoreCanvasInit(game) {
 }
 
 export function clearScore(segmentIndex, totalSegments) {
-  var segWidth = darworms.dwsettings.scoreCanvas.width / totalSegments;
+  var segWidth = scoreCanvas.width / totalSegments;
   scorectx.fillStyle = "rgba(222,222,222, 1.0)";
   scorectx.shadowOffsetX = 0;
   scorectx.shadowOffsetY = 0;
 
-  scorectx.fillRect(segWidth * segmentIndex, 0, segWidth, darworms.dwsettings.scoreCanvas.height);
+  scorectx.fillRect(segWidth * segmentIndex, 0, segWidth, scoreCanvas.height);
 }
 
 
 
 function scoreStartx(segmentIndex, totalSegments, text) {
-  var segWidth = darworms.dwsettings.scoreCanvas.width / totalSegments;
+  var segWidth = scoreCanvas.width / totalSegments;
   var twidth = scorectx.measureText(text).width;
   return ((segWidth * segmentIndex) + (segWidth / 2) - (twidth / 2));
 

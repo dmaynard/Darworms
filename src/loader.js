@@ -30,7 +30,6 @@ export var darworms = {
   buttonLSelectors: ['#p1Lbutton', '#p2Lbutton', '#p3Lbutton', '#p4Lbutton'],
   inDir: [3, 4, 5, 0, 1, 2],
   wCanvasPixelDim: [0, 0],
-  playPageIitialized: false,
   wCanvasRef: undefined,
   minTwoColumnWidth: 480,
   leftColumnWidth: 320,
@@ -46,7 +45,7 @@ export var darworms = {
     uiFrameCount: 0,
     xPts: [0.5, 0.25, -0.25, -0.5, -0.25, 0.25],
     yPts: [0.0, 0.5, 0.5, 0.0, -0.5, -0.5],
-    fps: 30,
+    fps: 4,
     frameInterval: 33.33333,
     uifps: 30,
     uiInterval: 33.33333,
@@ -88,7 +87,6 @@ export var darworms = {
   },
 
   dwsettings: {   //  User adjustable settings
-    vgridsize: 1.0,
     forceInitialGridSize: true,
     largeGridSize: 18, // The original Atari 800 Character mode
     smallGridSize: 10, // so cells can be selected with touch
@@ -98,10 +96,7 @@ export var darworms = {
     fixedInitPos: true,
     pickDirectionUI: 0,
     noWhere: undefined,
-
-    scoreCanvas: undefined,
     gridGeometry: "torus",
-
     codons: {
       "e": 0,
       "ne": 1,
@@ -126,20 +121,22 @@ export var darworms = {
     backGroundTheme: 0,
     doAnimations: true,
     gridBackground: ["#F5F5F5", "#404040"],
-    cellBackground: ["#F5F5F5", "#404040"]
-
+    cellBackground: ["#F5F5F5", "#404040"],
+    masterAudioVolume: 0.3,
+    gridSize: 18
   },
   images: {},
   audioContext: undefined,
   masterGainNode: undefined,
-  masterAudioVolume: 0.3,
+
   audioPanner: undefined,
   audioSamples: [],
   // an array of 12 playback rates ranging from 0.5 to 1.0
   // this gives 12 notes from an octave in an equal tempered scale.
   audioPlaybackRates: [],
-  audioFrequencies: []
+  audioFrequencies: [],
 
+  // gameTxt: '{"version":"0.9.1","createdAt":"Fri May 10 2019 21:33:43 GMT-0700 (Pacific Daylight Time)","numMoves":263,"numTurns":83,"width":10,"backGroundTheme":"1","doAnimations":true,"doAudio":"1","gridGeometry":"torus","fixedInitPos":"1","pickDirectionUI":"0","masterAudioVolume":0.3,"fps":"30","players":[{"index":0,"typeName":"Random","startingPos":{"x":5,"y":5},"name":"FBFEBEEDCBFFEFFFDDDCFDADBFFFABFFBBDCBBAECEAEAEAEDCADBDADACACBBAX","score":14,"instrument":0,"musickeyName":"CMajor","MusicScale":[0,2,4,5,7,9,11]},{"index":1,"typeName":"Random","startingPos":{"x":5,"y":5},"name":"DCEEADEEEBCFEFFEFBCDBFFFFBFFAFFFBDADAEADBEAEABAECDDDADDDBBACABAX","score":13,"instrument":0,"musickeyName":"CMajor","MusicScale":[0,2,4,5,7,9,11]},{"index":2,"typeName":"Random","startingPos":{"x":5,"y":5},"name":"BCFDEDEECBACFBAFCCDCDFADCCCFABAFDEDEEDADBECCEEEEABDDBBADCBCCABAX","score":22,"instrument":0,"musickeyName":"CMajor","MusicScale":[0,2,4,5,7,9,11]},{"index":3,"typeName":"Random","startingPos":{"x":5,"y":5},"name":"AEDCFDFDECAEEBEFCFFDFFDDFBFFBFAFDBEEAEADEEACAEAEADADBBADBCACABAX","score":17,"instrument":0,"musickeyName":"CMajor","MusicScale":[0,2,4,5,7,9,11]}]}'
 };
 
 window.addEventListener("load", function() {

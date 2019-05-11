@@ -361,7 +361,8 @@ function makeMoves() {
       updateScores();
       darworms.theGame.gameState = darworms.gameStates.over;
       var gameTxt = encodeGame( darworms.theGame, darworms.dwsettings, darworms.graphics, darworms.version);
-      decodeGame(gameTxt);
+      // decodeGame(gameTxt);
+      // darworms.main.injectSettings(gameTxt);
     }
   }
   if (darworms.dwsettings.doAnimations) {

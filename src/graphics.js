@@ -541,3 +541,48 @@ export function showTimes() {
 
 
   };
+
+  // this should be moved to graphics.js
+export function resizeCanvas() {
+    var xc = $('#wcanvas');
+    var canvasElement = document.getElementById('wcanvas');
+    var sc = $('#scorecanvas');
+    var nc = $('#navcontainer');
+    var fb = $('#footerbar');
+    var w = $(window).width();
+    var h = $(window).height();
+    if (h > 400) {
+      xc.css({
+        width: w - 20 + 'px',
+        height: h - 140 + 'px'
+      });
+      sc.css({
+        width: w - 20 + 'px',
+        height: 30 + 'px'
+
+      });
+    } else {
+      var nw = Math.floor(w * .70);
+      xc.css({
+        width: nw + 'px',
+        height: h - 110 + 'px'
+      });
+      sc.css({
+        width: nw + 'px'
+
+      });
+
+    }
+    canvasElement.height = h - 140;
+    canvasElement.width = w;
+    if ($('#debug').slider().val() === "1") {
+      alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val() + "arg " + nw);
+    }
+
+    if (darworms.theGame) {
+      setScale(this.grid.width, this.grid.height);
+      darworms.theGame.needsRedraw = true;
+      clearCanvas();
+      drawCells();
+    }
+  }

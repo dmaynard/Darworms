@@ -33,7 +33,7 @@ AudioSample.prototype.playSample = function (rate, pan) {
         // Do we have to create a new buffer every time we play a note ?
         source = darworms.audioContext.createBufferSource();
         source.buffer = this.savedBuffer;
-        darworms.masterGainNode.gain.value = darworms.masterAudioVolume;
+        darworms.masterGainNode.gain.value = darworms.dwsettings.masterAudioVolume;
         source.connect(darworms.masterGainNode);
         // console.log(" playSample " + this.name + " volume  " + darworms.masterGainNode.gain.value);
         if ( darworms.audioPanner !== undefined ) {

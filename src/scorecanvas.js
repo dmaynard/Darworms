@@ -19,32 +19,41 @@ export function scoreCanvasInit(game) {
 }
 
 export function clearScore(segmentIndex, totalSegments) {
-  var segWidth = darworms.dwsettings.scoreCanvas.width / totalSegments;
+  var segWidth = scoreCanvas.width / totalSegments;
   scorectx.fillStyle = "rgba(222,222,222, 1.0)";
   scorectx.shadowOffsetX = 0;
   scorectx.shadowOffsetY = 0;
 
-  scorectx.fillRect(segWidth * segmentIndex, 0, segWidth, darworms.dwsettings.scoreCanvas.height);
+  scorectx.fillRect(segWidth * segmentIndex, 0, segWidth, scoreCanvas.height);
 }
 
 
 
 function scoreStartx(segmentIndex, totalSegments, text) {
-  var segWidth = darworms.dwsettings.scoreCanvas.width / totalSegments;
+  var segWidth = scoreCanvas.width / totalSegments;
   var twidth = scorectx.measureText(text).width;
   return ((segWidth * segmentIndex) + (segWidth / 2) - (twidth / 2));
 
 }
 
-export function updateScores() {
+export function updateScores(wormArray) {
   var i;
-  for (i = 0; i < 4; i++) {
-    if (darworms.theGame.worms[i] !== undefined && darworms.theGame.worms[i].shouldDrawScore()) {
+
+  wormArray.forEach(function(aworm, i) {
+    if (aworm !== undefined && aworm.shouldDrawScore()) {
       clearScore(i, 4);
       scorectx.fillStyle = darworms.dwsettings.colorTable[i + 1];
       // scorectx.shadowOffsetX = 3;
       // scorectx.shadowOffsetY = 3;
-      scorectx.fillText(darworms.theGame.worms[i].score, scoreStartx(i, 4, darworms.theGame.worms[i].score.toString()), 15);
+      scorectx.fillText(aworm.score, scoreStartx(i, 4, aworm.score.toString()), 15);
     }
-  }
+  })
+  // for (i = 0; i < 4; i++) {
+  //   if (aworm !== undefined && shouldDrawScore.shouldDrawScore()) {
+  //      clearScore(i, 4);
+  //      scorectx.fillStyle = darworms.dwsettings.colorTable[i + 1];
+  // scorectx.shadowOffsetX = 3;
+  // scorectx.shadowOffsetY = 3;
+  //      scorectx.fillText(aworm.score, scoreStartx(i, 4, aworm.score.toString()), 15);
+  //    }
 };

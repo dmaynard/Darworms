@@ -47,6 +47,11 @@ import {
   updateScores
 } from "./scorecanvas.js";
 
+import {
+  encodeGame,
+  decodeGame,
+} from "./gameio.js"
+
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -103,7 +108,7 @@ export class Game {
     if ((scale.x) < 20 || (scale.y < 20)) {
       $('#pickDirectionUI').slider().val(1);
       $('#pickDirectionUI').slider("refresh");
-      darworms.dwsettings.pickDirectionUI = "1";
+      darworms.dwsettings.pickDirectionUI = 1;
     }
     console.log(" Scale: " + scale.format() + "darworms.dwsettings.pickDirectionUI" + 1);
     this.zoomFrame = 0;
@@ -353,9 +358,11 @@ function makeMoves() {
       // document.getElementById("startpause").innerHTML = "Start Game";
       $("#startpause").text("Start Game");
       showTimes();
-      updateScores();
+      updateScores(darworms.theGame.worms);
       darworms.theGame.gameState = darworms.gameStates.over;
-
+      darworms.gameTxt = encodeGame( darworms.theGame, darworms.dwsettings, darworms.graphics, darworms.version);
+      // decodeGame(gameTxt);
+      // darworms.main.injectSettings(gameTxt);
     }
   }
   if (darworms.dwsettings.doAnimations) {
@@ -363,7 +370,7 @@ function makeMoves() {
     animateDyingWorms();
     darworms.theGame.getAvePos();
   }
-  updateScores();
+  updateScores(darworms.theGame.worms);
   var elapsed = new Date().getTime() - startTime;
   frameTimes.push(elapsed);
 };

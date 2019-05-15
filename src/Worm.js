@@ -102,6 +102,7 @@ export class Worm {
     this.died = false;
     this.name = "";
     this.wType = 0; // None (asleep)
+    this.typeName = "";
     this.directionIndex = 0;
     this.diedAtFrame = 0;
     this.showTutorial = true;
@@ -113,6 +114,7 @@ export class Worm {
 
       this.audioSamplesPtrs = [];
     this.pos = new Point(-1, -1);
+    this.startingPos = new Point(-1, -1);
 
     for (var i = 0; i < 64; i = i + 1) {
       this.dna[i] = darworms.dwsettings.codons.unSet;
@@ -248,6 +250,7 @@ export class Worm {
   };
   place(aState, aGame, pos) {
     this.pos = pos;
+    this.startingPos = pos;
     this.nMoves = 0;
     this.score = 0;
     this.state = aState;
@@ -329,20 +332,20 @@ export class Worm {
     return gooddna;
   };
 
-  emailDarworm() {
-    console.log( "Emailing: " + this.toText());
-    var mailtourl = "mailto:?subject="
-         + encodeURIComponent("Check out this cool Darworm")
-         + "&body="
-         + encodeURIComponent("Darworms is a free web game available at \n")
-         + encodeURIComponent("https://dmaynard.github.io/Darworms/public\n")
-         + encodeURIComponent("You can copy the darworm string below and then go to the game and paste the text into one of the players\n")
-         + encodeURIComponent(this.toText());
-    console.log( "url: "  + mailtourl);
+  emailDarworm () {
+    console.log("Emailing: " + this.toText());
+    var mailtourl = "mailto:?subject=" +
+      encodeURIComponent("Check out this cool Darworm") +
+      "&body=" +
+      encodeURIComponent("Darworms is a free web game available at \n") +
+      encodeURIComponent("https://dmaynard.github.io/Darworms/public\n") +
+      // encodeURIComponent('<a href ="https://dmaynard.github.io/Darworms/public> Darworms" </a>') +
+      encodeURIComponent("You can copy the darworm string below and then go to the game and paste the text into one of the players\n") +
+      encodeURIComponent(this.toText());
+    console.log("url: " + mailtourl);
 
     // document.location.href = mailtourl;
     window.open(mailtourl);
-
 
   }
 

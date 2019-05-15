@@ -25,11 +25,21 @@ function addPick(a, o, ...fields) {
     return Object.assign(a,pick(o, ...fields))
 }
 
+export function emailGame( gameText) {
+  var mailtourl = "mailto:?subject=" +
+    encodeURIComponent("Darworms Game ") +
+    "&body=" +
+    encodeURIComponent("Darworms is a unique, free web strategy territoty capture game. Select everything below and paste it into browser address bar \n") +
+    // encodeURIComponent("Here is an example of a game I played: \n") +
 
-export function emailGame( game, settings) {
-  console.log (" emailGame ");
+    encodeURIComponent(darworms.host) +
+    encodeURIComponent("?darwormsgame=") +
+    encodeURIComponent(gameText);
+  console.log("url: " + mailtourl);
+  // document.location.href = mailtourl;
+  window.open(mailtourl);
+
 }
-
 export function encodeGame( game, settings, graphics, version) {
     console.log (" encodeGame 0 ");
     now = new Date();
@@ -44,7 +54,9 @@ export function encodeGame( game, settings, graphics, version) {
     gameObj.players = [];
     game.worms.forEach ( function (aworm, i) {
       var wrm = { index: i};
-     wrm = addPick(wrm, aworm, "typeName", "startingPos", "name", "score", "instrument", "musickeyName", "MusicScale");
+      // new dna may have been set in this game
+      aworm.toText();
+      wrm = addPick(wrm, aworm, "typeName", "startingPos", "name", "score", "instrument", "musickeyName", "MusicScale");
       gameObj.players.push(wrm);
     });
 

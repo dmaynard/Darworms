@@ -7,7 +7,7 @@ import {
 } from "./Point.js";
 import "./Grid.js";
 import {
-  Worm
+  Worm,
 } from "./Worm.js";
 import {
   Game,
@@ -28,6 +28,10 @@ import {
   setScale,
   resizeCanvas
 } from "./graphics.js";
+import {
+    scoreCanvasInit
+} from "./scorecanvas.js";
+import { emailGame } from "./gameio.js"
 /*
   <script src="scripts/loader.js"></script>
   <script src="scripts/AudioSample.js"></script>
@@ -251,8 +255,6 @@ darworms.main = (function() {
 
   }
 
-
-
   var applySettings = function() {
 
     darworms.dwsettings.gridGeometry = $('input[name=geometry-radio-choice]:checked').val();
@@ -265,15 +267,15 @@ darworms.main = (function() {
     }
     darworms.dwsettings.gridSize = parseInt($('#gridsize').val());
     darworms.dwsettings.doAnimations = $('#doanim').slider().val() == "true" ? true : false;
-    darworms.dwsettings.doAudio = $('#audioon').slider().val();
-    darworms.dwsettings.fixedInitPos = $('#fixedinitpos').slider().val();
+    darworms.dwsettings.doAudio = $('#audioon').slider().val()  == "1" ? 1 : 0;;
+    darworms.dwsettings.fixedInitPos = $('#fixedinitpos').slider().val()  == "1" ? 1 : 0;;
 
-    darworms.dwsettings.pickDirectionUI = $('#pickDirectionUI').slider().val();
+    darworms.dwsettings.pickDirectionUI = $('#pickDirectionUI').slider().val() == "1" ? 1 : 0;
 
     console.log(" darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
     console.log(" darworms.dwsettings.doAudio " + darworms.dwsettings.doAudio);
     darworms.dwsettings.masterAudioVolume = $("#audiovol").val() / 100;
-    darworms.graphics.fps = $("#fps").val();
+    darworms.graphics.fps = parseInt($("#fps").val());
     darworms.graphics.frameInterval = 1000 / darworms.graphics.fps;
 
     console.log(" darworms.dwsettings.masterAudioVolume " + darworms.dwsettings.masterAudioVolume);
@@ -452,6 +454,10 @@ darworms.main = (function() {
 
     }
   }
+  darworms.sendemail = function() {
+    console.log(" sendEMail " + darworms.gameTxt);
+    emailGame(darworms.gameTxt);
+  }
   darworms.startgame = function(startNow) {
     console.log(" Startgame start now = " + startNow);
     if (darworms.theGame) {
@@ -499,7 +505,8 @@ darworms.main = (function() {
         }
         // $(textFields[i]).val(worm.toText());
         var startingPoint = ((darworms.dwsettings.fixedInitPos == 1) ? darworms.theGame.origin :
-          new Point((Math.floor(Math.random() * darworms.theGame.grid.width)),
+           (playerTypes[i] == 2 ) ? worm.startingPos :  // Same
+            new Point((Math.floor(Math.random() * darworms.theGame.grid.width)),
             (Math.floor(Math.random() * darworms.theGame.grid.height))));
 
 
@@ -510,8 +517,8 @@ darworms.main = (function() {
         }
       })
     }
-    updateScores();
     if (startNow === false) return;
+    updateScores(gWorms);
     console.log(" NEW in startgame darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
     if (darworms.theGame.gameState === darworms.gameStates.running) {
       // This is now a pause game button
@@ -651,7 +658,7 @@ darworms.main = (function() {
         console.log("Compute time: " + (Date.now() - startTime));
 
         var startTime = Date.now();
-        updateScores();
+        updateScores(darworms.theGame.worms);
         drawDirtyCells();
         console.log("Draw time: " + (Date.now() - startTime));
 
@@ -681,12 +688,14 @@ darworms.main = (function() {
     // $("#lnkDialog").click();
 
   }
+  darworms.emailDarwormButton = function(index) {
+    console.log("emailDarwormButton called");
+    gWorms[darworms.selectedIdx].emailDarworm();
+  }
 
   darworms.playScale = function(index) {
     console.log("playScale called");
     gWorms[index].playScale();
-
-
   }
   darworms.yesabortgame = function() {
     console.log("Abort Game called");
@@ -942,16 +951,23 @@ darworms.main = (function() {
     // This may be needed when we actually build a phoneGap app
     // in this case delay initialization until we get the deviceready event
     document.addEventListener("deviceready", deviceInfo, true);
-    // window.onresize = doReSize;
-    // doReSize();
+
     $('#versionstring')[0].innerHTML = "Version " + darworms.version;
-    // wCanvas = document.getElementById("wcanvas");
-    // darworms.main.wGraphics = wCanvas.getContext("2d");
+    // See if the url constains an encoded game
+    const urlParams = new URLSearchParams(window.location.search);
     console.log(location.search);
-    if (darworms.gameTxt) {
-      injectSettings(darworms.gameTxt);
-      //  go to Playpage here ?
+    if (urlParams.has('darwormsgame')) {
+      darworms.gameTxt = decodeURIComponent(urlParams.get('darwormsgame'));
+      if (darworms.gameTxt) {
+        injectSettings(darworms.gameTxt);
+        //  go to Playpage here ?
+        scoreCanvasInit();
+        updateScores(gWorms);
+        $.mobile.changePage('#playpage');
+
+      }
     }
+
 
     graphicsInit();
     darworms.wCanvasPixelDim = new Point(wCanvas.clientWidth, wCanvas.clientHeight); // console.log ( " init wGraphics " + darworms.main.wGraphics);

@@ -332,7 +332,7 @@ export class Worm {
     return gooddna;
   };
 
-  emailDarworm() {
+  emailDarworm () {
     console.log("Emailing: " + this.toText());
     var mailtourl = "mailto:?subject=" +
       encodeURIComponent("Check out this cool Darworm") +

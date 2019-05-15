@@ -1,7 +1,9 @@
 import { Point } from "./Point.js";
 
 export var darworms = {
-  version: "0.9.1",
+  version: "0.9.2",
+  // host: "localhost:5000",
+  host: "https://dmaynard.github.io/Darworms/public",
   compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
   gameStates: {
     "over": 0,
@@ -45,7 +47,7 @@ export var darworms = {
     uiFrameCount: 0,
     xPts: [0.5, 0.25, -0.25, -0.5, -0.25, 0.25],
     yPts: [0.0, 0.5, 0.5, 0.0, -0.5, -0.5],
-    fps: 4,
+    fps: 4,  //  initial frame rate
     frameInterval: 33.33333,
     uifps: 30,
     uiInterval: 33.33333,
@@ -135,7 +137,7 @@ export var darworms = {
   // this gives 12 notes from an octave in an equal tempered scale.
   audioPlaybackRates: [],
   audioFrequencies: [],
-
+  gameTxt: null
   // gameTxt: '{"version":"0.9.1","createdAt":"Fri May 10 2019 21:33:43 GMT-0700 (Pacific Daylight Time)","numMoves":263,"numTurns":83,"width":10,"backGroundTheme":"1","doAnimations":true,"doAudio":"1","gridGeometry":"torus","fixedInitPos":"1","pickDirectionUI":"0","masterAudioVolume":0.3,"fps":"30","players":[{"index":0,"typeName":"Random","startingPos":{"x":5,"y":5},"name":"FBFEBEEDCBFFEFFFDDDCFDADBFFFABFFBBDCBBAECEAEAEAEDCADBDADACACBBAX","score":14,"instrument":0,"musickeyName":"CMajor","MusicScale":[0,2,4,5,7,9,11]},{"index":1,"typeName":"Random","startingPos":{"x":5,"y":5},"name":"DCEEADEEEBCFEFFEFBCDBFFFFBFFAFFFBDADAEADBEAEABAECDDDADDDBBACABAX","score":13,"instrument":0,"musickeyName":"CMajor","MusicScale":[0,2,4,5,7,9,11]},{"index":2,"typeName":"Random","startingPos":{"x":5,"y":5},"name":"BCFDEDEECBACFBAFCCDCDFADCCCFABAFDEDEEDADBECCEEEEABDDBBADCBCCABAX","score":22,"instrument":0,"musickeyName":"CMajor","MusicScale":[0,2,4,5,7,9,11]},{"index":3,"typeName":"Random","startingPos":{"x":5,"y":5},"name":"AEDCFDFDECAEEBEFCFFDFFDDFBFFBFAFDBEEAEADEEACAEAEADADBBADBCACABAX","score":17,"instrument":0,"musickeyName":"CMajor","MusicScale":[0,2,4,5,7,9,11]}]}'
 };
 

@@ -36,15 +36,24 @@ function scoreStartx(segmentIndex, totalSegments, text) {
 
 }
 
-export function updateScores() {
+export function updateScores(wormArray) {
   var i;
-  for (i = 0; i < 4; i++) {
-    if (darworms.theGame.worms[i] !== undefined && darworms.theGame.worms[i].shouldDrawScore()) {
+
+  wormArray.forEach(function(aworm, i) {
+    if (aworm !== undefined && aworm.shouldDrawScore()) {
       clearScore(i, 4);
       scorectx.fillStyle = darworms.dwsettings.colorTable[i + 1];
       // scorectx.shadowOffsetX = 3;
       // scorectx.shadowOffsetY = 3;
-      scorectx.fillText(darworms.theGame.worms[i].score, scoreStartx(i, 4, darworms.theGame.worms[i].score.toString()), 15);
+      scorectx.fillText(aworm.score, scoreStartx(i, 4, aworm.score.toString()), 15);
     }
-  }
+  })
+  // for (i = 0; i < 4; i++) {
+  //   if (aworm !== undefined && shouldDrawScore.shouldDrawScore()) {
+  //      clearScore(i, 4);
+  //      scorectx.fillStyle = darworms.dwsettings.colorTable[i + 1];
+  // scorectx.shadowOffsetX = 3;
+  // scorectx.shadowOffsetY = 3;
+  //      scorectx.fillText(aworm.score, scoreStartx(i, 4, aworm.score.toString()), 15);
+  //    }
 };

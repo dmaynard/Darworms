@@ -23,7 +23,7 @@
   <!-- script src="scripts/modernizr.js"></script -->
   <script src="./bundle.js"></script>
 
-  <style type=text/css> .ui-page .ui-content { padding-top: 4px; padding-bottom: 4px; padding-left: 0px; padding-right: 0px; } .ui-page .ui-content .ui-block-a.playerbutton1 .ui-block-a { color: red; background: #8c8c8c; font-size: 0.8em;
+  <style type=text/css> .ui-page .ui-content { padding-top: 4px; padding-bottom: 4px; padding-left: 4px; padding-right: 4px; } .ui-page .ui-content .ui-block-a.playerbutton1 .ui-block-a { color: red; background: #8c8c8c; font-size: 0.8em;
     padding-bottom: 4px; padding-top: 4px; } .ui-page .ui-content .ui-btn.playerbutton2 .ui-btn-inner { color: green; background: #8c8c8c; font-size: 0.8em; padding-bottom: 4px; padding-top: 4px; } .ui-page .ui-content .ui-btn.playerbutton3
     .ui-btn-inner { color: blue; background: #8c8c8c; font-size: 0.8em; padding-bottom: 4px; padding-top: 4px; } .ui-page .ui-content .ui-btn.playerbutton4 .ui-btn-inner { color: yellow; background: #8c8c8c; font-size: 0.8em; padding-bottom: 4px;
     padding-top: 12px; } .ui-navbar { padding-bottom: 8px; } .right { float: right; width: 100px; } .ui-grayed-out { opacity: 0.4; } .ui-opaque { opacity: 1.0; } .ui-dialog-contain { max-width: 1200px; } p.about { padding-left: 20px; padding-right:
@@ -40,6 +40,7 @@
       <a href=#settingspage data-role=button data-transition="fade"> Settings </a>
       <a href=#debugpage data-role=button data-transition="fade"> Peformance </a>
       <a href=#aboutpage data-role=button data-transition="flip"> About </a>
+      <a href=#loadsavepage data-role=button data-transition="flip"> Load/Save Game </a>
       <a href=#emailpage data-role=button data-transition="flip"> EMail Game </a>
     </div>
   </div>
@@ -364,13 +365,30 @@
         </div>
     </div>
   </div>
+  <div data-role="page" data-theme="a" id=loadsavepage>
+    <div data-role="header">
+      <a href="#menupage">Back</a>
+      <h1>Load/Save Game</h1>
+    </div>
+    <div data-role="ui-content">
+          <div class="ui-grid-a ui-responsive">
+            <div class="ui-block-a"><a href=#menupage class="ui-btn ui-shadow ui-corner-all">Cancel</a></div>
+            <a id="loadsavegame" data-role=button data-inline="true"  class="ui-btn ui-shadow ui-corner-all" onclick=darworms.saveGame()>Save Game</a>
+        </div>
+       <h3>Saved Games</h3>
+        <ul data-role="listview" id="savedgames" data-split-icon="delete" data-split-theme="a" style="margin: 20px;" >
+           <li id="l1"><a>5.00</a><a id="1" class="deleteMe"></a></li>
+
+        </ul>
+        </div>
+  </div>
   <div data-role="page" data-theme="a" id=emailpage>
     <div data-role="header">
       <a href="#menupage">Back</a>
       <h1>Email Game</h1>
     </div>
     <div data-role="content">
-      <p class="about"> You can email a link to the game to a friend.  You friend will be able to get a replay of the last game you played by simply clicking on the link.  This will your own client email program.  You will be able to review the email before you send it.  This program does not and will not ever have any access to your email or to your contacts.</p>
+      <p class="about"> You can email a link to the game to a friend.  You friend will be able to get a replay of the last game you played by simply clicking on the link.  This will use your own local email  client program.  You will be able to review the email before you send it.  This program does not and will not ever have any access to your email or to your contacts.</p>
 
 
 

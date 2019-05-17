@@ -31,13 +31,18 @@ import {
 import {
     scoreCanvasInit
 } from "./scorecanvas.js";
-import { emailGame } from "./gameio.js"
+import {
+  emailGame,
+  saveGame,
+  loadGames,
+  freeGames
+} from "./gameio.js"
 /*
   <script src="scripts/loader.js"></script>
   <script src="scripts/AudioSample.js"></script>
   <script src="scripts/Point.js"></script>
   <script src="scripts/Grid.js"></script>
-  <script src="scripts/Worm.js"></script>
+  <script src="scripts/Worm.js"Games></script>
   <script src="scripts/WPane.js"></script>
   <script src="scripts/Game.js"></script>
   <script src="scripts/main.js"></script>
@@ -458,6 +463,12 @@ darworms.main = (function() {
     console.log(" sendEMail " + darworms.gameTxt);
     emailGame(darworms.gameTxt);
   }
+
+  darworms.saveGame = function() {
+    console.log(" saveGame ");
+    saveGame(darworms.gameTxt);
+  }
+
   darworms.startgame = function(startNow) {
     console.log(" Startgame start now = " + startNow);
     if (darworms.theGame) {
@@ -796,6 +807,16 @@ darworms.main = (function() {
     console.log(" leaveEditPage " + foo)
   }
 
+  var loadSavedGames = function() {
+    console.log(" loadSavedGames ");
+    loadGames();
+  }
+
+  var freeSavedGames = function() {
+    console.log(" freeSavedGames ");
+    freeGames();
+  }
+
   function unlockAudioContext(audioCtx) {
     if (audioCtx.state !== 'suspended') return;
     const b = document.body;
@@ -1101,7 +1122,10 @@ darworms.main = (function() {
     leavePlayPage: leavePlayPage,
     wormEventHandler: wormEventHandler,
     initEditPage: initEditPage,
-    leaveEditPage: leaveEditPage
+    leaveEditPage: leaveEditPage,
+    loadSavedGames: loadSavedGames,
+    freeSavedGames: freeSavedGames
+
 
   };
 

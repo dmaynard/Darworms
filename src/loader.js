@@ -155,6 +155,8 @@ window.addEventListener("load", function() {
     $("#playpage").on('pagehide', darworms.main.leavePlayPage);
     $("#edit-darworm-page").on('pageshow', darworms.main.initEditPage);
     $("#edit-darworm-page").on('pagehide', darworms.main.leaveditPage);
+    $("#loadsavepage").on('pageshow', darworms.main.loadSavedGames);
+    $("#loadsavepage").on('pagehide', darworms.main.freeSavedGames);
 
     $( "#tutorialpopup" ).popup({
         afterclose: function( event, ui ) {

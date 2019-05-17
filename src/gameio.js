@@ -25,6 +25,18 @@ function addPick(a, o, ...fields) {
     return Object.assign(a,pick(o, ...fields))
 }
 
+function gameName( game ) {
+  const then = new Date(game.createdAt);
+  var name = then.toString();
+  let nplayers = 0;
+  game.players.forEach ( function (aworm, i) {
+    if (aworm.typeName !== " None ") nplayers++;
+  });
+  name = name.substr(0, name.indexOf('GMT'));
+  name += '[' + game.width + 'x' +  game.width + ': ' + nplayers ;
+  name += (nplayers == 1) ? ' player]' : ' players]';
+  return name;
+}
 export function emailGame( gameText) {
   var mailtourl = "mailto:?subject=" +
     encodeURIComponent("Darworms Game ") +
@@ -44,7 +56,7 @@ export function encodeGame( game, settings, graphics, version) {
     console.log (" encodeGame 0 ");
     now = new Date();
     gameObj = { version: version};
-    gameObj.createdAt = now.toString();
+    gameObj.createdAt = now.valueOf();
     gameObj = addPick( gameObj, game,"numMoves", "numTurns");
     gameObj = addPick( gameObj, game.grid, "width");
     gameObj = addPick( gameObj, settings, "backGroundTheme", "doAnimations",
@@ -76,4 +88,48 @@ export function decodeGame( gameTxt ) {
   let gameObj = JSON.parse(gameTxt);
   darworms.dwsettings.gridGeometry = gameObj.gridGeometry;
   darworms.main.setupGridGeometry();
+}
+
+export function loadGames () {
+  const data = JSON.parse(localStorage.getItem('darwormgames'))
+  darworms.savedgames = data || [];
+  darworms.savedgames.forEach ( function (gameTxt, i) {
+    const gameObj = JSON.parse(gameTxt);
+    const then = new Date(gameObj.createdAt);
+    /* const elementStr = '<li> <button data-role="button" data-inline="false"  data-theme="a" lass="ui-btn ui-shadow ui-corner-all"> ' +
+    then.toTimeString() +
+     '</button></li>';
+    $('#savedgames')[0].appendChild(elementStr).trigger('create');
+*/
+    $('#savedgames').append('<li><a>' + gameName(gameObj) + '</a><a class="deleteMe"></a></li>').listview('refresh');
+    const liStr = '<li><a class="ui-btn>"' + then.toTimeString() + '</a><a class="deleteMe"></a></li>';
+    //    $('#savedgames').append(liStr).trigger('create');
+    //    $('#savedgames').append('<li id="l1"><a>5.00</a><a id="1" class="deleteMe"></a></li>').trigger('create');
+     console.log(" liStr: " + liStr);
+
+
+  })
+
+}
+
+export function freeGames () {
+  const svgamelist = $('#savedgames')[0];
+  while (svgamelist.firstChild) {
+    svgamelist.removeChild(svgamelist.firstChild)
+  }
+
+}
+
+export function saveGame (gameTxt) {
+   console.log (" saveGame ");
+   darworms.savedgames.push(gameTxt);
+   localStorage.setItem('darwormgames', JSON.stringify(darworms.savedgames));
+
+
+}
+
+export function loadGame () {
+ console.log (" loadGame ");
+  const data = JSON.parse(localStorage.getItem('darwormgames'));
+
 }

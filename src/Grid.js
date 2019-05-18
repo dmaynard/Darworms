@@ -1,5 +1,8 @@
 import { Point } from "./Point.js";
 import { darworms } from "./loader.js";
+import {
+  log
+} from "./utils.js"
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -142,8 +145,8 @@ import { darworms } from "./loader.js";
   move (from, to, dir, colorIndex) {
     if ((this.inVectorsAt(to) & darworms.inMask[dir]) !== 0) {
       alert(" Attempted to eat eaten spoke at " + to.format());
-      console.log("  (" + to.x + "," + to.y + ") dir: " + dir + " value: ");
-      console.log("Attempted to eat eaten spoke at " + to.format() + " dir " + dir + " value: 0x" + this.valueAt(to).toString(16));
+      log("  (" + to.x + "," + to.y + ") dir: " + dir + " value: ");
+      log("Attempted to eat eaten spoke at " + to.format() + " dir " + dir + " value: 0x" + this.valueAt(to).toString(16));
     }
     this.setValueAt(to, this.valueAt(to) | darworms.inMask[dir] | (darworms.inMask[dir] << 16));
     this.setValueAt(from, this.valueAt(from) | darworms.outMask[dir] | (darworms.outMask[dir] << 8));
@@ -169,14 +172,14 @@ import { darworms } from "./loader.js";
   // Returns next x,y position
   next (point, dir) {
     var nP = new Point(point.x, point.y);
-    // console.log ("  (" + point.x  + "," + point.y + ") dir: " + dir);
+    // log ("  (" + point.x  + "," + point.y + ") dir: " + dir);
     if ((point.y & 1) === 0) {
       nP.add(evenRowVec[dir]);
     } else {
       nP.add(oddRowVec[dir]);
     }
     if ((darworms.dwsettings.gridGeometry == 'falloff' && ((nP.x < 0) || (nP.x > this.width - 1) || (nP.y < 0) || (nP.y > this.height - 1)))) {
-      // console.log ("  (" + nP.x  + "," + nP.y + ") returning noWhere");
+      // log ("  (" + nP.x  + "," + nP.y + ") returning noWhere");
       return darworms.dwsettings.noWhere;
     }
     if (nP.x < 0) {
@@ -191,7 +194,7 @@ import { darworms } from "./loader.js";
     if (nP.y > this.height - 1) {
       nP.y = 0;
     }
-    // console.log ("    next from: (" + point.format()  + " dir " + dir + " next:  " + nP.format());
+    // log ("    next from: (" + point.format()  + " dir " + dir + " next:  " + nP.format());
     return nP;
   };
   each (action) {
@@ -203,14 +206,14 @@ import { darworms } from "./loader.js";
     }
   };
   logSpokesAt (point) {
-    console.log("[ " + point.x + "," + point.y + "] val = " + this.colorsAt(point).toString(16));
+    log("[ " + point.x + "," + point.y + "] val = " + this.colorsAt(point).toString(16));
     for (var dir = 0; dir < 8; dir = dir + 1) {
-      console.log("   spoke: " + dir + " colorindex" + this.spokeAt(point, dir));
+      log("   spoke: " + dir + " colorindex" + this.spokeAt(point, dir));
 
     }
   };
   logValueAt (point) {
-    console.log("[ " + point.x + "," + point.y + "] val = 0x" + this.hexValueAt(point) +
+    log("[ " + point.x + "," + point.y + "] val = 0x" + this.hexValueAt(point) +
       this.dirList(this.hexValueAt(point)) + " outVectors = 0x" +
       this.outVectorsAt(point).toString(16) + this.dirList(this.outVectorsAt(point)) +
       " inVectors = 0x" + this.inVectorsAt(point).toString(16));

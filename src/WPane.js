@@ -39,7 +39,7 @@ export class WPane {
     //    (this.pHeight- (2*this.pMargin))/(this.cHeight === 1 ? this.cHeight :this.cHeight+0.5));
     this.scale = new Point((this.pWidth / this.cWidth),
       (this.pHeight / this.cHeight));
-    console.log("wpane scale " + this.scale.format());
+    log("wpane scale " + this.scale.format());
     this.offset = new Point(center.x - (this.cWidth >> 1), center.y - (this.cHeight >> 1));
     this.offset.wrap(this.grid.width, this.grid.height);
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -49,7 +49,7 @@ export class WPane {
     this.savedCanvas.width = this.canvas.width;
     this.savedCanvas.height = this.canvas.height;
   }
-  
+
   clear() {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     // background for user selct direction screen
@@ -66,40 +66,40 @@ export class WPane {
     // centers the focused point on the canvas
     // should be called whenever the focus point changes
     // or the user zooms in or out.
-    // console.log( " WPane.prototype.setCenter  center: "   + center.format() + " zoomSize: "  + size.format() );
+    // log( " WPane.prototype.setCenter  center: "   + center.format() + " zoomSize: "  + size.format() );
     // If we are changing scale we have to invalidate the cached background image
     if (size.x != this.cWidth || size.y != this.cHeight) {
       this.savedCtx = null;
     };
-    // console.log( "     WPane.prototype.setCenter  offset: "   + this.offset.format()  );
+    // log( "     WPane.prototype.setCenter  offset: "   + this.offset.format()  );
     this.cWidth = size.x;
     this.cHeight = size.y;
 
     this.scale = new Point((this.pWidth - (2 * this.pMargin)) / (this.cWidth === 1 ? this.cWidth : this.cWidth + 0.5),
       (this.pHeight - (2 * this.pMargin)) / (this.cHeight === 1 ? this.cHeight : this.cHeight + 0.5));
-    console.log("setCenter scale " + this.scale.format());
+    log("setCenter scale " + this.scale.format());
     this.offset = new Point(center.x - Math.floor(this.cWidth / 2), center.y - Math.floor(this.cHeight / 2));
     this.offset.wrap(this.grid.width, this.grid.height);
-    // console.log( "         WPane.prototype.setCenter  offset after wrap : "   + this.offset.format()  );
+    // log( "         WPane.prototype.setCenter  offset after wrap : "   + this.offset.format()  );
 
   };
 
   setSize(size) {
     // sets the scale, screen offset, and
 
-    // console.log( " WPane.prototype.setCenter  center: "   + center.format() + " zoomSize: "  + size.format() );
+    // log( " WPane.prototype.setCenter  center: "   + center.format() + " zoomSize: "  + size.format() );
     // If we are changing scale we have to invalidate the cached background image
     //if ( size.x != this.cWidth || size.y != this.cHeight) {
     //    this.savedCtx = null;
     //};
-    console.log("     WPane.prototype.setSize  size: " + size.format());
+    log("     WPane.prototype.setSize  size: " + size.format());
     this.cWidth = size.x;
     this.cHeight = size.y;
 
     this.scale = new Point((this.pWidth - (2 * this.pMargin)) / (this.cWidth === 1 ? this.cWidth : this.cWidth + 0.5),
       (this.pHeight - (2 * this.pMargin)) / (this.cHeight === 1 ? this.cHeight : this.cHeight + 0.5));
-    // console.log( "     WPane.prototype.setSize  scale.x: "   + this.scale.x  + " yscale " + this.scale.x);
-    // console.log(this.scale.format() );
+    // log( "     WPane.prototype.setSize  scale.x: "   + this.scale.x  + " yscale " + this.scale.x);
+    // log(this.scale.format() );
   };
   drawCells() {
     this.clear();
@@ -155,7 +155,7 @@ export class WPane {
     this.ctx.setTransform(this.scale.x, 0, 0, this.scale.y, xoff, yoff);
   };
   drawCell(wPoint, gPoint) {
-    // console.log( " WPane.prototype.drawCell wPoint "   + wPoint.format() + "  gPoint "  + gPoint.format() );
+    // log( " WPane.prototype.drawCell wPoint "   + wPoint.format() + "  gPoint "  + gPoint.format() );
 
     this.pSetTransform(wPoint);
     /*
@@ -203,12 +203,12 @@ export class WPane {
 
     var outvec = this.grid.outVectorsAt(gPoint);
     var invec = this.grid.inVectorsAt(gPoint);
-    // console.log (" drawCell at" +  gPoint.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
+    // log (" drawCell at" +  gPoint.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
 
     for (var i = 0; i < 6; i = i + 1) {
       if ((outvec & darworms.outMask[i]) !== 0) {
         var outSpokeColor = darworms.dwsettings.colorTable[this.grid.spokeAt(gPoint, i)];
-        // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + gPoint.format());
+        // log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + gPoint.format());
         this.ctx.strokeStyle = outSpokeColor;
         this.ctx.lineWidth = 3.0 / this.scale.x;
         this.ctx.lineCap = 'round';
@@ -220,7 +220,7 @@ export class WPane {
       }
       if ((invec & darworms.outMask[i]) !== 0) {
         var inSpokeColor = darworms.dwsettings.colorTable[this.grid.spokeAt(gPoint, i)];
-        // console.log (" inSpokeColor " + i + " :  " + inSpokeColor + " at "  + gPoint.format());
+        // log (" inSpokeColor " + i + " :  " + inSpokeColor + " at "  + gPoint.format());
         this.ctx.strokeStyle = inSpokeColor;
         this.ctx.lineWidth = 3.0 / this.scale.x;
         this.ctx.lineCap = 'round';

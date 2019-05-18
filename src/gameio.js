@@ -2,6 +2,9 @@
 import {
   updateScores
 } from "./scorecanvas.js";
+import {
+  log
+} from "./utils.js"
 
 
 
@@ -52,13 +55,13 @@ export function emailGame(gameText) {
     encodeURIComponent(darworms.host) +
     encodeURIComponent("?darwormsgame=") +
     encodeURIComponent(gameText);
-  console.log("url: " + mailtourl);
+  log("url: " + mailtourl);
   // document.location.href = mailtourl;
   window.open(mailtourl);
 
 }
 export function encodeGame(game, settings, graphics, version) {
-  console.log(" encodeGame 0 ");
+  log(" encodeGame 0 ");
   now = new Date();
   gameObj = {
     version: version
@@ -86,14 +89,14 @@ export function encodeGame(game, settings, graphics, version) {
   let testOne = decodeURIComponent(gameUrl);
   let testTwo = JSON.parse(testOne);
   let testThree = JSON.stringify(testTwo);
-  console.log("before: " + gameTxt);
-  console.log("after:  " + testThree);
+  log("before: " + gameTxt);
+  log("after:  " + testThree);
   return (gameTxt)
 
 }
 
 export function decodeGame(gameTxt) {
-  console.log(" decodeGame ");
+  log(" decodeGame ");
   let gameObj = JSON.parse(gameTxt);
   darworms.dwsettings.gridGeometry = gameObj.gridGeometry;
   darworms.main.setupGridGeometry();
@@ -104,7 +107,7 @@ export function loadGames() {
   const data = JSON.parse(localStorage.getItem('darwormgames'))
   darworms.savedgames = data || [];
   let gameindex = 0;
-  $('#savedgames').listview( "option", "icon", "star" );
+
   darworms.savedgames.forEach(function(gameTxt, i) {
     const gameObj = JSON.parse(gameTxt);
     const then = new Date(gameObj.createdAt);
@@ -119,13 +122,13 @@ export function loadGames() {
 
     //    $('#savedgames').append(liStr).trigger('create');
     //    $('#savedgames').append('<li id="l1"><a>5.00</a><a id="1" class="deleteMe"></a></li>').trigger('create');
-    console.log(" liStr: " + liStr);
+    log(" liStr: " + liStr);
 
 
   })
   $('.deleteMe').on('click', function(event) {
-    console.log(" deleteMe clicked");
-    console.log($(this).attr("value"));
+    log(" deleteMe clicked");
+    log($(this).attr("value"));
     let index = parseInt($(this).attr("value"))
     if ((index >= 0) && (index < darworms.savedgames.length)) {
       darworms.savedgames.splice(index, 1);
@@ -134,8 +137,8 @@ export function loadGames() {
     refreshSavedGames();
   });
   $('.loadMe').on('click', function(event) {
-    console.log(" loadMe clicked");
-    console.log($(this).attr("value"));
+    log(" loadMe clicked");
+    log($(this).attr("value"));
     let index = parseInt($(this).attr("value"))
     if ((index >= 0) && (index < darworms.savedgames.length)) {
       let gameObj = darworms.main.injectSettings(darworms.savedgames[$(this).attr("value")]);
@@ -154,7 +157,7 @@ export function freeGames() {
 }
 
 export function saveGame(gameTxt) {
-  console.log(" saveGame ");
+  log(" saveGame ");
   darworms.savedgames.push(gameTxt);
   localStorage.setItem('darwormgames', JSON.stringify(darworms.savedgames));
   refreshSavedGames();
@@ -162,7 +165,7 @@ export function saveGame(gameTxt) {
 }
 
 export function loadGame() {
-  console.log(" loadGame ");
+  log(" loadGame ");
   const data = JSON.parse(localStorage.getItem('darwormgames'));
 }
 

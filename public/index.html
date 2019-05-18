@@ -47,8 +47,8 @@
   <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true scroll="no" style="overflow: hidden">
     <div data-role="content" >
       <!-- div id="canvascontainer" class="canvas-container" -->
-      <div id="canvascontainer">
-        <canvas id="wcanvas" class="wcanvasclass"></canvas>
+      <div id="canvascontainer" width="100%">
+        <canvas id="wcanvas" class="wcanvasclass" width="100%"></canvas>
         <canvas id="scorecanvas" class="scorecanvasclass" height="20"></canvas>
       </div>
 
@@ -230,7 +230,7 @@
       </div>
       <div>
         <form id="newevent1info" name="newevent1info">
-          <label for="debug">Debug:</label>
+          <label for="debug">Alerts:</label>
           <select name="debug" id="debug" data-role="slider" data-mini='true'>
                     <option value="0">Off</option>
                     <option value=1>On</option>
@@ -238,9 +238,9 @@
 
         </form>
 
-        <form id="animateui" name="animateui" align="left">
-          <label for="doanimui">UI Animation:</label>
-          <select name="doanimui" id="doanimui" data-role="slider" data-mini='true'>
+        <form id="loggingform" name="loggingform" align="left">
+          <label for="logging">Logging to Console:</label>
+          <select name="logging" id="logging" data-role="slider" data-mini='true'>
                     <option value=true>Yes</option>
                     <option value=false>No</option>
                 </select>

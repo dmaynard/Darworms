@@ -1,7 +1,10 @@
 import { Point } from "./Point.js";
+import {
+  log
+} from "./utils.js"
 
 export var darworms = {
-  version: "0.9.2",
+  version: "0.9.3",
   // host: "localhost:5000",
   host: "https://dmaynard.github.io/Darworms/public",
   compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
@@ -92,7 +95,7 @@ export var darworms = {
     forceInitialGridSize: true,
     largeGridSize: 18, // The original Atari 800 Character mode
     smallGridSize: 10, // so cells can be selected with touch
-    minLargeWidth: 400, //
+    minLargeWidth: 800, //
     isLargeScreen: true,
     doAudio: 1,
     fixedInitPos: true,
@@ -125,6 +128,7 @@ export var darworms = {
     gridBackground: ["#F5F5F5", "#404040"],
     cellBackground: ["#F5F5F5", "#404040"],
     masterAudioVolume: 0.3,
+    dologging: false,
     gridSize: 18
   },
   images: {},
@@ -142,7 +146,7 @@ export var darworms = {
 };
 
 window.addEventListener("load", function() {
-    // console.log(" stage 1 loading finished");
+    // log(" stage 1 loading finished");
     window.onerror = function(msg, url, line) {
       alert(msg + " " + url + " " + line);
     }
@@ -160,13 +164,13 @@ window.addEventListener("load", function() {
 
     $( "#tutorialpopup" ).popup({
         afterclose: function( event, ui ) {
-          console.log(" afterclose even fired" + $('#tutorialpopup input[type=checkbox]').prop("checked"));
+          log(" afterclose even fired" + $('#tutorialpopup input[type=checkbox]').prop("checked"));
           if ( $('#tutorialpopup input[type=checkbox]').prop("checked") ) {
             darworms.theGame.focusWorm.showTutorial = false;
           }
         }
     });
-    console.log("About to call darworms.main.init()");
+    log("About to call darworms.main.init()");
     window.darworms = darworms;  // So index.html onclick can find handlers
     darworms.main.init();
 

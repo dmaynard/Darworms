@@ -310,6 +310,7 @@ darworms.main = (function() {
     gameObj.players.forEach(function(aworm) {
       var i = aworm.index;
       gWorms[i].name = aworm.name;
+
       //  decode  tyename therefore
 
       if (regx.test(gWorms[i].name)) {
@@ -328,6 +329,7 @@ darworms.main = (function() {
       gWorms[i].MusicScale = aworm.MusicScale;
 
     });
+    return gameObj;
   }
 
   var setupGridGeometry = function() {
@@ -706,7 +708,7 @@ darworms.main = (function() {
 
   darworms.playScale = function(index) {
     console.log("playScale called");
-    gWorms[index].playScale();
+    gWorms[darworms.selectedIdx].playScale();
   }
   darworms.yesabortgame = function() {
     console.log("Abort Game called");
@@ -1111,7 +1113,7 @@ darworms.main = (function() {
 
   return {
     init: init,
-
+    gWorms: gWorms,
     setSelectedDarwormType: setSelectedDarwormType,
     setupEditPage: setupEditPage,
     applySettings: applySettings,

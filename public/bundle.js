@@ -1596,6 +1596,7 @@ function loadGames() {
 
   const data = JSON.parse(localStorage.getItem('darwormgames'));
   darworms.savedgames = data || [];
+  $('#savedgames').listview( "option", "icon", "star" );
   darworms.savedgames.forEach(function(gameTxt, i) {
     const gameObj = JSON.parse(gameTxt);
     const then = new Date(gameObj.createdAt);
@@ -1604,8 +1605,8 @@ function loadGames() {
      '</button></li>';
     $('#savedgames')[0].appendChild(elementStr).trigger('create');
 */
-    const liStr = '<li><a class="loadMe" value=' + i + '>' + gameName(gameObj) + '</a><a value=' +
-      i + ' class="deleteMe"></a></li>';
+    const liStr = '<li data-icon="delete" data-split-icon="delete-black"><a class="loadMe" value=' + i + '>' + gameName(gameObj) + '</a><a value=' +
+      i + ' data-icon="star" data-split-icon="delete-black" class="deleteMe" ></a></li>';
     $('#savedgames').append(liStr).listview('refresh');
 
     //    $('#savedgames').append(liStr).trigger('create');

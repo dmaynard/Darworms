@@ -199,6 +199,8 @@ window.addEventListener("load", function() {
     $("#playpage").on('pagehide', darworms$1.main.leavePlayPage);
     $("#edit-darworm-page").on('pageshow', darworms$1.main.initEditPage);
     $("#edit-darworm-page").on('pagehide', darworms$1.main.leaveditPage);
+    $("#loadsavepage").on('pageshow', darworms$1.main.loadSavedGames);
+    $("#loadsavepage").on('pagehide', darworms$1.main.freeSavedGames);
 
     $( "#tutorialpopup" ).popup({
         afterclose: function( event, ui ) {
@@ -1512,23 +1514,35 @@ function updateScores(wormArray) {
 
 // gameio.js
 
-let gameObj =  {};
+let gameObj = {};
 let gameTxt = "";
 let gameUrl = "";
 
 
 function pick(o, ...fields) {
-    return fields.reduce((a, x) => {
-        if(o.hasOwnProperty(x)) a[x] = o[x];
-        return a;
-    }, {});
+  return fields.reduce((a, x) => {
+    if (o.hasOwnProperty(x)) a[x] = o[x];
+    return a;
+  }, {});
 }
 
 function addPick(a, o, ...fields) {
-    return Object.assign(a,pick(o, ...fields))
+  return Object.assign(a, pick(o, ...fields))
 }
 
-function emailGame( gameText) {
+function gameName(game) {
+  const then = new Date(game.createdAt);
+  var name = then.toString();
+  let nplayers = 0;
+  game.players.forEach(function(aworm, i) {
+    if (aworm.typeName !== " None ") nplayers++;
+  });
+  name = name.substr(0, name.indexOf('GMT'));
+  name += '[' + game.width + 'x' + game.width + ': ' + nplayers;
+  name += (nplayers == 1) ? ' player]' : ' players]';
+  return name;
+}
+function emailGame(gameText) {
   var mailtourl = "mailto:?subject=" +
     encodeURIComponent("Darworms Game ") +
     "&body=" +
@@ -1543,35 +1557,108 @@ function emailGame( gameText) {
   window.open(mailtourl);
 
 }
-function encodeGame( game, settings, graphics, version) {
-    console.log (" encodeGame 0 ");
-    now = new Date();
-    gameObj = { version: version};
-    gameObj.createdAt = now.toString();
-    gameObj = addPick( gameObj, game,"numMoves", "numTurns");
-    gameObj = addPick( gameObj, game.grid, "width");
-    gameObj = addPick( gameObj, settings, "backGroundTheme", "doAnimations",
-     "doAudio", "gridGeometry", "fixedInitPos", "pickDirectionUI", "masterAudioVolume");
-    gameObj = addPick( gameObj, graphics, "fps");
+function encodeGame(game, settings, graphics, version) {
+  console.log(" encodeGame 0 ");
+  now = new Date();
+  gameObj = {
+    version: version
+  };
+  gameObj.createdAt = now.valueOf();
+  gameObj = addPick(gameObj, game, "numMoves", "numTurns");
+  gameObj = addPick(gameObj, game.grid, "width");
+  gameObj = addPick(gameObj, settings, "backGroundTheme", "doAnimations",
+    "doAudio", "gridGeometry", "fixedInitPos", "pickDirectionUI", "masterAudioVolume");
+  gameObj = addPick(gameObj, graphics, "fps");
 
-    gameObj.players = [];
-    game.worms.forEach ( function (aworm, i) {
-      var wrm = { index: i};
-      // new dna may have been set in this game
-      aworm.toText();
-      wrm = addPick(wrm, aworm, "typeName", "startingPos", "name", "score", "instrument", "musickeyName", "MusicScale");
-      gameObj.players.push(wrm);
-    });
+  gameObj.players = [];
+  game.worms.forEach(function(aworm, i) {
+    var wrm = {
+      index: i
+    };
+    // new dna may have been set in this game
+    aworm.toText();
+    wrm = addPick(wrm, aworm, "typeName", "startingPos", "name", "score", "instrument", "musickeyName", "MusicScale");
+    gameObj.players.push(wrm);
+  });
 
-    gameTxt = JSON.stringify(gameObj);
-    gameUrl = encodeURIComponent(gameTxt);
-    let testOne = decodeURIComponent(gameUrl);
-    let testTwo = JSON.parse(testOne);
-    let testThree = JSON.stringify(testTwo);
-    console.log("before: " + gameTxt);
-    console.log("after:  " + testThree);
-    return (gameTxt)
+  gameTxt = JSON.stringify(gameObj);
+  gameUrl = encodeURIComponent(gameTxt);
+  let testOne = decodeURIComponent(gameUrl);
+  let testTwo = JSON.parse(testOne);
+  let testThree = JSON.stringify(testTwo);
+  console.log("before: " + gameTxt);
+  console.log("after:  " + testThree);
+  return (gameTxt)
 
+}
+
+function loadGames() {
+
+  const data = JSON.parse(localStorage.getItem('darwormgames'));
+  darworms.savedgames = data || [];
+  $('#savedgames').listview( "option", "icon", "star" );
+  darworms.savedgames.forEach(function(gameTxt, i) {
+    const gameObj = JSON.parse(gameTxt);
+    const then = new Date(gameObj.createdAt);
+    /* const elementStr = '<li> <button data-role="button" data-inline="false"  data-theme="a" lass="ui-btn ui-shadow ui-corner-all"> ' +
+    then.toTimeString() +
+     '</button></li>';
+    $('#savedgames')[0].appendChild(elementStr).trigger('create');
+*/
+    const liStr = '<li data-icon="delete" data-split-icon="delete-black"><a class="loadMe" value=' + i + '>' + gameName(gameObj) + '</a><a value=' +
+      i + ' data-icon="star" data-split-icon="delete-black" class="deleteMe" ></a></li>';
+    $('#savedgames').append(liStr).listview('refresh');
+
+    //    $('#savedgames').append(liStr).trigger('create');
+    //    $('#savedgames').append('<li id="l1"><a>5.00</a><a id="1" class="deleteMe"></a></li>').trigger('create');
+    console.log(" liStr: " + liStr);
+
+
+  });
+  $('.deleteMe').on('click', function(event) {
+    console.log(" deleteMe clicked");
+    console.log($(this).attr("value"));
+    let index = parseInt($(this).attr("value"));
+    if ((index >= 0) && (index < darworms.savedgames.length)) {
+      darworms.savedgames.splice(index, 1);
+    }
+    localStorage.setItem('darwormgames', JSON.stringify(darworms.savedgames));
+    refreshSavedGames();
+  });
+  $('.loadMe').on('click', function(event) {
+    console.log(" loadMe clicked");
+    console.log($(this).attr("value"));
+    let index = parseInt($(this).attr("value"));
+    if ((index >= 0) && (index < darworms.savedgames.length)) {
+      let gameObj = darworms.main.injectSettings(darworms.savedgames[$(this).attr("value")]);
+      updateScores(darworms.main.gWorms);
+      $.mobile.changePage('#playpage');
+    }
+
+  });
+}
+
+function freeGames() {
+  const svgamelist = $('#savedgames')[0];
+  while (svgamelist.firstChild) {
+    svgamelist.removeChild(svgamelist.firstChild);
+  }
+}
+
+function saveGame(gameTxt) {
+  console.log(" saveGame ");
+  darworms.savedgames.push(gameTxt);
+  localStorage.setItem('darwormgames', JSON.stringify(darworms.savedgames));
+  refreshSavedGames();
+
+}
+
+function refreshSavedGames() {
+  const svgamelist = $('#savedgames')[0];
+  while (svgamelist.firstChild) {
+    svgamelist.removeChild(svgamelist.firstChild);
+  }
+  loadGames();
 }
 
 //  Game.js
@@ -1905,7 +1992,7 @@ function gameInit() {
   <script src="scripts/AudioSample.js"></script>
   <script src="scripts/Point.js"></script>
   <script src="scripts/Grid.js"></script>
-  <script src="scripts/Worm.js"></script>
+  <script src="scripts/Worm.js"Games></script>
   <script src="scripts/WPane.js"></script>
   <script src="scripts/Game.js"></script>
   <script src="scripts/main.js"></script>
@@ -2166,6 +2253,7 @@ darworms$1.main = (function() {
     gameObj.players.forEach(function(aworm) {
       var i = aworm.index;
       gWorms[i].name = aworm.name;
+
       //  decode  tyename therefore
 
       if (regx.test(gWorms[i].name)) {
@@ -2183,6 +2271,7 @@ darworms$1.main = (function() {
       gWorms[i].MusicScale = aworm.MusicScale;
 
     });
+    return gameObj;
   };
 
   var setupGridGeometry = function() {
@@ -2284,6 +2373,12 @@ darworms$1.main = (function() {
     console.log(" sendEMail " + darworms$1.gameTxt);
     emailGame(darworms$1.gameTxt);
   };
+
+  darworms$1.saveGame = function() {
+    console.log(" saveGame ");
+    saveGame(darworms$1.gameTxt);
+  };
+
   darworms$1.startgame = function(startNow) {
     console.log(" Startgame start now = " + startNow);
     if (darworms$1.theGame) {
@@ -2520,7 +2615,7 @@ darworms$1.main = (function() {
 
   darworms$1.playScale = function(index) {
     console.log("playScale called");
-    gWorms[index].playScale();
+    gWorms[darworms$1.selectedIdx].playScale();
   };
   darworms$1.yesabortgame = function() {
     console.log("Abort Game called");
@@ -2607,6 +2702,16 @@ darworms$1.main = (function() {
 
   var leaveEditPage = function(foo) {
     console.log(" leaveEditPage " + foo);
+  };
+
+  var loadSavedGames = function() {
+    console.log(" loadSavedGames ");
+    loadGames();
+  };
+
+  var freeSavedGames = function() {
+    console.log(" freeSavedGames ");
+    freeGames();
   };
 
   function unlockAudioContext(audioCtx) {
@@ -2893,7 +2998,7 @@ darworms$1.main = (function() {
 
   return {
     init: init,
-
+    gWorms: gWorms,
     setSelectedDarwormType: setSelectedDarwormType,
     setupEditPage: setupEditPage,
     applySettings: applySettings,
@@ -2904,7 +3009,10 @@ darworms$1.main = (function() {
     leavePlayPage: leavePlayPage,
     wormEventHandler: wormEventHandler,
     initEditPage: initEditPage,
-    leaveEditPage: leaveEditPage
+    leaveEditPage: leaveEditPage,
+    loadSavedGames: loadSavedGames,
+    freeSavedGames: freeSavedGames
+
 
   };
 

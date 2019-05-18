@@ -5,6 +5,10 @@
  * Time: 11:37 PM
  */
 
+ import {
+   log
+ } from "./utils.js"
+ 
 export class  Point {
   constructor(x,y) {
     const privateString = "(" + x + "," + y + ")";
@@ -15,16 +19,16 @@ export class  Point {
       return this.x == other.x && this.y == other.y;
   };
   add (other) {
-  //    console.log (" adding (" + other.x + "," + other.y + " to (" + this.x + "," + this.y );
+  //    log (" adding (" + other.x + "," + other.y + " to (" + this.x + "," + this.y );
       this.x = this.x + other.x;
       this.y = this.y + other.y;
     }
   dist(other) {
-        //  console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
+        //  log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
         return Math.sqrt((this.x - other.x ) * (this.x - other.x) +  (this.y - other.y) * (this.y - other.y));
     }
   absDiff (other) {
-        //  console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
+        //  log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
         return new Point( Math.abs(this.x-other.x) , Math.abs(this.y-other.y));
     }
   wrap (wg, hg) {
@@ -41,6 +45,6 @@ export class  Point {
     };
 
     print ( ) {
-      console.log ( " Private class variable " + privateString);
+      log ( " Private class variable " + privateString);
     }
 }

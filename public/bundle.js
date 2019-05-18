@@ -1,10 +1,17 @@
+// utils.js
+function log ( str )  {
+  if ($('#logging').slider().val() == "true") {
+    console.log( str );
+  }
+}
+
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
  * Date: 9/21/13
  * Time: 11:37 PM
  */
-
+ 
 class  Point {
   constructor(x,y) {
     this.x = x;
@@ -14,16 +21,16 @@ class  Point {
       return this.x == other.x && this.y == other.y;
   };
   add (other) {
-  //    console.log (" adding (" + other.x + "," + other.y + " to (" + this.x + "," + this.y );
+  //    log (" adding (" + other.x + "," + other.y + " to (" + this.x + "," + this.y );
       this.x = this.x + other.x;
       this.y = this.y + other.y;
     }
   dist(other) {
-        //  console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
+        //  log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
         return Math.sqrt((this.x - other.x ) * (this.x - other.x) +  (this.y - other.y) * (this.y - other.y));
     }
   absDiff (other) {
-        //  console.log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
+        //  log (" dist from (" + other.x + "," + other.y + ") to (" + this.x + "," + this.y );
         return new Point( Math.abs(this.x-other.x) , Math.abs(this.y-other.y));
     }
   wrap (wg, hg) {
@@ -40,12 +47,12 @@ class  Point {
     };
 
     print ( ) {
-      console.log ( " Private class variable " + privateString);
+      log ( " Private class variable " + privateString);
     }
 }
 
 var darworms$1 = {
-  version: "0.9.2",
+  version: "0.9.3",
   // host: "localhost:5000",
   host: "https://dmaynard.github.io/Darworms/public",
   compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
@@ -136,7 +143,7 @@ var darworms$1 = {
     forceInitialGridSize: true,
     largeGridSize: 18, // The original Atari 800 Character mode
     smallGridSize: 10, // so cells can be selected with touch
-    minLargeWidth: 400, //
+    minLargeWidth: 800, //
     isLargeScreen: true,
     doAudio: 1,
     fixedInitPos: true,
@@ -169,6 +176,7 @@ var darworms$1 = {
     gridBackground: ["#F5F5F5", "#404040"],
     cellBackground: ["#F5F5F5", "#404040"],
     masterAudioVolume: 0.3,
+    dologging: false,
     gridSize: 18
   },
   images: {},
@@ -186,7 +194,7 @@ var darworms$1 = {
 };
 
 window.addEventListener("load", function() {
-    // console.log(" stage 1 loading finished");
+    // log(" stage 1 loading finished");
     window.onerror = function(msg, url, line) {
       alert(msg + " " + url + " " + line);
     };
@@ -204,13 +212,13 @@ window.addEventListener("load", function() {
 
     $( "#tutorialpopup" ).popup({
         afterclose: function( event, ui ) {
-          console.log(" afterclose even fired" + $('#tutorialpopup input[type=checkbox]').prop("checked"));
+          log(" afterclose even fired" + $('#tutorialpopup input[type=checkbox]').prop("checked"));
           if ( $('#tutorialpopup input[type=checkbox]').prop("checked") ) {
             darworms$1.theGame.focusWorm.showTutorial = false;
           }
         }
     });
-    console.log("About to call darworms.main.init()");
+    log("About to call darworms.main.init()");
     window.darworms = darworms$1;  // So index.html onclick can find handlers
     darworms$1.main.init();
 
@@ -233,10 +241,10 @@ function AudioSample(name, location) {
     xhr.onload = (function () {
         darworms$1.audioContext.decodeAudioData(xhr.response,
             (function(incomingBuffer) {
-                // console.log( "on Load incoming Buffer");
-                // console.log(" xhr " + xhr.status + "  " + xhr.statusText);
-                // console.log(" incoming buffer = " + incomingBuffer );
-                // console.log ( " this.name " + this.name);
+                // log( "on Load incoming Buffer");
+                // log(" xhr " + xhr.status + "  " + xhr.statusText);
+                // log(" incoming buffer = " + incomingBuffer );
+                // log ( " this.name " + this.name);
                 this.savedBuffer = incomingBuffer; // Save the buffer, we'll reuse it
             }
         ).bind(this));
@@ -247,14 +255,14 @@ function AudioSample(name, location) {
 
 AudioSample.prototype.playSample = function (rate, pan) {
     var source;
-    // console.log(" playSample " + this.name + "  " + this.location + "  savedBuffer " + this.savedBuffer);
+    // log(" playSample " + this.name + "  " + this.location + "  savedBuffer " + this.savedBuffer);
     if (darworms$1.audioContext !== undefined && this.savedBuffer !== undefined) {
         // Do we have to create a new buffer every time we play a note ?
         source = darworms$1.audioContext.createBufferSource();
         source.buffer = this.savedBuffer;
         darworms$1.masterGainNode.gain.value = darworms$1.dwsettings.masterAudioVolume;
         source.connect(darworms$1.masterGainNode);
-        // console.log(" playSample " + this.name + " volume  " + darworms.masterGainNode.gain.value);
+        // log(" playSample " + this.name + " volume  " + darworms.masterGainNode.gain.value);
         if ( darworms$1.audioPanner !== undefined ) {
           darworms$1.masterGainNode.connect(darworms$1.audioPanner);
           darworms$1.audioPanner.connect(darworms$1.audioContext.destination);
@@ -416,8 +424,8 @@ AudioSample.prototype.playSample = function (rate, pan) {
   move (from, to, dir, colorIndex) {
     if ((this.inVectorsAt(to) & darworms$1.inMask[dir]) !== 0) {
       alert(" Attempted to eat eaten spoke at " + to.format());
-      console.log("  (" + to.x + "," + to.y + ") dir: " + dir + " value: ");
-      console.log("Attempted to eat eaten spoke at " + to.format() + " dir " + dir + " value: 0x" + this.valueAt(to).toString(16));
+      log("  (" + to.x + "," + to.y + ") dir: " + dir + " value: ");
+      log("Attempted to eat eaten spoke at " + to.format() + " dir " + dir + " value: 0x" + this.valueAt(to).toString(16));
     }
     this.setValueAt(to, this.valueAt(to) | darworms$1.inMask[dir] | (darworms$1.inMask[dir] << 16));
     this.setValueAt(from, this.valueAt(from) | darworms$1.outMask[dir] | (darworms$1.outMask[dir] << 8));
@@ -443,14 +451,14 @@ AudioSample.prototype.playSample = function (rate, pan) {
   // Returns next x,y position
   next (point, dir) {
     var nP = new Point(point.x, point.y);
-    // console.log ("  (" + point.x  + "," + point.y + ") dir: " + dir);
+    // log ("  (" + point.x  + "," + point.y + ") dir: " + dir);
     if ((point.y & 1) === 0) {
       nP.add(evenRowVec[dir]);
     } else {
       nP.add(oddRowVec[dir]);
     }
     if ((darworms$1.dwsettings.gridGeometry == 'falloff' && ((nP.x < 0) || (nP.x > this.width - 1) || (nP.y < 0) || (nP.y > this.height - 1)))) {
-      // console.log ("  (" + nP.x  + "," + nP.y + ") returning noWhere");
+      // log ("  (" + nP.x  + "," + nP.y + ") returning noWhere");
       return darworms$1.dwsettings.noWhere;
     }
     if (nP.x < 0) {
@@ -465,7 +473,7 @@ AudioSample.prototype.playSample = function (rate, pan) {
     if (nP.y > this.height - 1) {
       nP.y = 0;
     }
-    // console.log ("    next from: (" + point.format()  + " dir " + dir + " next:  " + nP.format());
+    // log ("    next from: (" + point.format()  + " dir " + dir + " next:  " + nP.format());
     return nP;
   };
   each (action) {
@@ -477,14 +485,14 @@ AudioSample.prototype.playSample = function (rate, pan) {
     }
   };
   logSpokesAt (point) {
-    console.log("[ " + point.x + "," + point.y + "] val = " + this.colorsAt(point).toString(16));
+    log("[ " + point.x + "," + point.y + "] val = " + this.colorsAt(point).toString(16));
     for (var dir = 0; dir < 8; dir = dir + 1) {
-      console.log("   spoke: " + dir + " colorindex" + this.spokeAt(point, dir));
+      log("   spoke: " + dir + " colorindex" + this.spokeAt(point, dir));
 
     }
   };
   logValueAt (point) {
-    console.log("[ " + point.x + "," + point.y + "] val = 0x" + this.hexValueAt(point) +
+    log("[ " + point.x + "," + point.y + "] val = 0x" + this.hexValueAt(point) +
       this.dirList(this.hexValueAt(point)) + " outVectors = 0x" +
       this.outVectorsAt(point).toString(16) + this.dirList(this.outVectorsAt(point)) +
       " inVectors = 0x" + this.inVectorsAt(point).toString(16));
@@ -682,7 +690,7 @@ class Worm {
 
   }
   setKey(keyName) {
-    console.log(" keyname: " + keyName);
+    log(" keyname: " + keyName);
     this.musickeyName = keyName;
     this.MusicScale = musicalkeys[keyName];
   }
@@ -726,28 +734,28 @@ class Worm {
   randomize() {
     var dir;
     for (var i = 0; i < 63; i = i + 1) {
-      // console.log(" randomize loop start  i = " + i + " dna[i] = " + this.dna[i]);
+      // log(" randomize loop start  i = " + i + " dna[i] = " + this.dna[i]);
       if (this.dna[i] === darworms$1.dwsettings.codons.unSet) {
         for (var j = 0; j < 1000; j = j + 1) {
           dir = Math.floor(Math.random() * 6);
-          //console.log( " dir = " + dir +  " i=" + i + " outMask[dir] = " + outMask[dir] + "& = " + (i & outMask[dir]));
+          //log( " dir = " + dir +  " i=" + i + " outMask[dir] = " + outMask[dir] + "& = " + (i & outMask[dir]));
           if ((i & darworms$1.outMask[dir]) === 0) {
             this.dna[i] = dir;
             this.numChoices += 1;
-            // console.log(" Setting dir 0x" + i.toString(16) + " to " + compassPts[dir]);
+            // log(" Setting dir 0x" + i.toString(16) + " to " + compassPts[dir]);
             break;
           }
         }
         if (this.dna[i] === darworms$1.dwsettings.codons.unSet) {
-          console.log("Error we rolled craps 10,000 times in a row");
+          log("Error we rolled craps 10,000 times in a row");
         }
       }
-      // console.log(" randomize loop end  i = " + i + " dna[i] = " + this.dna[i]);
+      // log(" randomize loop end  i = " + i + " dna[i] = " + this.dna[i]);
     }
     this.toText();
   };
   log() {
-    console.log(" Worm State: " + darworms$1.wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
+    log(" Worm State: " + darworms$1.wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
   };
   place(aState, aGame, pos) {
     this.pos = pos;
@@ -755,19 +763,19 @@ class Worm {
     this.nMoves = 0;
     this.score = 0;
     this.state = aState;
-    console.log(" placing worm   i = " + this.colorIndex + " state " + aState + " " + this.numChoices + " of 64 possible moves defined");
+    log(" placing worm   i = " + this.colorIndex + " state " + aState + " " + this.numChoices + " of 64 possible moves defined");
   };
   dump() {
     this.log();
     for (var i = 0; i < 64; i = i + 1) {
-      console.log(" dna" + i + " = " + darworms$1.compassPts[this.dna[i]]);
+      log(" dna" + i + " = " + darworms$1.compassPts[this.dna[i]]);
       var spokes = [];
       for (var spoke = 0; spoke < 6; spoke = spoke + 1) {
         if ((i & darworms$1.outMask[spoke]) !== 0) {
           spokes.push(darworms$1.compassPts[spoke]);
         }
       }
-      console.log(" dna" + i + " " + spokes + " = " + darworms$1.compassPts[this.dna[i]]);
+      log(" dna" + i + " " + spokes + " = " + darworms$1.compassPts[this.dna[i]]);
     }
 
   };
@@ -833,7 +841,7 @@ class Worm {
   };
 
   emailDarworm () {
-    console.log("Emailing: " + this.toText());
+    log("Emailing: " + this.toText());
     var mailtourl = "mailto:?subject=" +
       encodeURIComponent("Check out this cool Darworm") +
       "&body=" +
@@ -842,7 +850,7 @@ class Worm {
       // encodeURIComponent('<a href ="https://dmaynard.github.io/Darworms/public> Darworms" </a>') +
       encodeURIComponent("You can copy the darworm string below and then go to the game and paste the text into one of the players\n") +
       encodeURIComponent(this.toText());
-    console.log("url: " + mailtourl);
+    log("url: " + mailtourl);
 
     // document.location.href = mailtourl;
     window.open(mailtourl);
@@ -907,6 +915,8 @@ let theGame = null;
 function graphicsInit(game) {
   wCanvas = document.getElementById("wcanvas");
   wGraphics = wCanvas.getContext("2d");
+  resizeCanvas();
+
 }
 function setGrid(currentGrid, game) {
    grid = currentGrid;
@@ -922,7 +932,7 @@ function setScale ( gridWidth, gridHeight) {
 }
  function reScale(gridWidth, gridHeight) {
    setScale(gridWidth, gridHeight);
-   console.log(" reScaled to " + scale.format());
+   log(" reScaled to " + scale.format());
  }
 function clearCanvas() {
   // Store the current transformation matrix
@@ -959,7 +969,7 @@ function getOffset(point) {
 function gsetTranslate(point) {
   var cellOffset = getOffset(point);
   wGraphics.setTransform(scale.x, 0, 0, scale.y, cellOffset.x, cellOffset.y);
-  // console.log( "Drawing cell " +  point.format() + " x= " + cellOffset.x + "  y= " + cellOffset.y);
+  // log( "Drawing cell " +  point.format() + " x= " + cellOffset.x + "  y= " + cellOffset.y);
 }
 
 function drawCells() {
@@ -973,7 +983,7 @@ function drawCells() {
   }
 function drawcell(point) {
   // if (point.isEqualTo(new Point (this.grid.width-1, this.grid.height/2))) {
-  //     console.log(this.grid.formatStateAt(point));
+  //     log(this.grid.formatStateAt(point));
   // }
   timeInDraw -= Date.now();
   // wGraphics.save();
@@ -1043,12 +1053,12 @@ function drawcell(point) {
 
   var outvec = grid.outVectorsAt(point);
   var invec = grid.inVectorsAt(point);
-  // console.log (" drawCell at" +  point.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
+  // log (" drawCell at" +  point.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
 
   for (var i = 0; i < 6; i = i + 1) {
     if ((outvec & darworms$1.outMask[i]) !== 0) {
       var outSpokeColor = darworms$1.dwsettings.colorTable[grid.spokeAt(point, i)];
-      // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
+      // log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
       wGraphics.strokeStyle = outSpokeColor;
       wGraphics.lineWidth = 2.0 / scale.x;
       wGraphics.lineCap = 'round';
@@ -1085,7 +1095,7 @@ function drawcell(point) {
 function drawDirtyCells() {
   var pt;
   // wGraphics.save();
-  // console.log(" Grawing dirty cells" + this.dirtyCells.length);
+  // log(" Grawing dirty cells" + this.dirtyCells.length);
   while ((pt = dirtyCells.pop()) !== undefined) {
     drawcell(pt);
   }
@@ -1115,11 +1125,11 @@ function highlightWorm(worm, index) {
 
 function   initPickUI(worm) {
 
-    console.log(" initPickUI");
+    log(" initPickUI");
     darworms$1.pickCells = new Array();
     var outvec = this.grid.outVectorsAt(worm.pos);
     var inVec = this.grid.inVectorsAt(worm.pos);
-    // console.log (" drawCell at" +  point.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
+    // log (" drawCell at" +  point.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
 
     for (var dir = 0; dir < 6; dir = dir + 1) {
       if (((outvec & darworms$1.outMask[dir]) == 0) && ((inVec & darworms$1.outMask[dir]) == 0)) {
@@ -1165,7 +1175,7 @@ function drawPickCell(point, activeColor) {
   // wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
   var owner = this.grid.spokeAt(point, 7);
   if (owner !== 0) {
-    console.log(" Why is an owned cell a target selection? " + point.format(point));
+    log(" Why is an owned cell a target selection? " + point.format(point));
   }
   drawcell(point); // set up original background for this cell
 
@@ -1194,7 +1204,7 @@ function drawPickCell(point, activeColor) {
   // wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
   var owner = this.grid.spokeAt(point, 7);
   if (owner !== 0) {
-    console.log(" Why is an owned cell a target selection origin? " + point.format(point));
+    log(" Why is an owned cell a target selection origin? " + point.format(point));
   }
   drawcell(point); // set up original backgrounf for this cell
 
@@ -1269,7 +1279,7 @@ function selectSmallUIDirection(touchPoint) {
     var diff = new Point(touchPoint.x - screenCoordinates.x, touchPoint.y - screenCoordinates.y);
     if ((absdiff.x < (scale.x / 2)) && (absdiff.y < (scale.y / 2)) &&
       this.gameState === darworms$1.gameStates.waiting) {
-      console.log(" target hit delta: " + diff.format());
+      log(" target hit delta: " + diff.format());
       setDNAandResumeGame(pickTarget.dir);
     }
   }, darworms$1.theGame);
@@ -1285,7 +1295,7 @@ function setDNAandResumeGame(direction) {
 }
 
 function selectLargeUIDirection(point) {
-  // console.log( "selectDirection: " + point.format());
+  // log( "selectDirection: " + point.format());
   var outvec = darworms$1.theGame.grid.stateAt(theGame.focusWorm.pos);
   var minDist = 100000;
   var dist;
@@ -1296,15 +1306,15 @@ function selectLargeUIDirection(point) {
         (((darworms$1.theGame.xPts[i] * wCanvas.width * .75) / 2) + (wCanvas.width / 2)),
         (((darworms$1.theGame.yPts[i] * wCanvas.height * .75) / 2) + (wCanvas.height / 2)));
 
-      // console.log(" direction: " + i + " target point " + target.format());
-      // console.log("Touch Point: " + point.format());
+      // log(" direction: " + i + " target point " + target.format());
+      // log("Touch Point: " + point.format());
       dist = target.dist(point);
       //  Actual pixel coordinates
       if (dist < minDist) {
         minDist = dist;
         select = i;
       }
-      // console.log("selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
+      // log("selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
     }
   }
   if ((minDist < wCanvas.width / 8) && (select >= 0)) {
@@ -1357,7 +1367,7 @@ function showTimes() {
     var nFrames = 0;
     var sumTime = 0;
     var fps = 0;
-    console.log("frameTimes.length " + frameTimes.length);
+    log("frameTimes.length " + frameTimes.length);
     for (var i = 0; i < frameTimes.length; i = i + 1) {
       nFrames = nFrames + 1;
       if (frameTimes[i] > max) {
@@ -1414,7 +1424,7 @@ function showTimes() {
 
 
   }
-  // this should be moved to graphics.js
+//  set the wcanvas dimensions based on the window dimentions
 function resizeCanvas() {
     var xc = $('#wcanvas');
     var canvasElement = document.getElementById('wcanvas');
@@ -1448,7 +1458,7 @@ function resizeCanvas() {
     canvasElement.height = h - 140;
     canvasElement.width = w;
     if ($('#debug').slider().val() === "1") {
-      alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val() + "arg " + nw);
+      alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val());
     }
 
     if (darworms$1.theGame) {
@@ -1552,13 +1562,13 @@ function emailGame(gameText) {
     encodeURIComponent(darworms.host) +
     encodeURIComponent("?darwormsgame=") +
     encodeURIComponent(gameText);
-  console.log("url: " + mailtourl);
+  log("url: " + mailtourl);
   // document.location.href = mailtourl;
   window.open(mailtourl);
 
 }
 function encodeGame(game, settings, graphics, version) {
-  console.log(" encodeGame 0 ");
+  log(" encodeGame 0 ");
   now = new Date();
   gameObj = {
     version: version
@@ -1586,8 +1596,8 @@ function encodeGame(game, settings, graphics, version) {
   let testOne = decodeURIComponent(gameUrl);
   let testTwo = JSON.parse(testOne);
   let testThree = JSON.stringify(testTwo);
-  console.log("before: " + gameTxt);
-  console.log("after:  " + testThree);
+  log("before: " + gameTxt);
+  log("after:  " + testThree);
   return (gameTxt)
 
 }
@@ -1596,7 +1606,7 @@ function loadGames() {
 
   const data = JSON.parse(localStorage.getItem('darwormgames'));
   darworms.savedgames = data || [];
-  $('#savedgames').listview( "option", "icon", "star" );
+
   darworms.savedgames.forEach(function(gameTxt, i) {
     const gameObj = JSON.parse(gameTxt);
     const then = new Date(gameObj.createdAt);
@@ -1611,13 +1621,13 @@ function loadGames() {
 
     //    $('#savedgames').append(liStr).trigger('create');
     //    $('#savedgames').append('<li id="l1"><a>5.00</a><a id="1" class="deleteMe"></a></li>').trigger('create');
-    console.log(" liStr: " + liStr);
+    log(" liStr: " + liStr);
 
 
   });
   $('.deleteMe').on('click', function(event) {
-    console.log(" deleteMe clicked");
-    console.log($(this).attr("value"));
+    log(" deleteMe clicked");
+    log($(this).attr("value"));
     let index = parseInt($(this).attr("value"));
     if ((index >= 0) && (index < darworms.savedgames.length)) {
       darworms.savedgames.splice(index, 1);
@@ -1626,8 +1636,8 @@ function loadGames() {
     refreshSavedGames();
   });
   $('.loadMe').on('click', function(event) {
-    console.log(" loadMe clicked");
-    console.log($(this).attr("value"));
+    log(" loadMe clicked");
+    log($(this).attr("value"));
     let index = parseInt($(this).attr("value"));
     if ((index >= 0) && (index < darworms.savedgames.length)) {
       let gameObj = darworms.main.injectSettings(darworms.savedgames[$(this).attr("value")]);
@@ -1646,7 +1656,7 @@ function freeGames() {
 }
 
 function saveGame(gameTxt) {
-  console.log(" saveGame ");
+  log(" saveGame ");
   darworms.savedgames.push(gameTxt);
   localStorage.setItem('darwormgames', JSON.stringify(darworms.savedgames));
   refreshSavedGames();
@@ -1697,7 +1707,7 @@ class Game {
     this.activeIndex = 0;
 
     setScale(gridWidth, gridHeight);
-    console.log(" new Game scale set to " + scale.format());
+    log(" new Game scale set to " + scale.format());
     this.origin = new Point(gridWidth >> 1, gridHeight >> 1);
     focusPoint = this.origin;
     this.worms = [];
@@ -1720,7 +1730,7 @@ class Game {
       $('#pickDirectionUI').slider("refresh");
       darworms$1.dwsettings.pickDirectionUI = 1;
     }
-    console.log(" Scale: " + scale.format() + "darworms.dwsettings.pickDirectionUI" + 1);
+    log(" Scale: " + scale.format() + "darworms.dwsettings.pickDirectionUI" + 1);
     this.zoomFrame = 0;
     this.startx = 0;
     this.starty = 0;
@@ -1739,18 +1749,18 @@ class Game {
   updateScale(width, height) {
     setScale(this.grid.width, this.grid.height);
 
-    console.log("updateScale " + scale.format());
+    log("updateScale " + scale.format());
   };
 
   log() {
 
-    console.log(" Game grid size  " + new Point(this.grid.width, this.grid.height).format());
-    console.log(" Game Canvas size  " + new Point(wCanvas.width, wCanvas.height).format());
-    console.log(" Game scale " + scale.format());
+    log(" Game grid size  " + new Point(this.grid.width, this.grid.height).format());
+    log(" Game Canvas size  " + new Point(wCanvas.width, wCanvas.height).format());
+    log(" Game scale " + scale.format());
     for (var i = 0; i < this.worms.length; i = i + 1) {
-      console.log(" Game worm " + i + " :  " + this.worms[i].state + " at " + this.worms[i].pos.format() + " value:" + this.grid.hexValueAt(this.worms[i].pos));
+      log(" Game worm " + i + " :  " + this.worms[i].state + " at " + this.worms[i].pos.format() + " value:" + this.grid.hexValueAt(this.worms[i].pos));
       // this.worms[i].log();
-      // console.log ( "   Grid value =  ");
+      // log ( "   Grid value =  ");
       // this.grid.logValueAt(this.worms[i].pos);
     }
   };
@@ -1758,7 +1768,7 @@ class Game {
 
     this.grid.each(function(point, value) {
       if (value > 0) {
-        console.log("NonEmpty " + point.format() + " value: 0x" + value.toString(16));
+        log("NonEmpty " + point.format() + " value: 0x" + value.toString(16));
       }
     });
 
@@ -1805,7 +1815,7 @@ class Game {
       this.avePos.x = Math.floor(this.avePos.x / nActiveAve);
       this.avePos.y = Math.floor(this.avePos.y / nActiveAve);
     }
-    // console.log(this.avePos.format());
+    // log(this.avePos.format());
   };
 
   makeMove(graphicsOn) {
@@ -1813,21 +1823,21 @@ class Game {
     if (this.gameState === darworms$1.gameStates.waiting) {
       return;
     }
-    // console.log ("Game  StartingTurn " + this.numTurns );
+    // log ("Game  StartingTurn " + this.numTurns );
     for (var i = nextToMove; i < this.worms.length; i = i + 1) {
       var active = this.worms[i];
       darworms$1.theGame.activeIndex = i;
-      // console.log (" GamemakeMove   for worm" + i + " :  " + darwormd.wormStateNames[active.state] + " at "  + active.pos.format());
+      // log (" GamemakeMove   for worm" + i + " :  " + darwormd.wormStateNames[active.state] + " at "  + active.pos.format());
       if (active.state === darworms$1.wormStates.sleeping) {
         continue;
       }
       // active.state = darworms.wormStates.moving;
-      // console.log (" Game  Before Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
+      // log (" Game  Before Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
       // active.log();
-      // console.log ( "   Grid value =  ");
+      // log ( "   Grid value =  ");
       // this.grid.logValueAt(active.pos);
       var currentState = this.grid.stateAt(active.pos);
-      // console.log (" Current State = " + currentState);
+      // log (" Current State = " + currentState);
       if (currentState == 0x3F) {
         // last sample is death sound
         if ((active.state != (darworms$1.wormStates.dead) && (active.state != darworms$1.wormStates.dying))) {
@@ -1838,13 +1848,13 @@ class Game {
           }
           active.state = (darworms$1.dwsettings.doAnimations) ? darworms$1.wormStates.dying : darworms$1.wormStates.dead;
           active.diedAtFrame = darworms$1.graphics.uiFrames;
-          console.log(" darworm " + active.colorIndex + " dying at frame: " + darworms$1.graphics.animFrame);
+          log(" darworm " + active.colorIndex + " dying at frame: " + darworms$1.graphics.animFrame);
         }
 
         if (active.state == darworms$1.wormStates.dying) {
           if ((darworms$1.graphics.uiFrames - active.diedAtFrame) > darworms$1.graphics.dyningAnimationFrames) {
             active.state = darworms$1.wormStates.dead;
-            console.log(" darworm " + active.colorIndex + " dead at frame: " + darworms$1.graphics.animFrame);
+            log(" darworm " + active.colorIndex + " dead at frame: " + darworms$1.graphics.animFrame);
           }
         }
 
@@ -1852,7 +1862,7 @@ class Game {
         var direction = active.getMoveDir(currentState);
         if (direction === darworms$1.dwsettings.codons.unSet) {
           this.gameState = darworms$1.gameStates.waiting;
-          // console.log(" setting gamestate to  " + this.gameState);
+          // log(" setting gamestate to  " + this.gameState);
           focusPoint = active.pos;
           darworms$1.theGame.focusWorm = active;
           darworms$1.theGame.focusValue = currentState;
@@ -1865,7 +1875,7 @@ class Game {
             $('#tutorialpopup').popup("option", "theme", darworms$1.themes[darworms$1.theGame.activeIndex]);
             // this makes the popup background transparent, but it looks reall bad
             // $('#tutorialpopup').popup( "option","theme", 'none' );
-            console.log(" init popup here");
+            log(" init popup here");
             drawdna(document.getElementById('popupcanvas'), active, currentState);
             $('#tutorialpopup').popup("open", {
               positionTo: btns[darworms$1.theGame.activeIndex]
@@ -1881,7 +1891,7 @@ class Game {
         {
           pushDirtyCell(active.pos);
         }
-        // console.log (" Move Direction = " + direction);
+        // log (" Move Direction = " + direction);
         var next = this.grid.next(active.pos, direction);
         if (next.isEqualTo(darworms$1.dwsettings.noWhere)) { // fell of edge of world
           active.state = darworms$1.wormStates.dead;
@@ -1891,7 +1901,7 @@ class Game {
           active.score = active.score + didScore;
           this.numMoves = this.numMoves + 1;
           active.nMoves = active.nMoves + 1;
-          // console.log("    Worm " + active.colorIndex + "  just made move " + active.nMoves + " game turn " + this.numTurns + " From " + this.grid.formatStateAt(active.pos) + " direction  " + direction);
+          // log("    Worm " + active.colorIndex + "  just made move " + active.nMoves + " game turn " + this.numTurns + " From " + this.grid.formatStateAt(active.pos) + " direction  " + direction);
           active.pos = next;
 
           {
@@ -1908,19 +1918,19 @@ class Game {
 
           }
 
-          // console.log(" active.score [" +  i + "] ="  + active.score);
+          // log(" active.score [" +  i + "] ="  + active.score);
 
-          //console.log("     From Value is " +  this.grid.hexValueAt(active.pos)  );
-          //console.log (" Next Point = " + next.format());
-          //console.log(" Set To State to " +  this.grid.stateAt(active.pos)  );
-          //console.log("     To Value is " +  this.grid.hexValueAt(active.pos)  );
+          //log("     From Value is " +  this.grid.hexValueAt(active.pos)  );
+          //log (" Next Point = " + next.format());
+          //log(" Set To State to " +  this.grid.stateAt(active.pos)  );
+          //log("     To Value is " +  this.grid.hexValueAt(active.pos)  );
         }
 
       }
       if ((active.state !== darworms$1.wormStates.dead)) {
         nAlive = nAlive + 1;
       }
-      //console.log (" Game  After Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
+      //log (" Game  After Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
       // this.grid.logValueAt(active.pos);
     }
     nextToMove = 0;
@@ -1944,7 +1954,7 @@ class Game {
 //  Called from Timer Loop
 
 function makeMoves() {
-  // console.log(" makeMoves theGameOver " + theGameOver +  "  gameState " + gameStateNames[theGame.gameState] );
+  // log(" makeMoves theGameOver " + theGameOver +  "  gameState " + gameStateNames[theGame.gameState] );
   var startTime = new Date().getTime();
   startFrameTimes.push(startTime);
   if (darworms$1.theGame.needsRedraw) {
@@ -1954,7 +1964,7 @@ function makeMoves() {
   if (darworms$1.theGame.gameState != darworms$1.gameStates.over) {
     if (darworms$1.theGame.makeMove(darworms$1.dwsettings.doAnimations) === false) {
       stopGameTimer();
-      console.log(" Game Over");
+      log(" Game Over");
       clearInterval(darworms$1.graphics.timer);
       // document.getElementById("startpause").innerHTML = "Start Game";
       $("#startpause").text("Start Game");
@@ -1979,7 +1989,7 @@ function makeMoves() {
 
 function gameInit() {
   // used to initialize variables in this module's closure
-  console.log(" wCanvas,width: " + wCanvas.width);
+  log(" wCanvas,width: " + wCanvas.width);
   graphicsInit(this);
   scoreCanvasInit();
   nextToMove = 0;
@@ -2186,12 +2196,7 @@ darworms$1.main = (function() {
       $('#gridsizeslider').show();
       $('#abortgame').hide();
     }
-    if (darworms$1.dwsettings.forceInitialGridSize) {
-      $('#gridsize').val(
-        darworms$1.dwsettings.isLargeScreen ? darworms$1.dwsettings.largeGridSize :
-        darworms$1.dwsettings.smallGridSize).slider("refresh");
-      darworms$1.dwsettings.forceInitialGridSize = false;
-    }
+
    $('#fps').val(darworms$1.graphics.fps).slider("refresh");
 
    $('#gridsize').val(darworms$1.dwsettings.gridSize).slider("refresh");
@@ -2220,13 +2225,13 @@ darworms$1.main = (function() {
     darworms$1.dwsettings.doAudio = $('#audioon').slider().val()  == "1" ? 1 : 0;    darworms$1.dwsettings.fixedInitPos = $('#fixedinitpos').slider().val()  == "1" ? 1 : 0;
     darworms$1.dwsettings.pickDirectionUI = $('#pickDirectionUI').slider().val() == "1" ? 1 : 0;
 
-    console.log(" darworms.dwsettings.doAnimations " + darworms$1.dwsettings.doAnimations);
-    console.log(" darworms.dwsettings.doAudio " + darworms$1.dwsettings.doAudio);
+    log(" darworms.dwsettings.doAnimations " + darworms$1.dwsettings.doAnimations);
+    log(" darworms.dwsettings.doAudio " + darworms$1.dwsettings.doAudio);
     darworms$1.dwsettings.masterAudioVolume = $("#audiovol").val() / 100;
     darworms$1.graphics.fps = parseInt($("#fps").val());
     darworms$1.graphics.frameInterval = 1000 / darworms$1.graphics.fps;
 
-    console.log(" darworms.dwsettings.masterAudioVolume " + darworms$1.dwsettings.masterAudioVolume);
+    log(" darworms.dwsettings.masterAudioVolume " + darworms$1.dwsettings.masterAudioVolume);
   };
 
   var injectSettings = function(gameTxt) {
@@ -2275,7 +2280,7 @@ darworms$1.main = (function() {
   };
 
   var setupGridGeometry = function() {
-    console.log(" pagebeforeshow setupGridGeometry ");
+    log(" pagebeforeshow setupGridGeometry ");
     if (darworms$1.theGame && darworms$1.theGame.gameState !== darworms$1.gameStates.over) {
       $('#geometryradios').hide();
     } else {
@@ -2331,15 +2336,15 @@ darworms$1.main = (function() {
     // alert( event.toString() + " tap event x:" + touchX + "  y:" + touchY)
     */
 
-    console.log(" Tap Event at x: " + touchX + " y: " + touchY);
-    // console.log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
-    // console.log (" wcanvas coord width " + wCanvas.width + " coord height "  + wCanvas.height  );
+    log(" Tap Event at x: " + touchX + " y: " + touchY);
+    // log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
+    // log (" wcanvas coord width " + wCanvas.width + " coord height "  + wCanvas.height  );
     if (darworms$1.theGame.gameState === darworms$1.gameStates.waiting) {
       selectDirection(new Point(touchX, touchY));
     }
   };
   darworms$1.menuButton = function() {
-    console.log(" menuButton");
+    log(" menuButton");
     if (darworms$1.theGame.gameState && ((darworms$1.theGame.gameState == darworms$1.gameStates.running) ||
         (darworms$1.theGame.gameState == darworms$1.gameStates.paused))) {
       darworms$1.theGame.gameState = darworms$1.gameStates.paused;
@@ -2370,19 +2375,19 @@ darworms$1.main = (function() {
     }
   };
   darworms$1.sendemail = function() {
-    console.log(" sendEMail " + darworms$1.gameTxt);
+    log(" sendEMail " + darworms$1.gameTxt);
     emailGame(darworms$1.gameTxt);
   };
 
   darworms$1.saveGame = function() {
-    console.log(" saveGame ");
+    log(" saveGame ");
     saveGame(darworms$1.gameTxt);
   };
 
   darworms$1.startgame = function(startNow) {
-    console.log(" Startgame start now = " + startNow);
+    log(" Startgame start now = " + startNow);
     if (darworms$1.theGame) {
-      console.log("GameState is " +
+      log("GameState is " +
         darworms$1.theGame.gameState + (darworms$1.gameStateNames[darworms$1.theGame.gameState]));
     }
     // wCanvas.width = $('#wcanvas').width();
@@ -2391,10 +2396,9 @@ darworms$1.main = (function() {
     var curScreen = new Point(wCanvas.width, wCanvas.height);
     darworms$1.wCanvasPixelDim = curScreen;
 
-    var curScreen = new Point(wCanvas.width, wCanvas.height);
     if (darworms$1.theGame === undefined || darworms$1.theGame === null || darworms$1.theGame.grid.height != darworms$1.dwsettings.gridSize ||
       !(darworms$1.wCanvasPixelDim.isEqualTo(curScreen))) {
-      console.log(" theGame size has changed Screen is" + curScreen.format() + " grid = " + darworms$1.dwsettings.gridSize + " x " +
+      log(" theGame size has changed Screen is" + curScreen.format() + " grid = " + darworms$1.dwsettings.gridSize + " x " +
         darworms$1.dwsettings.gridSize);
       if ((darworms$1.dwsettings.gridSize & 1) !== 0) {
         // height must be an even number because of toroid shape
@@ -2414,7 +2418,7 @@ darworms$1.main = (function() {
       darworms$1.theGame.needsRedraw = true;
       drawCells();
       darworms$1.theGame.worms = gWorms;
-      console.log(" init gridsize: " + $("#gridsize").val() + " gHeight" + darworms$1.dwsettings.gridSize);
+      log(" init gridsize: " + $("#gridsize").val() + " gHeight" + darworms$1.dwsettings.gridSize);
 
       gWorms.forEach(function(worm, i) {
         worm.init(playerTypes[i]);
@@ -2440,7 +2444,7 @@ darworms$1.main = (function() {
     }
     if (startNow === false) return;
     updateScores(gWorms);
-    console.log(" NEW in startgame darworms.dwsettings.doAnimations " + darworms$1.dwsettings.doAnimations);
+    log(" NEW in startgame darworms.dwsettings.doAnimations " + darworms$1.dwsettings.doAnimations);
     if (darworms$1.theGame.gameState === darworms$1.gameStates.running) {
       // This is now a pause game button
       // clearInterval(darworms.graphics.timer);
@@ -2467,7 +2471,7 @@ darworms$1.main = (function() {
       // darworms.graphics.timer = setInterval(updateGameState, 1000 / $("#fps").val());
       var animFramesPerSec = darworms$1.dwsettings.doAnimations ? darworms$1.graphics.fps : 60;
       startGameLoop(animFramesPerSec);
-      console.log(" setInterval: " + 1000 / $("#fps").val());
+      log(" setInterval: " + 1000 / $("#fps").val());
       // document.getElementById("startpause").innerHTML = "Pause Game";
       $("#startpause").text("Pause Game");
       initTheGame(true);
@@ -2478,12 +2482,12 @@ darworms$1.main = (function() {
       //  No.  This locks the browser.  We must put it inside the the
       // animation request and do a set of moves each animframe and draw the
       // playfield
-      console.log('darworms.dwsettings.doAnimations == "false"');
+      log('darworms.dwsettings.doAnimations == "false"');
       darworms$1.theGame.gameState = darworms$1.gameStates.running;
       clearCanvas();
       drawCells();
 
-      console.log(" Game Running");
+      log(" Game Running");
       $("#startpause").text("Running");
       /*  busy loop making moves.  Freezes the javascript engine!
         while (darworms.theGame.gameState != darworms.gameStates.over) {
@@ -2492,7 +2496,7 @@ darworms$1.main = (function() {
          }
          if (darworms.theGame.makeMove(false) === false) {
            darworms.theGame.elapsedTime = darworms.theGame.elapsedTime + new Date().getTime();
-           console.log(" Game Over");
+           log(" Game Over");
            darworms.theGame.showTimes();
            darworms.theGame.gameState = darworms.gameStates.over;
            $("#startpause").text("Start Game");
@@ -2575,14 +2579,14 @@ darworms$1.main = (function() {
           (darworms$1.theGame.gameState !== darworms$1.gameStates.waiting)) {
           nMoves = nMoves + 1;          makeMoves();
         }
-        console.log("Compute time: " + (Date.now() - startTime));
+        log("Compute time: " + (Date.now() - startTime));
 
         var startTime = Date.now();
         updateScores(darworms$1.theGame.worms);
         drawDirtyCells();
-        console.log("Draw time: " + (Date.now() - startTime));
+        log("Draw time: " + (Date.now() - startTime));
 
-        console.log(".");
+        log(".");
       }
 
     }
@@ -2598,27 +2602,27 @@ darworms$1.main = (function() {
     }
 
     // if ( darworms.graphics.rawFrameCount %  60 == 0) {
-    //     console.log("Date.now() " + Date.now());
+    //     log("Date.now() " + Date.now());
     // }
   };
 
   darworms$1.abortgame = function() {
-    console.log("Abort Game called");
+    log("Abort Game called");
     $.mobile.changePage('#abortdialog', 'pop', true, true);
     // $("#lnkDialog").click();
 
   };
   darworms$1.emailDarwormButton = function(index) {
-    console.log("emailDarwormButton called");
+    log("emailDarwormButton called");
     gWorms[darworms$1.selectedIdx].emailDarworm();
   };
 
   darworms$1.playScale = function(index) {
-    console.log("playScale called");
+    log("playScale called");
     gWorms[darworms$1.selectedIdx].playScale();
   };
   darworms$1.yesabortgame = function() {
-    console.log("Abort Game called");
+    log("Abort Game called");
     $.mobile.changePage('#playpage');
     darworms$1.theGame.gameState = darworms$1.gameStates.over;
     darworms$1.startgame(false);
@@ -2627,7 +2631,7 @@ darworms$1.main = (function() {
   };
 
   darworms$1.noabortgame = function() {
-    console.log("Abort Game called");
+    log("Abort Game called");
     $.mobile.changePage('#settingspage');
     // $("#lnkDialog").click();
 
@@ -2686,7 +2690,7 @@ darworms$1.main = (function() {
     selector.page("option", "theme", newTheme);
   };
   var initEditPage = function(foo) {
-    console.log(" initEditPage " + darworms$1.selectedIdx);
+    log(" initEditPage " + darworms$1.selectedIdx);
     swapTheme($('#edit-darworm-page'), darworms$1.themes[darworms$1.selectedIdx]);
     $('#edittextfield').val(gWorms[darworms$1.selectedIdx].wType == 0 ? "" : gWorms[darworms$1.selectedIdx].name);
     // $('#edit-darworm-page').page.refresh();
@@ -2701,16 +2705,16 @@ darworms$1.main = (function() {
   };
 
   var leaveEditPage = function(foo) {
-    console.log(" leaveEditPage " + foo);
+    log(" leaveEditPage " + foo);
   };
 
   var loadSavedGames = function() {
-    console.log(" loadSavedGames ");
+    log(" loadSavedGames ");
     loadGames();
   };
 
   var freeSavedGames = function() {
-    console.log(" freeSavedGames ");
+    log(" freeSavedGames ");
     freeGames();
   };
 
@@ -2739,7 +2743,7 @@ darworms$1.main = (function() {
       $('#doAudio').hide();
     }
     unlockAudioContext(darworms$1.audioContext);
-    console.log("audio is " + darworms$1.dwsettings.doAudio + "  Context state is " + darworms$1.audioContext.state);
+    log("audio is " + darworms$1.dwsettings.doAudio + "  Context state is " + darworms$1.audioContext.state);
 
     if (darworms$1.dwsettings.doAudio) {
       if (darworms$1.audioContext.createGain !== undefined) {
@@ -2815,7 +2819,7 @@ darworms$1.main = (function() {
 
     }
     while (darworms$1.audioPlaybackRates.length < 13);
-    console.log("Final rate = " + darworms$1.audioPlaybackRates[12] + "  error: " +
+    log("Final rate = " + darworms$1.audioPlaybackRates[12] + "  error: " +
       (1.0 - darworms$1.audioPlaybackRates[12]));
 
     darworms$1.audioPlaybackRates[12] = 1.0;
@@ -2862,11 +2866,12 @@ darworms$1.main = (function() {
     // This may be needed when we actually build a phoneGap app
     // in this case delay initialization until we get the deviceready event
     document.addEventListener("deviceready", deviceInfo, true);
+    $("#logging").slider().val( darworms$1.dwsettings.dologging ? "true" : "false");
 
     $('#versionstring')[0].innerHTML = "Version " + darworms$1.version;
     // See if the url constains an encoded game
     const urlParams = new URLSearchParams(window.location.search);
-    console.log(location.search);
+    log(location.search);
     if (urlParams.has('darwormsgame')) {
       darworms$1.gameTxt = decodeURIComponent(urlParams.get('darwormsgame'));
       if (darworms$1.gameTxt) {
@@ -2881,7 +2886,11 @@ darworms$1.main = (function() {
 
 
     graphicsInit();
-    darworms$1.wCanvasPixelDim = new Point(wCanvas.clientWidth, wCanvas.clientHeight); // console.log ( " init wGraphics " + darworms.main.wGraphics);
+    darworms$1.dwsettings.isLargeScreen = $(window).width() >= darworms$1.dwsettings.minLargeWidth;
+    darworms$1.dwsettings.gridSize = darworms$1.dwsettings.isLargeScreen ?
+          darworms$1.dwsettings.largeGridSize : darworms$1.dwsettings.smallGridSize;
+
+    darworms$1.wCanvasPixelDim = new Point(wCanvas.clientWidth, wCanvas.clientHeight); // log ( " init wGraphics " + darworms.main.wGraphics);
     $('#wcanvas').bind('tap', wormEventHandler);
     // $('#wcanvas').on("tap", wormEventHandler);
     // $('#wcanvas').bind('vmousedown', wormEventHandler);
@@ -2914,7 +2923,7 @@ darworms$1.main = (function() {
     //  The following code is designed to remove the toolbar on mobile Safari
     if (!window.location.hash && window.addEventListener) {
       window.addEventListener("load", function() {
-        console.log("load event listener triggered");
+        log("load event listener triggered");
         setTimeout(function() {
           window.scrollTo(0, 0);
         }, 100);
@@ -2927,7 +2936,7 @@ darworms$1.main = (function() {
     }
     $(window).bind('throttledresize orientationchange', function(event) {
       window.scrollTo(1, 0);
-      console.log("resize event triggered");
+      log("resize event triggered");
       if (darworms$1.theGame) {
         clearCanvas();
       }
@@ -2955,7 +2964,7 @@ darworms$1.main = (function() {
       darworms$1.selectedIdx = 3;
     });
     $("#nextbutton").click(function() {
-      console.log(" nextbutton clicked");
+      log(" nextbutton clicked");
       $.mobile.changePage("#edit-darworm-page", {
         allowSamePageTransition: true
       });
@@ -2964,7 +2973,7 @@ darworms$1.main = (function() {
       // $.mobile.changePage( "#edit-darworm-page", { allowSamePageTransition: true } );
     });
     $("input[name='edit-radio-choice']").on("change", function() {
-      console.log(" edit-radio-choice on change function");
+      log(" edit-radio-choice on change function");
       var type = ($("input[name='edit-radio-choice']:checked").val());
       playerTypes[darworms$1.selectedIdx] = typeFromName(type);
       gWorms[darworms$1.selectedIdx].init(typeFromName(type));
@@ -2972,7 +2981,7 @@ darworms$1.main = (function() {
     });
 
     $("input[name='edit-textname']").on("change", function() {
-      console.log(" edit-textname");
+      log(" edit-textname");
       var dnastring = ($("input[name='edit-textname']").val());
       var regx = /^[ABCDEF\?]{63}X$/;
       if (regx.test(dnastring)) {

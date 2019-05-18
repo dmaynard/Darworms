@@ -4,6 +4,9 @@ import {
 import {
   darworms
 } from "./loader.js";
+import {
+  log
+} from "./utils.js"
 /**
  * Created with JetBrains WebStorm.
  * User: dmaynard
@@ -180,7 +183,7 @@ export class Worm {
 
   }
   setKey(keyName) {
-    console.log(" keyname: " + keyName)
+    log(" keyname: " + keyName)
     this.musickeyName = keyName;
     this.MusicScale = musicalkeys[keyName];
   }
@@ -224,29 +227,29 @@ export class Worm {
   randomize() {
     var dir;
     for (var i = 0; i < 63; i = i + 1) {
-      // console.log(" randomize loop start  i = " + i + " dna[i] = " + this.dna[i]);
+      // log(" randomize loop start  i = " + i + " dna[i] = " + this.dna[i]);
       if (this.dna[i] === darworms.dwsettings.codons.unSet) {
         for (var j = 0; j < 1000; j = j + 1) {
           dir = Math.floor(Math.random() * 6);
-          //console.log( " dir = " + dir +  " i=" + i + " outMask[dir] = " + outMask[dir] + "& = " + (i & outMask[dir]));
+          //log( " dir = " + dir +  " i=" + i + " outMask[dir] = " + outMask[dir] + "& = " + (i & outMask[dir]));
           if ((i & darworms.outMask[dir]) === 0) {
             this.dna[i] = dir;
             this.numChoices += 1;
-            // console.log(" Setting dir 0x" + i.toString(16) + " to " + compassPts[dir]);
+            // log(" Setting dir 0x" + i.toString(16) + " to " + compassPts[dir]);
             break;
           }
         }
         if (this.dna[i] === darworms.dwsettings.codons.unSet) {
-          console.log("Error we rolled craps 10,000 times in a row");
+          log("Error we rolled craps 10,000 times in a row");
         }
       }
-      // console.log(" randomize loop end  i = " + i + " dna[i] = " + this.dna[i]);
+      // log(" randomize loop end  i = " + i + " dna[i] = " + this.dna[i]);
     }
     this.toText();
   };
   log() {
     var dir;
-    console.log(" Worm State: " + darworms.wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
+    log(" Worm State: " + darworms.wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
   };
   place(aState, aGame, pos) {
     this.pos = pos;
@@ -254,19 +257,19 @@ export class Worm {
     this.nMoves = 0;
     this.score = 0;
     this.state = aState;
-    console.log(" placing worm   i = " + this.colorIndex + " state " + aState + " " + this.numChoices + " of 64 possible moves defined");
+    log(" placing worm   i = " + this.colorIndex + " state " + aState + " " + this.numChoices + " of 64 possible moves defined");
   };
   dump() {
     this.log();
     for (var i = 0; i < 64; i = i + 1) {
-      console.log(" dna" + i + " = " + darworms.compassPts[this.dna[i]]);
+      log(" dna" + i + " = " + darworms.compassPts[this.dna[i]]);
       var spokes = [];
       for (var spoke = 0; spoke < 6; spoke = spoke + 1) {
         if ((i & darworms.outMask[spoke]) !== 0) {
           spokes.push(darworms.compassPts[spoke]);
         }
       }
-      console.log(" dna" + i + " " + spokes + " = " + darworms.compassPts[this.dna[i]]);
+      log(" dna" + i + " " + spokes + " = " + darworms.compassPts[this.dna[i]]);
     }
 
   };
@@ -333,7 +336,7 @@ export class Worm {
   };
 
   emailDarworm () {
-    console.log("Emailing: " + this.toText());
+    log("Emailing: " + this.toText());
     var mailtourl = "mailto:?subject=" +
       encodeURIComponent("Check out this cool Darworm") +
       "&body=" +
@@ -342,7 +345,7 @@ export class Worm {
       // encodeURIComponent('<a href ="https://dmaynard.github.io/Darworms/public> Darworms" </a>') +
       encodeURIComponent("You can copy the darworm string below and then go to the game and paste the text into one of the players\n") +
       encodeURIComponent(this.toText());
-    console.log("url: " + mailtourl);
+    log("url: " + mailtourl);
 
     // document.location.href = mailtourl;
     window.open(mailtourl);

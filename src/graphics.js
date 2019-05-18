@@ -4,6 +4,9 @@ import {
 import {
   darworms
 } from "./loader.js";
+import {
+  log
+} from "./utils.js"
 
 export var wGraphics;
 export var wCanvas;
@@ -23,6 +26,8 @@ let theGame = null;
 export function graphicsInit(game) {
   wCanvas = document.getElementById("wcanvas");
   wGraphics = wCanvas.getContext("2d");
+  resizeCanvas()
+
 }
 export function setGrid(currentGrid, game) {
    grid = currentGrid;
@@ -39,7 +44,7 @@ export function setScale ( gridWidth, gridHeight) {
 }
  export function reScale(gridWidth, gridHeight) {
    setScale(gridWidth, gridHeight);
-   console.log(" reScaled to " + scale.format());
+   log(" reScaled to " + scale.format());
  };
 
 export function clearCanvas() {
@@ -78,7 +83,7 @@ export function getOffset(point) {
 export function gsetTranslate(point) {
   var cellOffset = getOffset(point);
   wGraphics.setTransform(scale.x, 0, 0, scale.y, cellOffset.x, cellOffset.y);
-  // console.log( "Drawing cell " +  point.format() + " x= " + cellOffset.x + "  y= " + cellOffset.y);
+  // log( "Drawing cell " +  point.format() + " x= " + cellOffset.x + "  y= " + cellOffset.y);
 };
 
 
@@ -94,7 +99,7 @@ export function drawCells() {
 
 export function drawcell(point) {
   // if (point.isEqualTo(new Point (this.grid.width-1, this.grid.height/2))) {
-  //     console.log(this.grid.formatStateAt(point));
+  //     log(this.grid.formatStateAt(point));
   // }
   timeInDraw -= Date.now();
   // wGraphics.save();
@@ -164,12 +169,12 @@ export function drawcell(point) {
 
   var outvec = grid.outVectorsAt(point);
   var invec = grid.inVectorsAt(point);
-  // console.log (" drawCell at" +  point.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
+  // log (" drawCell at" +  point.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
 
   for (var i = 0; i < 6; i = i + 1) {
     if ((outvec & darworms.outMask[i]) !== 0) {
       var outSpokeColor = darworms.dwsettings.colorTable[grid.spokeAt(point, i)];
-      // console.log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
+      // log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
       wGraphics.strokeStyle = outSpokeColor;
       wGraphics.lineWidth = 2.0 / scale.x;
       wGraphics.lineCap = 'round';
@@ -207,7 +212,7 @@ export function drawcell(point) {
 export function drawDirtyCells() {
   var pt;
   // wGraphics.save();
-  // console.log(" Grawing dirty cells" + this.dirtyCells.length);
+  // log(" Grawing dirty cells" + this.dirtyCells.length);
   while ((pt = dirtyCells.pop()) !== undefined) {
     drawcell(pt);
   }
@@ -238,11 +243,11 @@ export function highlightWorm(worm, index) {
 
 export function   initPickUI(worm) {
 
-    console.log(" initPickUI")
+    log(" initPickUI")
     darworms.pickCells = new Array();
     var outvec = this.grid.outVectorsAt(worm.pos);
     var inVec = this.grid.inVectorsAt(worm.pos);
-    // console.log (" drawCell at" +  point.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
+    // log (" drawCell at" +  point.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
 
     for (var dir = 0; dir < 6; dir = dir + 1) {
       if (((outvec & darworms.outMask[dir]) == 0) && ((inVec & darworms.outMask[dir]) == 0)) {
@@ -289,7 +294,7 @@ export function drawPickCell(point, activeColor) {
   // wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
   var owner = this.grid.spokeAt(point, 7);
   if (owner !== 0) {
-    console.log(" Why is an owned cell a target selection? " + point.format(point));
+    log(" Why is an owned cell a target selection? " + point.format(point));
   }
   drawcell(point); // set up original background for this cell
 
@@ -319,7 +324,7 @@ export function drawPickCellOrigin(point, activeColor) {
   // wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
   var owner = this.grid.spokeAt(point, 7);
   if (owner !== 0) {
-    console.log(" Why is an owned cell a target selection origin? " + point.format(point));
+    log(" Why is an owned cell a target selection origin? " + point.format(point));
   }
   drawcell(point); // set up original backgrounf for this cell
 
@@ -395,7 +400,7 @@ function selectSmallUIDirection(touchPoint) {
     var diff = new Point(touchPoint.x - screenCoordinates.x, touchPoint.y - screenCoordinates.y);
     if ((absdiff.x < (scale.x / 2)) && (absdiff.y < (scale.y / 2)) &&
       this.gameState === darworms.gameStates.waiting) {
-      console.log(" target hit delta: " + diff.format());
+      log(" target hit delta: " + diff.format());
       setDNAandResumeGame(pickTarget.dir);
     }
   }, darworms.theGame);
@@ -411,7 +416,7 @@ function setDNAandResumeGame(direction) {
 }
 
 function selectLargeUIDirection(point) {
-  // console.log( "selectDirection: " + point.format());
+  // log( "selectDirection: " + point.format());
   var outvec = darworms.theGame.grid.stateAt(theGame.focusWorm.pos);
   var minDist = 100000;
   var dist;
@@ -422,15 +427,15 @@ function selectLargeUIDirection(point) {
         (((darworms.theGame.xPts[i] * wCanvas.width * .75) / 2) + (wCanvas.width / 2)),
         (((darworms.theGame.yPts[i] * wCanvas.height * .75) / 2) + (wCanvas.height / 2)));
 
-      // console.log(" direction: " + i + " target point " + target.format());
-      // console.log("Touch Point: " + point.format());
+      // log(" direction: " + i + " target point " + target.format());
+      // log("Touch Point: " + point.format());
       dist = target.dist(point);
       //  Actual pixel coordinates
       if (dist < minDist) {
         minDist = dist;
         select = i;
       }
-      // console.log("selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
+      // log("selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
     }
   }
   if ((minDist < wCanvas.width / 8) && (select >= 0)) {
@@ -484,7 +489,7 @@ export function showTimes() {
     var nFrames = 0;
     var sumTime = 0;
     var fps = 0;
-    console.log("frameTimes.length " + frameTimes.length);
+    log("frameTimes.length " + frameTimes.length);
     for (var i = 0; i < frameTimes.length; i = i + 1) {
       nFrames = nFrames + 1;
       if (frameTimes[i] > max) {
@@ -542,7 +547,7 @@ export function showTimes() {
 
   };
 
-  // this should be moved to graphics.js
+//  set the wcanvas dimensions based on the window dimentions
 export function resizeCanvas() {
     var xc = $('#wcanvas');
     var canvasElement = document.getElementById('wcanvas');
@@ -576,7 +581,7 @@ export function resizeCanvas() {
     canvasElement.height = h - 140;
     canvasElement.width = w;
     if ($('#debug').slider().val() === "1") {
-      alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val() + "arg " + nw);
+      alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val());
     }
 
     if (darworms.theGame) {

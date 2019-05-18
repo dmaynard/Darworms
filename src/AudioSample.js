@@ -2,6 +2,9 @@
  * Created by dmaynard on 1/19/15.
  */
 import { darworms } from "./loader.js";
+import {
+  log
+} from "./utils.js"
 
 export default function AudioSample(name, location) {
     this.location = location;
@@ -14,10 +17,10 @@ export default function AudioSample(name, location) {
     xhr.onload = (function () {
         darworms.audioContext.decodeAudioData(xhr.response,
             (function(incomingBuffer) {
-                // console.log( "on Load incoming Buffer");
-                // console.log(" xhr " + xhr.status + "  " + xhr.statusText);
-                // console.log(" incoming buffer = " + incomingBuffer );
-                // console.log ( " this.name " + this.name);
+                // log( "on Load incoming Buffer");
+                // log(" xhr " + xhr.status + "  " + xhr.statusText);
+                // log(" incoming buffer = " + incomingBuffer );
+                // log ( " this.name " + this.name);
                 this.savedBuffer = incomingBuffer; // Save the buffer, we'll reuse it
             }
         ).bind(this));
@@ -28,14 +31,14 @@ export default function AudioSample(name, location) {
 
 AudioSample.prototype.playSample = function (rate, pan) {
     var source;
-    // console.log(" playSample " + this.name + "  " + this.location + "  savedBuffer " + this.savedBuffer);
+    // log(" playSample " + this.name + "  " + this.location + "  savedBuffer " + this.savedBuffer);
     if (darworms.audioContext !== undefined && this.savedBuffer !== undefined) {
         // Do we have to create a new buffer every time we play a note ?
         source = darworms.audioContext.createBufferSource();
         source.buffer = this.savedBuffer;
         darworms.masterGainNode.gain.value = darworms.dwsettings.masterAudioVolume;
         source.connect(darworms.masterGainNode);
-        // console.log(" playSample " + this.name + " volume  " + darworms.masterGainNode.gain.value);
+        // log(" playSample " + this.name + " volume  " + darworms.masterGainNode.gain.value);
         if ( darworms.audioPanner !== undefined ) {
           darworms.masterGainNode.connect(darworms.audioPanner);
           darworms.audioPanner.connect(darworms.audioContext.destination);

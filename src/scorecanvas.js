@@ -20,7 +20,7 @@ export function scoreCanvasInit(game) {
 
 export function clearScore(segmentIndex, totalSegments) {
   var segWidth = scoreCanvas.width / totalSegments;
-  scorectx.fillStyle = "rgba(222,222,222, 1.0)";
+  scorectx.fillStyle = darworms.dwsettings.cellBackground[0];
   scorectx.shadowOffsetX = 0;
   scorectx.shadowOffsetY = 0;
 

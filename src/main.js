@@ -25,11 +25,12 @@ import {
   drawCells,
   drawDirtyCells,
   clearCanvas,
+  setGrid,
   setScale,
   resizeCanvas
 } from "./graphics.js";
 import {
-    scoreCanvasInit
+  scoreCanvasInit
 } from "./scorecanvas.js";
 import {
   emailGame,
@@ -245,15 +246,15 @@ darworms.main = (function() {
       $('#abortgame').hide();
     }
 
-   $('#fps').val(darworms.graphics.fps).slider("refresh");
+    $('#fps').val(darworms.graphics.fps).slider("refresh");
 
-   $('#gridsize').val(darworms.dwsettings.gridSize).slider("refresh");
-   $('#backg').val(darworms.dwsettings.backGroundTheme).slider("refresh");
-   $('#doanim').val(darworms.dwsettings.doAnimations).slider("refresh");
-   $('#audioon').val(darworms.dwsettings.doAudio).slider("refresh");
-   $('#fixedinitpos').val(darworms.dwsettings.fixedInitPos).slider("refresh");
+    $('#gridsize').val(darworms.dwsettings.gridSize).slider("refresh");
+    $('#backg').val(darworms.dwsettings.backGroundTheme).slider("refresh");
+    $('#doanim').val(darworms.dwsettings.doAnimations).slider("refresh");
+    $('#audioon').val(darworms.dwsettings.doAudio).slider("refresh");
+    $('#fixedinitpos').val(darworms.dwsettings.fixedInitPos).slider("refresh");
 
-   $('#pickDirectionUI').val(darworms.dwsettings.pickDirectionUI).slider("refresh");
+    $('#pickDirectionUI').val(darworms.dwsettings.pickDirectionUI).slider("refresh");
 
 
   }
@@ -270,8 +271,8 @@ darworms.main = (function() {
     }
     darworms.dwsettings.gridSize = parseInt($('#gridsize').val());
     darworms.dwsettings.doAnimations = $('#doanim').slider().val() == "true" ? true : false;
-    darworms.dwsettings.doAudio = $('#audioon').slider().val()  == "1" ? 1 : 0;;
-    darworms.dwsettings.fixedInitPos = $('#fixedinitpos').slider().val()  == "1" ? 1 : 0;;
+    darworms.dwsettings.doAudio = $('#audioon').slider().val() == "1" ? 1 : 0;;
+    darworms.dwsettings.fixedInitPos = $('#fixedinitpos').slider().val() == "1" ? 1 : 0;;
 
     darworms.dwsettings.pickDirectionUI = $('#pickDirectionUI').slider().val() == "1" ? 1 : 0;
 
@@ -313,8 +314,8 @@ darworms.main = (function() {
 
       if (regx.test(gWorms[i].name)) {
         if (!gWorms[i].fromText(gWorms[i].name)) {
-           alert("Invalid DNA for Daworm # " + (i+1) + " " );
-           gWorms[i].wType = 0;
+          alert("Invalid DNA for Daworm # " + (i + 1) + " ");
+          gWorms[i].wType = 0;
         };
 
       }
@@ -515,8 +516,8 @@ darworms.main = (function() {
         }
         // $(textFields[i]).val(worm.toText());
         var startingPoint = ((darworms.dwsettings.fixedInitPos == 1) ? darworms.theGame.origin :
-           (playerTypes[i] == 2 ) ? worm.startingPos :  // Same
-            new Point((Math.floor(Math.random() * darworms.theGame.grid.width)),
+          (playerTypes[i] == 2) ? worm.startingPos : // Same
+          new Point((Math.floor(Math.random() * darworms.theGame.grid.width)),
             (Math.floor(Math.random() * darworms.theGame.grid.height))));
 
 
@@ -527,6 +528,7 @@ darworms.main = (function() {
         }
       })
     }
+    setButtonNames();
     if (startNow === false) return;
     updateScores(gWorms);
     log(" NEW in startgame darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
@@ -753,7 +755,19 @@ darworms.main = (function() {
       overflow: 'hidden',
       height: '100%'
     });
+    $('#wcanvasparagrap').css( {
 
+      background: darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme]
+
+    });
+
+    if (darworms.theGame === undefined || darworms.theGame === null || darworms.theGame.grid.height != darworms.dwsettings.gridSize) {
+      darworms.theGame = new Game(darworms.dwsettings.gridSize, darworms.dwsettings.gridSize);
+      setGrid(darworms.theGame.grid, darworms.theGame)
+    }
+    setButtonNames();
+    drawCells();
+    updateScores(darworms.main.gWorms);
     if (!darworms.playpageInitialized) {
       resizeCanvas();
       darworms.startgame(false);
@@ -968,7 +982,7 @@ darworms.main = (function() {
     // This may be needed when we actually build a phoneGap app
     // in this case delay initialization until we get the deviceready event
     document.addEventListener("deviceready", deviceInfo, true);
-    $("#logging").slider().val( darworms.dwsettings.dologging ? "true" : "false");
+    $("#logging").slider().val(darworms.dwsettings.dologging ? "true" : "false");
 
     $('#versionstring')[0].innerHTML = "Version " + darworms.version;
     // See if the url constains an encoded game
@@ -990,7 +1004,7 @@ darworms.main = (function() {
     graphicsInit();
     darworms.dwsettings.isLargeScreen = $(window).width() >= darworms.dwsettings.minLargeWidth;
     darworms.dwsettings.gridSize = darworms.dwsettings.isLargeScreen ?
-          darworms.dwsettings.largeGridSize : darworms.dwsettings.smallGridSize;
+      darworms.dwsettings.largeGridSize : darworms.dwsettings.smallGridSize;
 
     darworms.wCanvasPixelDim = new Point(wCanvas.clientWidth, wCanvas.clientHeight); // log ( " init wGraphics " + darworms.main.wGraphics);
     $('#wcanvas').bind('tap', wormEventHandler);

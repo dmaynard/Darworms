@@ -10,9 +10,9 @@ import {
 
 export var wGraphics;
 export var wCanvas;
-export var scale;  // this really shouldm't be needed eleswhere
-var gridSize = new Point (0,0);
-var grid;  // module global passed in at init time
+export var scale; // this really shouldm't be needed eleswhere
+var gridSize = new Point(0, 0);
+var grid; // module global passed in at init time
 
 let xPts = [1.0, 0.5, -0.5, -1.0, -0.5, 0.5];
 let yPts = [0.0, 1.0, 1.0, 0.0, -1.0, -1.0];
@@ -30,30 +30,31 @@ export function graphicsInit(game) {
 
 }
 export function setGrid(currentGrid, game) {
-   grid = currentGrid;
-   timeInDraw = 0;
-   frameTimes.length = 0;
-   startFrameTimes.length = 0;
-   theGame = game;
+  grid = currentGrid;
+  timeInDraw = 0;
+  frameTimes.length = 0;
+  startFrameTimes.length = 0;
+  theGame = game;
 
 }
 
-export function setScale ( gridWidth, gridHeight) {
+export function setScale(gridWidth, gridHeight) {
   scale = new Point((wCanvas.width / (gridWidth + 1.5)), (wCanvas.height / (gridHeight + 1)));
-  gridSize = new Point( gridWidth, gridHeight);
+  gridSize = new Point(gridWidth, gridHeight);
 }
- export function reScale(gridWidth, gridHeight) {
-   setScale(gridWidth, gridHeight);
-   log(" reScaled to " + scale.format());
- };
+export function reScale(gridWidth, gridHeight) {
+  setScale(gridWidth, gridHeight);
+  log(" reScaled to " + scale.format());
+};
 
 export function clearCanvas() {
   // Store the current transformation matrix
   wGraphics.save();
   // Use the identity matrix while clearing the canvas
   wGraphics.setTransform(1, 0, 0, 1, 0, 0);
-  wGraphics.clearRect(0, 0, wCanvas.width,  wCanvas.height);
+  wGraphics.clearRect(0, 0, wCanvas.width, wCanvas.height);
   wGraphics.fillStyle = darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme];
+  wGraphics.fillStyle = "#F5F5F500";
   wGraphics.fillRect(0, 0, wCanvas.width, wCanvas.height);
 
   // Restore the transform
@@ -62,7 +63,7 @@ export function clearCanvas() {
 };
 
 export function startGameTimer() {
-  gameElapsedTime =  - new Date().getTime();
+  gameElapsedTime = -new Date().getTime();
 }
 
 export function stopGameTimer() {
@@ -88,6 +89,7 @@ export function gsetTranslate(point) {
 
 
 export function drawCells() {
+  if (grid) {
     wGraphics.save();
     for (var col = 0; col < grid.width; col = col + 1) {
       for (var row = 0; row < grid.height; row = row + 1) {
@@ -95,7 +97,8 @@ export function drawCells() {
       }
     }
     wGraphics.restore();
-  };
+  }
+};
 
 export function drawcell(point) {
   // if (point.isEqualTo(new Point (this.grid.width-1, this.grid.height/2))) {
@@ -219,7 +222,7 @@ export function drawDirtyCells() {
   // wGraphics.restore();
 };
 
-export function pushDirtyCell( pos ) {
+export function pushDirtyCell(pos) {
   dirtyCells.push(pos);
 }
 export function highlightWorm(worm, index) {
@@ -241,50 +244,50 @@ export function highlightWorm(worm, index) {
   }
 }
 
-export function   initPickUI(worm) {
+export function initPickUI(worm) {
 
-    log(" initPickUI")
-    darworms.pickCells = new Array();
-    var outvec = this.grid.outVectorsAt(worm.pos);
-    var inVec = this.grid.inVectorsAt(worm.pos);
-    // log (" drawCell at" +  point.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
+  log(" initPickUI")
+  darworms.pickCells = new Array();
+  var outvec = this.grid.outVectorsAt(worm.pos);
+  var inVec = this.grid.inVectorsAt(worm.pos);
+  // log (" drawCell at" +  point.format() + " outVectors 0x" + outvec.toString(16) + " inVectors 0x" + invec.toString(16));
 
-    for (var dir = 0; dir < 6; dir = dir + 1) {
-      if (((outvec & darworms.outMask[dir]) == 0) && ((inVec & darworms.outMask[dir]) == 0)) {
-        var pickTarget = {};
-        pickTarget.pos = this.grid.next(worm.pos, dir);
-        pickTarget.dir = dir;
-        pickTarget.color = darworms.dwsettings.alphaColorTable[theGame.focusWorm.colorIndex];
-        pickTarget.wormColorIndex = theGame.focusWorm.colorIndex;
-        darworms.pickCells.push(pickTarget);
-      }
+  for (var dir = 0; dir < 6; dir = dir + 1) {
+    if (((outvec & darworms.outMask[dir]) == 0) && ((inVec & darworms.outMask[dir]) == 0)) {
+      var pickTarget = {};
+      pickTarget.pos = this.grid.next(worm.pos, dir);
+      pickTarget.dir = dir;
+      pickTarget.color = darworms.dwsettings.alphaColorTable[theGame.focusWorm.colorIndex];
+      pickTarget.wormColorIndex = theGame.focusWorm.colorIndex;
+      darworms.pickCells.push(pickTarget);
     }
   }
+}
 
 
-  export function drawPickCells() {
-    var animFraction = 1.0 * (darworms.graphics.animFrame & 0x7F) / 128;
-    if ((darworms.dwsettings.pickDirectionUI == 1) && (animFraction < 0.1)) {
-      clearCanvas();
-      drawCells(); // shound use backbuffer instead of redrawing?
-    };
+export function drawPickCells() {
+  var animFraction = 1.0 * (darworms.graphics.animFrame & 0x7F) / 128;
+  if ((darworms.dwsettings.pickDirectionUI == 1) && (animFraction < 0.1)) {
+    clearCanvas();
+    drawCells(); // shound use backbuffer instead of redrawing?
+  };
 
+  darworms.pickCells.forEach(function(pickTarget) {
+    drawPickCell(pickTarget.pos, pickTarget.color);
+  });
+  drawPickCellOrigin(darworms.theGame.focusWorm.pos,
+    darworms.dwsettings.alphaColorTable[darworms.theGame.focusWorm.colorIndex]);
+
+  if (darworms.dwsettings.pickDirectionUI == 1) {
     darworms.pickCells.forEach(function(pickTarget) {
-      drawPickCell(pickTarget.pos, pickTarget.color);
+      drawExpandedTarget(pickTarget);
     });
-    drawPickCellOrigin(darworms.theGame.focusWorm.pos,
-      darworms.dwsettings.alphaColorTable[darworms.theGame.focusWorm.colorIndex]);
-
-    if (darworms.dwsettings.pickDirectionUI == 1) {
-      darworms.pickCells.forEach(function(pickTarget) {
-        drawExpandedTarget(pickTarget);
-      });
-    }
-
-    darworms.theGame.worms.forEach(function(worm, index) {
-       highlightWorm(worm, index);
-    }, darworms.theGame);
   }
+
+  darworms.theGame.worms.forEach(function(worm, index) {
+    highlightWorm(worm, index);
+  }, darworms.theGame);
+}
 
 
 export function drawPickCell(point, activeColor) {
@@ -444,17 +447,17 @@ function selectLargeUIDirection(point) {
 };
 
 export function animateDyingWorms() {
-    for (var i = 0; i < 4; i = i + 1) {
-      // We don't want to do the animates in the same order ever frame because
-      // when tow worms die together the second's animations would always overwite
-      // the first's/
+  for (var i = 0; i < 4; i = i + 1) {
+    // We don't want to do the animates in the same order ever frame because
+    // when tow worms die together the second's animations would always overwite
+    // the first's/
 
-      var whichWorm = ((i + darworms.graphics.uiFrames) & 0x3);
-      if (theGame.worms[whichWorm].state == darworms.wormStates.dying) {
-        animateDyingCell(theGame.worms[whichWorm]);
-      }
+    var whichWorm = ((i + darworms.graphics.uiFrames) & 0x3);
+    if (theGame.worms[whichWorm].state == darworms.wormStates.dying) {
+      animateDyingCell(theGame.worms[whichWorm]);
     }
   }
+}
 
 function animateDyingCell(worm) {
   drawcell(worm.pos);
@@ -483,111 +486,116 @@ function drawShrikingOutline(worm) {
 }
 
 export function showTimes() {
-    var min = 100000000;
-    var max = 0;
-    var ave = 0;
-    var nFrames = 0;
-    var sumTime = 0;
-    var fps = 0;
-    log("frameTimes.length " + frameTimes.length);
-    for (var i = 0; i < frameTimes.length; i = i + 1) {
-      nFrames = nFrames + 1;
-      if (frameTimes[i] > max) {
-        max = frameTimes[i];
-      }
-      if (frameTimes[i] < min) {
-        min = frameTimes[i];
-      }
-      sumTime = sumTime + frameTimes[i];
+  var min = 100000000;
+  var max = 0;
+  var ave = 0;
+  var nFrames = 0;
+  var sumTime = 0;
+  var fps = 0;
+  log("frameTimes.length " + frameTimes.length);
+  for (var i = 0; i < frameTimes.length; i = i + 1) {
+    nFrames = nFrames + 1;
+    if (frameTimes[i] > max) {
+      max = frameTimes[i];
     }
-    if (nFrames > 0) {
-      ave = Math.round(sumTime / nFrames * 100) / 100;
+    if (frameTimes[i] < min) {
+      min = frameTimes[i];
     }
-    var totalElapsed = new Date().getTime() - startFrameTimes[0];
-    var percentDrawing = Math.round((sumTime * 100 / totalElapsed * 100)) / 100;
-    // var percentDrawing = (sumTime * 100 / totalElapsed);
+    sumTime = sumTime + frameTimes[i];
+  }
+  if (nFrames > 0) {
+    ave = Math.round(sumTime / nFrames * 100) / 100;
+  }
+  var totalElapsed = new Date().getTime() - startFrameTimes[0];
+  var percentDrawing = Math.round((sumTime * 100 / totalElapsed * 100)) / 100;
+  // var percentDrawing = (sumTime * 100 / totalElapsed);
 
-    if (gameElapsedTime > 0) {
-      fps = Math.round(nFrames * 1000 / gameElapsedTime * 100) / 100;
-    }
-    document.getElementById('wormframes').innerHTML = nFrames;
-    document.getElementById('wormmintime').innerHTML = min;
-    document.getElementById('wormmaxtime').innerHTML = max;
-    document.getElementById('wormavetime').innerHTML = ave;
-    document.getElementById('wormframetargettime').innerHTML = 1000 / $("#fps").val();
+  if (gameElapsedTime > 0) {
+    fps = Math.round(nFrames * 1000 / gameElapsedTime * 100) / 100;
+  }
+  document.getElementById('wormframes').innerHTML = nFrames;
+  document.getElementById('wormmintime').innerHTML = min;
+  document.getElementById('wormmaxtime').innerHTML = max;
+  document.getElementById('wormavetime').innerHTML = ave;
+  document.getElementById('wormframetargettime').innerHTML = 1000 / $("#fps").val();
 
-    document.getElementById('wormfps').innerHTML = fps;
-    //  frame Intervals.  How often did out update get called
-    min = 1000000;
-    max = 0;
-    nFrames = 0;
-    sumTime = 0;
-    ave = 0;
-    var delta = 0;
-    for (i = 1; i < startFrameTimes.length; i = i + 1) {
-      nFrames = nFrames + 1;
-      delta = startFrameTimes[i] - startFrameTimes[i - 1];
-      if (delta > max) {
-        max = delta;
-      }
-      if (delta < min) {
-        min = delta;
-      }
-      sumTime = sumTime + delta;
+  document.getElementById('wormfps').innerHTML = fps;
+  //  frame Intervals.  How often did out update get called
+  min = 1000000;
+  max = 0;
+  nFrames = 0;
+  sumTime = 0;
+  ave = 0;
+  var delta = 0;
+  for (i = 1; i < startFrameTimes.length; i = i + 1) {
+    nFrames = nFrames + 1;
+    delta = startFrameTimes[i] - startFrameTimes[i - 1];
+    if (delta > max) {
+      max = delta;
     }
-    if (nFrames > 0) {
-      ave = Math.round(sumTime / nFrames * 100) / 100;
+    if (delta < min) {
+      min = delta;
     }
-    document.getElementById('wormframemintime').innerHTML = min;
-    document.getElementById('wormframemaxtime').innerHTML = max;
-    document.getElementById('wormframeavetime').innerHTML = ave;
-    document.getElementById('wormframepercenttime').innerHTML = percentDrawing;
-    document.getElementById('wormframetotaltime').innerHTML = timeInDraw / 1000;
+    sumTime = sumTime + delta;
+  }
+  if (nFrames > 0) {
+    ave = Math.round(sumTime / nFrames * 100) / 100;
+  }
+  document.getElementById('wormframemintime').innerHTML = min;
+  document.getElementById('wormframemaxtime').innerHTML = max;
+  document.getElementById('wormframeavetime').innerHTML = ave;
+  document.getElementById('wormframepercenttime').innerHTML = percentDrawing;
+  document.getElementById('wormframetotaltime').innerHTML = timeInDraw / 1000;
 
 
-  };
+};
 
 //  set the wcanvas dimensions based on the window dimentions
 export function resizeCanvas() {
-    var xc = $('#wcanvas');
-    var canvasElement = document.getElementById('wcanvas');
-    var sc = $('#scorecanvas');
-    var nc = $('#navcontainer');
-    var fb = $('#footerbar');
-    var w = $(window).width();
-    var h = $(window).height();
-    if (h > 400) {
-      xc.css({
-        width: w - 20 + 'px',
-        height: h - 140 + 'px'
-      });
-      sc.css({
-        width: w - 20 + 'px',
-        height: 30 + 'px'
-
-      });
-    } else {
-      var nw = Math.floor(w * .70);
-      xc.css({
-        width: nw + 'px',
-        height: h - 110 + 'px'
-      });
-      sc.css({
-        width: nw + 'px'
-
-      });
-
-    }
-    canvasElement.height = h - 140;
-    canvasElement.width = w;
-    if ($('#debug').slider().val() === "1") {
-      alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val());
-    }
-
-    if (darworms.theGame) {
-      setScale(this.grid.width, this.grid.height);
-      darworms.theGame.needsRedraw = true;
-      clearCanvas();
-      drawCells();
-    }
+  var xc = $('#wcanvas');
+  var canvasElement = document.getElementById('wcanvas');
+  var sc = $('#scorecanvas');
+  var nc = $('#navcontainer');
+  var fb = $('#footerbar');
+  var w = $(window).width();
+  var h = $(window).height();
+  var widescreen = w / (h - 140);
+  if (widescreen > 1.5) {
+    w = (h - 140);
   }
+
+  if (h > 400) {
+    xc.css({
+      width: w - 20 + 'px',
+      height: h - 140 + 'px'
+    });
+    sc.css({
+      width: w - 20 + 'px',
+      height: 30 + 'px'
+
+    });
+  } else {
+    var nw = Math.floor(w * .70);
+    xc.css({
+      width: nw + 'px',
+      height: h - 110 + 'px'
+    });
+    sc.css({
+      width: nw + 'px'
+
+    });
+
+  }
+  canvasElement.height = h - 140;
+  canvasElement.width = w;
+  if ($('#debug').slider().val() === "1") {
+    alert(" Resize " + w + " x " + h + " debug " + $('#debug').slider().val());
+  }
+
+  if (darworms.theGame) {
+    setScale(this.grid.width, this.grid.height);
+    darworms.theGame.needsRedraw = true;
+    clearCanvas();
+    drawCells();
+  }
+}

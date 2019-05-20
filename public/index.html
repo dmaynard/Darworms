@@ -29,8 +29,20 @@
     padding-top: 12px; } .ui-navbar { padding-bottom: 8px; } .right { float: right; width: 100px; } .ui-grayed-out { opacity: 0.4; } .ui-opaque { opacity: 1.0; } .ui-dialog-contain { max-width: 1200px; } p.about { padding-left: 20px; padding-right:
     20px; } #scorecanvas { display: inline-block; padding-top: 0px; padding-bottom: 0px; } #background { display: inline-block; } #animate { display: inline-block; align: right; } #wcanvas { cursor: pointer; } #popupcanvas { cursor: pointer;
     background: #8c8c8c; width: 200px; height: 200px; } @media all and (max-height: 400px) { #canvascontainer { width: 70%; height: 75%; float: left; } #navcontainer { display: none; } #landnavcontainer { height: 70%; float: left; display: block;
-    padding-top: 10px; padding-left: 10px; padding-bottom: 4px; } #scorecanvas { height: 20px; width: 70%; padding-top: 2px; padding-bottom: 2px; } } @media all and (min-height: 399px) { #wcanvas { width: 100%; cursor: pointer; } #canvascontainer {}
-    #landnavcontainer { display: none; } #scorecanvas { height: 30px; } .selectionuicontainer .ui-slider-switch { width: 15em } .pickcellsuicontainer .ui-slider-switch { width: 15em } } </style> </head> <body id="myPages">
+    padding-top: 10px; padding-left: 10px; padding-bottom: 4px; } #scorecanvas { height: 20px; width: 70%; padding-top: 2px; padding-bottom: 2px; } } @media all and (min-height: 399px) #wcanvascontainer { width: 100%; text-align: center; } #wcanvas {
+    width: 100%; text-align: center; } #landnavcontainer { display: none; } #scorecanvas { height: 30px; } .selectionuicontainer .ui-slider-switch { width: 15em } .pickcellsuicontainer .ui-slider-switch { width: 15em } }
+    #navcontainer {
+      padding: 0px 0px;
+      margin: 0px;
+    }
+    #wcanvasparagrap {
+      background: "#F5F5F5";
+      padding: 0px 0px;
+      margin: 0px;
+    }
+  </style>
+ </head> <body
+    id="myPages">
     <div data-role="page" data-theme="b" id=menupage>
     <div data-role="header">
       <h1>DARWORMS</h1>
@@ -38,19 +50,23 @@
     <div data-role="content">
       <a href=#playpage data-role=button data-transition="fade"> Play </a>
       <a href=#settingspage data-role=button data-transition="fade"> Settings </a>
-      <a href=#debugpage data-role=button data-transition="fade"> Peformance </a>
-      <a href=#aboutpage data-role=button data-transition="flip"> About </a>
       <a href=#loadsavepage data-role=button data-transition="flip"> Load/Save Game </a>
       <a href=#emailpage data-role=button data-transition="flip"> EMail Game </a>
+      <a href=#debugpage data-role=button data-transition="fade"> Peformance </a>
+      <a href=#aboutpage data-role=button data-transition="flip"> About </a>
     </div>
   </div>
   <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true scroll="no" style="overflow: hidden">
     <div data-role="content" >
       <!-- div id="canvascontainer" class="canvas-container" -->
-      <div id="canvascontainer" width="100%">
-        <canvas id="wcanvas" class="wcanvasclass" width="100%"></canvas>
+        <p id="wcanvasparagrap" class ="wcanvasp" align="center" padding-top: "0px"  padding-top: "0px" >
+
+        <canvas id="wcanvas" class="wcanvasclass" padding-top: "0px" ></canvas>
+        <br>
         <canvas id="scorecanvas" class="scorecanvasclass" height="20"></canvas>
-      </div>
+
+        </p>
+
 
       <!-- div data-role="controlgroup" data-type="horizontal" -->
       <div id="navcontainer" class="ui-grid-c" data-role=navbar>

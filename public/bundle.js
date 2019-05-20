@@ -2665,6 +2665,12 @@ darworms$1.main = (function() {
       overflow: 'hidden',
       height: '100%'
     });
+    $('#wcanvasparagrap').css( {
+
+      background: darworms$1.dwsettings.cellBackground[darworms$1.dwsettings.backGroundTheme]
+
+    });
+
     if (darworms$1.theGame === undefined || darworms$1.theGame === null || darworms$1.theGame.grid.height != darworms$1.dwsettings.gridSize) {
       darworms$1.theGame = new Game(darworms$1.dwsettings.gridSize, darworms$1.dwsettings.gridSize);
       setGrid(darworms$1.theGame.grid, darworms$1.theGame);

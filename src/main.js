@@ -755,6 +755,12 @@ darworms.main = (function() {
       overflow: 'hidden',
       height: '100%'
     });
+    $('#wcanvasparagrap').css( {
+
+      background: darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme]
+
+    });
+
     if (darworms.theGame === undefined || darworms.theGame === null || darworms.theGame.grid.height != darworms.dwsettings.gridSize) {
       darworms.theGame = new Game(darworms.dwsettings.gridSize, darworms.dwsettings.gridSize);
       setGrid(darworms.theGame.grid, darworms.theGame)

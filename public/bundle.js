@@ -177,7 +177,7 @@ var darworms$1 = {
     gridBackground: ["#F5F5F5", "#404040"],
     cellBackground: ["#F5F5F5", "#404040"],
     masterAudioVolume: 0.3,
-    dologging: false,
+    dologging: true,
     gridSize: 18
   },
   images: {},
@@ -1703,8 +1703,8 @@ const maxpan = 0.8;
 class Game {
   constructor(gridWidth, gridHeight) {
 
-    wCanvas.width = darworms$1.wCanvasPixelDim.x;
-    wCanvas.height = darworms$1.wCanvasPixelDim.y;
+    wCanvas.width = $('#wcanvas').width();
+    wCanvas.height = $('#wcanvas').height();
 
 
     this.gameState = darworms$1.gameStates.over;
@@ -1739,7 +1739,7 @@ class Game {
       $('#pickDirectionUI').slider("refresh");
       darworms$1.dwsettings.pickDirectionUI = 1;
     }
-    log(" Scale: " + scale.format() + "darworms.dwsettings.pickDirectionUI" + 1);
+    log(" Scale: " + scale.format() + "darworms.dwsettings.pickDirectionUI: " + darworms$1.dwsettings.pickDirectionUI);
     this.zoomFrame = 0;
     this.startx = 0;
     this.starty = 0;

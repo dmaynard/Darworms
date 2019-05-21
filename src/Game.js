@@ -78,8 +78,8 @@ const maxpan = 0.8;
 export class Game {
   constructor(gridWidth, gridHeight) {
 
-    wCanvas.width = darworms.wCanvasPixelDim.x;
-    wCanvas.height = darworms.wCanvasPixelDim.y;
+    wCanvas.width = $('#wcanvas').width();
+    wCanvas.height = $('#wcanvas').height()
 
 
     this.gameState = darworms.gameStates.over;
@@ -114,7 +114,7 @@ export class Game {
       $('#pickDirectionUI').slider("refresh");
       darworms.dwsettings.pickDirectionUI = 1;
     }
-    log(" Scale: " + scale.format() + "darworms.dwsettings.pickDirectionUI" + 1);
+    log(" Scale: " + scale.format() + "darworms.dwsettings.pickDirectionUI: " + darworms.dwsettings.pickDirectionUI);
     this.zoomFrame = 0;
     this.startx = 0;
     this.starty = 0;

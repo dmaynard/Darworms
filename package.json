@@ -25,7 +25,11 @@
     "rollup-plugin-commonjs": "^9.2.2",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-uglify": "^4.0.0",
+    "rollup-plugin-uglify-es": "0.0.1",
     "serve": "^9.3.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "uglify": "^0.1.5",
+    "uglify-es": "^3.3.9"
+  }
 }

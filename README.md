@@ -21,3 +21,4 @@ Then, run one of these:
 
 - `npm run serve` (for play mode), or:
 - `npm run dev` (for dev mode with dynamic reloading)
+- `npm run build` (for production mode with minimizing)

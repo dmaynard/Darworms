@@ -4,9 +4,9 @@ import {
 } from "./utils.js"
 
 export var darworms = {
-  version: "0.9.3",
+  version: "0.9.4",
   // host: "localhost:5000",
-  host: "https://dmaynard.github.io/Darworms/public",
+  host: "https://darworms.com",
   compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
   gameStates: {
     "over": 0,

@@ -341,7 +341,7 @@ export class Worm {
       encodeURIComponent("Check out this cool Darworm") +
       "&body=" +
       encodeURIComponent("Darworms is a free web game available at \n") +
-      encodeURIComponent("https://dmaynard.github.io/Darworms/public\n") +
+      encodeURIComponent( darworms.host + "\n") +
       // encodeURIComponent('<a href ="https://dmaynard.github.io/Darworms/public> Darworms" </a>') +
       encodeURIComponent("You can copy the darworm string below and then go to the game and paste the text into one of the players\n") +
       encodeURIComponent(this.toText());

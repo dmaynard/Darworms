@@ -49,7 +49,7 @@ export function emailGame(gameText) {
   var mailtourl = "mailto:?subject=" +
     encodeURIComponent("Darworms Game ") +
     "&body=" +
-    encodeURIComponent("Darworms is a unique, free web strategy territoty capture game. Select everything below and paste it into browser address bar \n") +
+    encodeURIComponent("Darworms is a unique, free web strategy territoty capture game. Select everything below and paste it into a browser address bar \n\n") +
     // encodeURIComponent("Here is an example of a game I played: \n") +
 
     encodeURIComponent(darworms.host) +

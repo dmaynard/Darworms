@@ -324,6 +324,7 @@ darworms.main = (function() {
       playerTypes[i] = gWorms[i].wType
       gWorms[i].score = aworm.score;
       gWorms[i].instrument = aworm.instrument;
+      gWorms[i].setNotes(aworm.instrument);
       gWorms[i].musickeyName = aworm.musickeyName;
       gWorms[i].MusicScale = aworm.MusicScale;
 
@@ -755,7 +756,7 @@ darworms.main = (function() {
       overflow: 'hidden',
       height: '100%'
     });
-    $('#wcanvasparagrap').css( {
+    $('#wcanvasparagrap').css({
 
       background: darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme]
 
@@ -978,33 +979,39 @@ darworms.main = (function() {
         return 0;
     }
   }
+
   var init = function() {
     // This may be needed when we actually build a phoneGap app
     // in this case delay initialization until we get the deviceready event
     document.addEventListener("deviceready", deviceInfo, true);
+
     $("#logging").slider().val(darworms.dwsettings.dologging ? "true" : "false");
 
     $('#versionstring')[0].innerHTML = "Version " + darworms.version;
     // See if the url constains an encoded game
-    const urlParams = new URLSearchParams(window.location.search);
-    log(location.search);
-    if (urlParams.has('darwormsgame')) {
-      darworms.gameTxt = decodeURIComponent(urlParams.get('darwormsgame'));
-      if (darworms.gameTxt) {
-        injectSettings(darworms.gameTxt);
-        //  go to Playpage here ?
-        scoreCanvasInit();
-        updateScores(gWorms);
-        $.mobile.changePage('#playpage');
-
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      log(location.search);
+      if (urlParams.has('darwormsgame')) {
+        darworms.gameTxt = decodeURIComponent(urlParams.get('darwormsgame'));
+        if (darworms.gameTxt) {
+          injectSettings(darworms.gameTxt);
+          //  go to Playpage here ?
+          scoreCanvasInit();
+          updateScores(gWorms);
+          $.mobile.changePage('#playpage');
+          darworms.dwsettings.forceInitialGridSize = false;
+        }
       }
-    }
-
-
+    } catch (err) {
+      alert("Trouble parsing the url. Be sure to copy and paste the entire url starting with 'https' all way through to the lst '}' \n" + err.message);
+    };
     graphicsInit();
     darworms.dwsettings.isLargeScreen = $(window).width() >= darworms.dwsettings.minLargeWidth;
-    darworms.dwsettings.gridSize = darworms.dwsettings.isLargeScreen ?
-      darworms.dwsettings.largeGridSize : darworms.dwsettings.smallGridSize;
+    if (darworms.dwsettings.forceInitialGridSize) {
+      darworms.dwsettings.gridSize = darworms.dwsettings.isLargeScreen ?
+        darworms.dwsettings.largeGridSize : darworms.dwsettings.smallGridSize;
+    }
 
     darworms.wCanvasPixelDim = new Point(wCanvas.clientWidth, wCanvas.clientHeight); // log ( " init wGraphics " + darworms.main.wGraphics);
     $('#wcanvas').bind('tap', wormEventHandler);
@@ -1066,7 +1073,7 @@ darworms.main = (function() {
     });
 
     gWorms.forEach(function(worm, i) {
-      worm.setNotes(0);
+      worm.setNotes(worm.instrument || 0);
     })
     resizeCanvas();
     $("#p1button").click(function() {

@@ -119,24 +119,7 @@
       <h1>Settings</h1>
       <a href="#playpage">Play</a>
     </div>
-    <div data-role=content id="geometryradios">
-      <form>
-        <fieldset data-role="controlgroup" id="geometry-radiobuttons">
-          <legend>At edge of grid Darworms will:</legend>
-          <input type="radio" name="geometry-radio-choice" id="geometry-radio-torus" checked="checked" value="torus">
-          <label for="geometry-radio-torus">Wrap around (Torus)</label>
 
-          <input type="radio" name="geometry-radio-choice" id="geometry-radio-falloff" value="falloff">
-          <label for="geometry-radio-falloff">Fall off and die </label>
-
-          <input type="radio" name="geometry-radio-choice" id="geometry-radio-reflect" value="reflect">
-          <label for="geometry-radio-reflect">Reflect back into grid </label>
-
-
-        </fieldset>
-      </form>
-
-    </div>
     <div data-role=content id="realtimesettings">
 
       <div data-role="fieldcontain">
@@ -209,6 +192,23 @@
                 </select>
         </form>
       </fieldset>
+    </div>
+    <div data-role=content id="geometryradios">
+      <form>
+        <fieldset data-role="controlgroup" id="geometry-radiobuttons">
+          <legend>At edge of grid Darworms will:</legend>
+          <input type="radio" name="geometry-radio-choice" id="geometry-radio-torus" checked="checked" value="torus">
+          <label for="geometry-radio-torus">Wrap around (Torus)</label>
+
+          <input type="radio" name="geometry-radio-choice" id="geometry-radio-falloff" value="falloff">
+          <label for="geometry-radio-falloff">Fall off and die </label>
+
+          <input type="radio" name="geometry-radio-choice" id="geometry-radio-reflect" value="reflect">
+          <label for="geometry-radio-reflect">Reflect back into grid </label>
+
+        </fieldset>
+      </form>
+
     </div>
     <a id="abortgame" data-role=button data-inline="true" onclick=darworms.abortgame()>Abort Game</a>
 

@@ -141,7 +141,7 @@ export function loadGames() {
     log($(this).attr("value"));
     let index = parseInt($(this).attr("value"))
     if ((index >= 0) && (index < darworms.savedgames.length)) {
-      let gameObj = darworms.main.injectSettings(darworms.savedgames[$(this).attr("value")]);
+      let gameObj = darworms.main.injectSettings(darworms.savedgames[index]);
       updateScores(darworms.main.gWorms);
       $.mobile.changePage('#playpage');
     }

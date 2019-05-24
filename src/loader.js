@@ -128,7 +128,7 @@ export var darworms = {
     gridBackground: ["#F5F5F5", "#404040"],
     cellBackground: ["#F5F5F5", "#404040"],
     masterAudioVolume: 0.3,
-    dologging: true,
+    dologging: false,
     gridSize: 18
   },
   images: {},

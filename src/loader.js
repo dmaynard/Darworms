@@ -6,7 +6,7 @@ import {
 export var darworms = {
   version: "0.9.3",
   // host: "localhost:5000",
-  host: "https://dmaynard.github.io/Darworms/public",
+  host: "https://darworms.com",
   compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
   gameStates: {
     "over": 0,
@@ -128,7 +128,7 @@ export var darworms = {
     gridBackground: ["#F5F5F5", "#404040"],
     cellBackground: ["#F5F5F5", "#404040"],
     masterAudioVolume: 0.3,
-    dologging: true,
+    dologging: false,
     gridSize: 18
   },
   images: {},

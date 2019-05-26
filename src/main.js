@@ -479,7 +479,7 @@ darworms.main = (function() {
     }
     // wCanvas.width = $('#wcanvas').width();
     // wCanvas.height = $('#wcanvas').height(); // make it square
-    darworms.dwsettings.isLargeScreen = wCanvas.width >= darworms.dwsettings.minLargeWidth;
+    darworms.dwsettings.isLargeScreen = wCanvas.width >= darworms.dwsettings.minLargeScreenWidth;
     var curScreen = new Point(wCanvas.width, wCanvas.height);
     darworms.wCanvasPixelDim = curScreen;
 
@@ -984,7 +984,8 @@ darworms.main = (function() {
     // This may be needed when we actually build a phoneGap app
     // in this case delay initialization until we get the deviceready event
     document.addEventListener("deviceready", deviceInfo, true);
-
+    console.log("development mode: " + darworms.dwsettings.dologging);
+    console.log("width: " + $(window).width());
     $("#logging").slider().val(darworms.dwsettings.dologging ? "true" : "false");
 
     $('#versionstring')[0].innerHTML = "Version " + darworms.version;
@@ -1007,10 +1008,14 @@ darworms.main = (function() {
       alert("Trouble parsing the url. Be sure to copy and paste the entire url starting with 'https' all way through to the lst '}' \n" + err.message);
     };
     graphicsInit();
-    darworms.dwsettings.isLargeScreen = $(window).width() >= darworms.dwsettings.minLargeWidth;
+    darworms.dwsettings.isLargeScreen = $(window).width() >= darworms.dwsettings.minLargeScreenWidth;
+    darworms.dwsettings.isTinyScreen = $(window).width() < darworms.dwsettings.maxSmallSreenWidth;
     if (darworms.dwsettings.forceInitialGridSize) {
       darworms.dwsettings.gridSize = darworms.dwsettings.isLargeScreen ?
-        darworms.dwsettings.largeGridSize : darworms.dwsettings.smallGridSize;
+        darworms.dwsettings.largeGridSize :
+        darworms.dwsettings.isTinyScreen ?
+          darworms.dwsettings.tinyGridSize :
+          darworms.dwsettings.smallGridSize;
     }
 
     darworms.wCanvasPixelDim = new Point(wCanvas.clientWidth, wCanvas.clientHeight); // log ( " init wGraphics " + darworms.main.wGraphics);

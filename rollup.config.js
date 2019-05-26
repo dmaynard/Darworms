@@ -1,6 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify-es';
-// import replace from 'rollup-plugin-replace';
+import replace from 'rollup-plugin-replace';
 // import globals from 'rollup-plugin-node-globals';
 // `npm run build` -> `production` is true
 // `npm run dev` -> `production` is false
@@ -16,6 +16,11 @@ export default {
 	plugins: [
 
 		resolve(), // tells Rollup how to find date-fns in node_modules
+		replace({
+					exclude: ['node_modules/**', 'public/**'],
+					include: 'src/loader.js',
+					ENV: (production ? false : true),
+				}),
 
 			production && uglify(),
 

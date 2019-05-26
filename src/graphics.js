@@ -560,8 +560,8 @@ export function resizeCanvas() {
   var w = $(window).width();
   var h = $(window).height();
   var widescreen = w / (h - 140);
-  if (widescreen > 1.5) {
-    w = (h - 140);
+  if (widescreen > 2.0) {
+    w = 2.0 * (h - 140);
   }
 
   if (h > 400) {

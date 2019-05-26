@@ -29,9 +29,5 @@
     "rollup-plugin-uglify-es": "0.0.1",
     "serve": "^9.3.0"
   },
-  "dependencies": {
-    "rollup-plugin-node-globals": "^1.4.0",
-    "uglify": "^0.1.5",
-    "uglify-es": "^3.3.9"
-  }
+  "dependencies": {}
 }

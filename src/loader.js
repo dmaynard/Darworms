@@ -95,7 +95,10 @@ export var darworms = {
     forceInitialGridSize: true,
     largeGridSize: 18, // The original Atari 800 Character mode
     smallGridSize: 10, // so cells can be selected with touch
-    minLargeWidth: 800, //
+    tinyGridSize: 8,
+
+    minLargeScreenWidth: 800, //
+    maxSmallSreenWidth: 500,
     isLargeScreen: true,
     doAudio: 1,
     fixedInitPos: true,
@@ -128,7 +131,8 @@ export var darworms = {
     gridBackground: ["#F5F5F5", "#404040"],
     cellBackground: ["#F5F5F5", "#404040"],
     masterAudioVolume: 0.3,
-    dologging: false,
+    // Note  env is set by the rollup-plugin-replace at build time
+    dologging: ENV,
     gridSize: 18
   },
   images: {},

@@ -145,6 +145,20 @@ export var darworms = {
   // this gives 12 notes from an octave in an equal tempered scale.
   audioPlaybackRates: [],
   audioFrequencies: [],
+  audiosamplefiles: [
+    [ 'kalimba' , "sounds/Roland-SC-88-Kalimba-C5.wav" ],
+    [ 'piano' ,   "sounds/piano-c2.wav" ],
+    [ 'guitar' , "sounds/Alesis-Fusion-Nylon-String-Guitar-C4.wav"],
+    [ 'bass'   ,  "sounds/Alesis-Fusion-Acoustic-Bass-C2.wav"],
+    [ 'violin' , "sounds/Casio-VZ-10M-Pizzicato-Bell-C4.wav"],
+    [ 'flute' ,   "sounds/1980s-Casio-Flute-C5.wav" ],
+    [ 'flute2' ,   "sounds/E-Mu-Proteus-2-Flute-C5.wav" ],
+    [ 'koto'   , "sounds/Ensoniq-ESQ-1-Koto-C5.wav"],
+    [ 'sitar' ,   "sounds/Sitar-C5.wav" ],
+    [ 'alto piano', 'sounds/Ensoniq-SD-1-Electric-Piano-C6.wav'],
+    [ 'bongo', 'sounds/Hi-Bongo.wav'],
+    [ 'muted ' ,   "sounds/darworm-death.wav"]
+  ],
   gameTxt: null
   // gameTxt: '{"version":"0.9.1","createdAt":"Fri May 10 2019 21:33:43 GMT-0700 (Pacific Daylight Time)","numMoves":263,"numTurns":83,"width":10,"backGroundTheme":"1","doAnimations":true,"doAudio":"1","gridGeometry":"torus","fixedInitPos":"1","pickDirectionUI":"0","masterAudioVolume":0.3,"fps":"30","players":[{"index":0,"typeName":"Random","startingPos":{"x":5,"y":5},"name":"FBFEBEEDCBFFEFFFDDDCFDADBFFFABFFBBDCBBAECEAEAEAEDCADBDADACACBBAX","score":14,"instrument":0,"musickeyName":"CMajor","MusicScale":[0,2,4,5,7,9,11]},{"index":1,"typeName":"Random","startingPos":{"x":5,"y":5},"name":"DCEEADEEEBCFEFFEFBCDBFFFFBFFAFFFBDADAEADBEAEABAECDDDADDDBBACABAX","score":13,"instrument":0,"musickeyName":"CMajor","MusicScale":[0,2,4,5,7,9,11]},{"index":2,"typeName":"Random","startingPos":{"x":5,"y":5},"name":"BCFDEDEECBACFBAFCCDCDFADCCCFABAFDEDEEDADBECCEEEEABDDBBADCBCCABAX","score":22,"instrument":0,"musickeyName":"CMajor","MusicScale":[0,2,4,5,7,9,11]},{"index":3,"typeName":"Random","startingPos":{"x":5,"y":5},"name":"AEDCFDFDECAEEBEFCFFDFFDDFBFFBFAFDBEEAEADEEACAEAEADADBBADBCACABAX","score":17,"instrument":0,"musickeyName":"CMajor","MusicScale":[0,2,4,5,7,9,11]}]}'
 };

@@ -291,7 +291,9 @@ export class Game {
 
           if (true || graphicsOn) {
             pushDirtyCell(next);
-            if (darworms.dwsettings.doAudio == 1 && graphicsOn) {
+            // last sound slot is labeld muted but actually contains the end game clip
+            if (darworms.dwsettings.doAudio == 1 && graphicsOn  &&
+                (active.instrument < (darworms.audiosamplefiles.length-1))) {
               let panValue = maxpan * ((active.pos.x - (darworms.theGame.grid.width / 2)) / (darworms.theGame.grid.width / 2));
               if ((active.audioSamplesPtrs[direction] !== undefined) && (active.audioSamplesPtrs[direction] >= 0)) {
                 darworms.audioSamples[active.audioSamplesPtrs[direction]].

@@ -299,29 +299,15 @@
       <form>
         <div class="ui-field-contain">
           <label for="select-instrument">Instrument:</label>
-          <select name="select-instrument" onchange="darworms.setInstrumentVal(0)" id="select-native-edit">
-        <option value="0" selected="selected">Piano </option>
-        <option value="1">Guitar</option>
-        <option value="2">Kalimba</option>
-        <option value="3">Sitar</option>
-        <option value="4">Flute</option>
-        <option value="5">Clarinet</option>
-        <option value="-1">Muted</option>
+          <select name="select-instrument" onchange="darworms.setInstrumentVal(0)" id="select-instrument-dropdown">
+
     </select>
         </div>
 
         <div class="ui-field-contain">
           <label for="select-key">Key:</label>
           <select name="select-key" onchange="darworms.setKeyVal(0)" data-inline="true" id="select-native-key">
-        <option value="AMajor">A Major</option>
-        <option value="BMajor">B Major</option>
-        <option value="CMajor" selected="selected">C Major</option>
-        <option value="CMinor">C Minor</option>
-        <option value="DMajor">D Major</option>
-        <option value="EMajor">E Major</option>
-        <option value="FMajor">F Major</option>
-        <option value="GMajor">G Major</option>
-
+        
     </select>
 
           <a id="playButton" class="playKeyNotes" data-role=button data-inline="true" onclick='darworms.playScale()'>Play Key Notes</a>

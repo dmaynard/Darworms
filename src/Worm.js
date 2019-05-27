@@ -1,3 +1,4 @@
+//  Worm.js
 import {
   Point
 } from "./Point.js";
@@ -16,8 +17,8 @@ import {
  */
 /* Worm Object */
 
-const musicalkeys = {
-  "AMajor": [
+export const musicalkeys = {
+  "A Major": [
     darworms.notes.A,
     darworms.notes.B,
     darworms.notes.CS,
@@ -26,7 +27,7 @@ const musicalkeys = {
     darworms.notes.FS,
     darworms.notes.GS
   ],
-  "BMajor": [
+  "B Major": [
     darworms.notes.B,
     darworms.notes.CS,
     darworms.notes.DS,
@@ -35,7 +36,16 @@ const musicalkeys = {
     darworms.notes.GS,
     darworms.notes.AS
   ],
-  "CMajor": [
+  "B Minor": [
+    darworms.notes.B,
+    darworms.notes.CS,
+    darworms.notes.D,
+    darworms.notes.E,
+    darworms.notes.FS,
+    darworms.notes.G,
+    darworms.notes.A
+  ],
+  "C Major": [
     darworms.notes.C1,
     darworms.notes.D,
     darworms.notes.E,
@@ -44,7 +54,7 @@ const musicalkeys = {
     darworms.notes.A,
     darworms.notes.B
   ],
-  "CMinor": [
+  "C Minor": [
     darworms.notes.C1,
     darworms.notes.D,
     darworms.notes.EF,
@@ -54,7 +64,7 @@ const musicalkeys = {
     darworms.notes.BF
   ],
 
-  "DMajor": [
+  "D Major": [
     darworms.notes.D,
     darworms.notes.E,
     darworms.notes.FS,
@@ -64,7 +74,7 @@ const musicalkeys = {
     darworms.notes.CS
   ],
 
-  "EMajor": [
+  "E Major": [
     darworms.notes.E,
     darworms.notes.FS,
     darworms.notes.GS,
@@ -73,7 +83,7 @@ const musicalkeys = {
     darworms.notes.CS,
     darworms.notes.DS
   ],
-  "FMajor": [
+  "F Major": [
     darworms.notes.F,
     darworms.notes.G,
     darworms.notes.A,
@@ -82,7 +92,16 @@ const musicalkeys = {
     darworms.notes.D,
     darworms.notes.E
   ],
-  "GMajor": [
+  "F Minor": [
+    darworms.notes.F,
+    darworms.notes.G,
+    darworms.notes.AF,
+    darworms.notes.BF,
+    darworms.notes.C2,
+    darworms.notes.DF,
+    darworms.notes.EF
+  ],
+  "G Major": [
     darworms.notes.G,
     darworms.notes.A,
     darworms.notes.B,
@@ -90,6 +109,15 @@ const musicalkeys = {
     darworms.notes.D,
     darworms.notes.E,
     darworms.notes.FS
+  ],
+  "G Minor": [
+    darworms.notes.G,
+    darworms.notes.A,
+    darworms.notes.BF,
+    darworms.notes.C2,
+    darworms.notes.D,
+    darworms.notes.EF,
+    darworms.notes.F
   ]
 };
 
@@ -111,7 +139,7 @@ export class Worm {
     this.showTutorial = true;
 
 
-    this.musickeyName = "CMajor";
+    this.musickeyName = "C Major";
 
     this.MusicScale = [],
 
@@ -138,7 +166,7 @@ export class Worm {
     this.nMoves = 0;
     this.score = 0;
     this.prevScore = 0;
-    this.MusicScale = musicalkeys["CMajor"];
+    this.MusicScale = musicalkeys["C Major"];
     if (wType === 0) { // none   asleep
       this.state = 3; // sleeping
     }

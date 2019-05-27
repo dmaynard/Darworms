@@ -7,7 +7,7 @@ import {
 } from "./Point.js";
 import "./Grid.js";
 import {
-  Worm,
+  Worm, musicalkeys
 } from "./Worm.js";
 import {
   Game,
@@ -361,15 +361,6 @@ darworms.main = (function() {
 
   /* The following code is called from the game timer */
 
-  /* This sh.right {
-   float: right;
-   width: 300px;
-   background-color: #b0e0e6;
-   }ould be wrapped in an anonymous function closure */
-
-
-  // var localImage;
-
   var updateGameState = function() {
     // This is the game loop
     // Called from timer (should be the requestAnimation timer)
@@ -454,7 +445,7 @@ darworms.main = (function() {
     }
   }
   darworms.setInstrumentVal = function(index) {
-    var selectedInstrumentInput = $('#select-native-edit');
+    var selectedInstrumentInput = $('#select-instrument-dropdown');
     if (selectedInstrumentInput.length == 1) {
       var instrument = parseInt(selectedInstrumentInput.val());
       gWorms[darworms.selectedIdx].setNotes(instrument);
@@ -911,15 +902,33 @@ darworms.main = (function() {
         new AudioSample("sitar6", "sounds/sitar/sitar6.wav");
 
       }
-      */
+
 
       new AudioSample("piano", "sounds/piano-c2.wav");
       new AudioSample("guitar", "sounds/GuitarTrimmed.wav");
       new AudioSample("kalimba", "sounds/i_kalimba_c5.wav");
       new AudioSample("sitar", "sounds/Sitar-C5.wav");
       new AudioSample("flute", "sounds/FluteC3Trimmed.wav");
-      new AudioSample("clarinet", "sounds/ClarinetTrimmed.wav");
+      new AudioSample("clarinet", "sounds/Roland-SC-88-Kalimba-C5.wav");
       new AudioSample("death", "sounds/darworm-death.wav");
+      */
+      var selectdropdown = $('#select-instrument-dropdown');
+      darworms.audiosamplefiles.forEach(function ( file , index) {
+        new AudioSample( file[0], file[1] );
+        var optionTemplate = '<option value="' +index+ '">' + file[0] + '</option>';
+        selectdropdown.append(optionTemplate);
+        selectdropdown.selectmenu();
+        selectdropdown.selectmenu('refresh', true);
+      });
+
+     var keydropdown = $('#select-native-key');
+      Object.keys(musicalkeys).forEach( key => {
+        var optionTemplate = '<option value="' +key+ '">' + key + '</option>';
+        keydropdown.append(optionTemplate);
+        keydropdown.selectmenu();
+        keydropdown.selectmenu('refresh', true);
+
+      })
 
     }
     var twelfrootoftwo = 1.05946309436;

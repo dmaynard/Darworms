@@ -89,8 +89,8 @@ export function encodeGame(game, settings, graphics, version) {
   let testOne = decodeURIComponent(gameUrl);
   let testTwo = JSON.parse(testOne);
   let testThree = JSON.stringify(testTwo);
-  log("before: " + gameTxt);
-  log("after:  " + testThree);
+  // log("before: " + gameTxt);
+  // log("after:  " + testThree);
   return (gameTxt)
 
 }

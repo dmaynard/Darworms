@@ -4,10 +4,10 @@ import {
 } from "./utils.js"
 
 export var darworms = {
-  version: "0.9.4",
+  version: "0.9.5",
   // host: "localhost:5000",
   host: "https://darworms.com",
-  compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped"],
+  compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped", "ai"],
   gameStates: {
     "over": 0,
     "running": 1,
@@ -113,7 +113,8 @@ export var darworms = {
       "sw": 4,
       "se": 5,
       "unSet": 6,
-      "isTrapped": 7
+      "isTrapped": 7,
+      "smart": 8   //  ai at run time will decide direction
     },
     colorTable: ["#000000", "#EE0000", "#00EE00", "#0404EE",
       "#D0A000", "#448833", "#443388", "#338844",

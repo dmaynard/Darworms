@@ -1,3 +1,5 @@
+//  main.js
+// Darworms   (c) 2018  David S, Maynard
 import {
   darworms
 } from "./loader.js";
@@ -7,7 +9,9 @@ import {
 } from "./Point.js";
 import "./Grid.js";
 import {
-  Worm, musicalkeys
+  Worm,
+  musicalkeys,
+  dnaregx
 } from "./Worm.js";
 import {
   Game,
@@ -132,7 +136,7 @@ darworms.main = (function() {
   var buttonNames = ['#p1button', '#p2button', '#p3button', '#p4button',
     '#p1Lbutton', '#p2Lbutton', '#p3Lbutton', '#p4Lbutton'
   ];
-  var typeNames = [" None ", "Random", " Same ", " New  "];
+  var typeNames = [" None ", "Random", " Same ", " New  ", "Smart"];
   var textFields = ['#p1textfield', '#p2textfield', '#p3textfield', '#p4textfield', '#edittextfield'];
 
 
@@ -189,6 +193,9 @@ darworms.main = (function() {
           break;
         case 3:
           $('#' + 'edit' + '-radio-choice-4').prop("checked", true).checkboxradio("refresh");
+          break;
+        case 4:
+          $('#' + 'edit' + '-radio-choice-5').prop("checked", true).checkboxradio("refresh");
           break;
       }
       var selectinput = 'input[name=' + 'edit' + '-radio-choice]';
@@ -305,21 +312,21 @@ darworms.main = (function() {
     darworms.graphics.frameInterval = 1000 / darworms.graphics.fps;
     darworms.dwsettings.gridSize = gameObj.width;
 
-    var regx = /^[ABCDEF\?]{63}X$/;
+
     gameObj.players.forEach(function(aworm) {
       var i = aworm.index;
       gWorms[i].name = aworm.name;
 
       //  decode  tyename therefore
 
-      if (regx.test(gWorms[i].name)) {
+      if (dnaregx.test(gWorms[i].name)) {
         if (!gWorms[i].fromText(gWorms[i].name)) {
           alert("Invalid DNA for Daworm # " + (i + 1) + " ");
           gWorms[i].wType = 0;
         };
 
       }
-
+      (gWorms[i].fromText(aworm.name))
       gWorms[i].wType = aworm.typeName == " None " ? 0 : 2;
       playerTypes[i] = gWorms[i].wType
       gWorms[i].score = aworm.score;
@@ -623,7 +630,7 @@ darworms.main = (function() {
     if (darworms.theGame.gameState == darworms.gameStates.over) {
       //  end of game cleanup
       gWorms.forEach(function(worm, i) {
-        if (worm.wType == 3) { //  new
+        if ((worm.wType == 3) || (worm.wType == 4)) { //  new or smart
           worm.wType = 2; // Same
 
         }
@@ -649,7 +656,6 @@ darworms.main = (function() {
           darworms.graphics.then = darworms.graphics.now -
             (darworms.graphics.elapsed % darworms.graphics.frameInterval)
         }
-
       } else {
         var startTime = Date.now();
         var nMoves = 0;
@@ -700,6 +706,27 @@ darworms.main = (function() {
   darworms.playScale = function(index) {
     log("playScale called");
     gWorms[darworms.selectedIdx].playScale();
+  }
+
+  darworms.completeTrainingAI = function(index) {
+    log(" completeTrainingAI ");
+    gWorms[darworms.selectedIdx].completeDarwormAI();
+    gWorms[darworms.selectedIdx].toText();
+    $('#edittextfield').val(gWorms[darworms.selectedIdx].wType == 0 ? "" : gWorms[darworms.selectedIdx].name);
+    $('#completeButton').hide();
+    $('#darwormdeflabel').text(wdescription(gWorms[darworms.selectedIdx]));
+    gWorms[darworms.selectedIdx].wType = 2; //SAME
+    playerTypes[darworms.selectedIdx] = 2; //same
+  }
+  darworms.completeTrainingRand = function(index) {
+    log(" completeTrainingAI ");
+    gWorms[darworms.selectedIdx].completeDarwormRand();
+    gWorms[darworms.selectedIdx].toText();
+    $('#edittextfield').val(gWorms[darworms.selectedIdx].wType == 0 ? "" : gWorms[darworms.selectedIdx].name);
+    $('#completeButton').hide();
+    $('#darwormdeflabel').text(wdescription(gWorms[darworms.selectedIdx]));
+    gWorms[darworms.selectedIdx].wType = 2; //SAME
+    playerTypes[darworms.selectedIdx] = 2; //same
   }
   darworms.yesabortgame = function() {
     log("Abort Game called");
@@ -806,11 +833,25 @@ darworms.main = (function() {
     $('[name=select-key]').selectmenu("refresh");
     // $('[name=select-instrument]').refresh();
     $('#edit-darworm-page').trigger("create");
+    if (gWorms[darworms.selectedIdx].wType == 0) {
+      $('#darwormdeflabel').text('Darworm DNA');
+    } else {
+      var nGenes = gWorms[darworms.selectedIdx].getNumGenes(darworms.dwsettings.codons.unSet);
+      $('#darwormdeflabel').text(wdescription(gWorms[darworms.selectedIdx]));
+      if (nGenes > 0) {
+        $('#completeButton').show();
+
+      } else {
+        $('#completeButton').hide();
+      }
+    }
+    // $('#edit-darworm-page').page.refresh();
   }
 
   var leaveEditPage = function(foo) {
     log(" leaveEditPage " + foo)
   }
+
 
   var loadSavedGames = function() {
     log(" loadSavedGames ");
@@ -913,17 +954,17 @@ darworms.main = (function() {
       new AudioSample("death", "sounds/darworm-death.wav");
       */
       var selectdropdown = $('#select-instrument-dropdown');
-      darworms.audiosamplefiles.forEach(function ( file , index) {
-        new AudioSample( file[0], file[1] );
-        var optionTemplate = '<option value="' +index+ '">' + file[0] + '</option>';
+      darworms.audiosamplefiles.forEach(function(file, index) {
+        new AudioSample(file[0], file[1]);
+        var optionTemplate = '<option value="' + index + '">' + file[0] + '</option>';
         selectdropdown.append(optionTemplate);
         selectdropdown.selectmenu();
         selectdropdown.selectmenu('refresh', true);
       });
 
-     var keydropdown = $('#select-native-key');
-      Object.keys(musicalkeys).forEach( key => {
-        var optionTemplate = '<option value="' +key+ '">' + key + '</option>';
+      var keydropdown = $('#select-native-key');
+      Object.keys(musicalkeys).forEach(key => {
+        var optionTemplate = '<option value="' + key + '">' + key + '</option>';
         keydropdown.append(optionTemplate);
         keydropdown.selectmenu();
         keydropdown.selectmenu('refresh', true);
@@ -968,11 +1009,25 @@ darworms.main = (function() {
   var initGlobals = function() {
 
   }
+
+  var wdescription = function(worm) {
+    var unSet = worm.getNumGenes(darworms.dwsettings.codons.unSet);
+    var ai = worm.getNumGenes(darworms.dwsettings.codons.smart);
+    var set = 64 - (unSet + ai);
+    return ('Darworm DNA: ' +
+      unSet + ' untrained ' +
+      set + ' trained ' +
+      ai + ' awaiting ai ');
+  }
+
   var typeFromName = function(name) {
     switch (name) {
       case "none":
         return 0;
         break;
+      case "smart":
+        return 4;
+        break
       case "random":
         return 1;
         break;
@@ -1023,8 +1078,8 @@ darworms.main = (function() {
       darworms.dwsettings.gridSize = darworms.dwsettings.isLargeScreen ?
         darworms.dwsettings.largeGridSize :
         darworms.dwsettings.isTinyScreen ?
-          darworms.dwsettings.tinyGridSize :
-          darworms.dwsettings.smallGridSize;
+        darworms.dwsettings.tinyGridSize :
+        darworms.dwsettings.smallGridSize;
     }
 
     darworms.wCanvasPixelDim = new Point(wCanvas.clientWidth, wCanvas.clientHeight); // log ( " init wGraphics " + darworms.main.wGraphics);
@@ -1115,21 +1170,32 @@ darworms.main = (function() {
       log(" edit-radio-choice on change function");
       var type = ($("input[name='edit-radio-choice']:checked").val());
       playerTypes[darworms.selectedIdx] = typeFromName(type);
+      gWorms[darworms.selectedIdx].wType = playerTypes[darworms.selectedIdx];
       gWorms[darworms.selectedIdx].init(typeFromName(type));
       $('#edittextfield').val(typeFromName(type) == 0 ? "" : gWorms[darworms.selectedIdx].name);
+      if (gWorms[darworms.selectedIdx].wType == 0) {
+        $('#darwormdeflabel').text('Darworm DNA');
+        $('#completeButton').hide();
+      } else {
+        var nUntrained = gWorms[darworms.selectedIdx].getNumGenes(darworms.dwsettings.codons.unSet);
+        $('#darwormdeflabel').text(gWorms[darworms.selectedIdx].wdescription);
+        $('#darwormdeflabel').text(wdescription(gWorms[darworms.selectedIdx]));
+        if (nUntrained > 0) {
+          $('#completeButton').show()
+        } else {
+          $('#completeButton').hide()
+        }
+      }
     });
 
     $("input[name='edit-textname']").on("change", function() {
       log(" edit-textname")
       var dnastring = ($("input[name='edit-textname']").val());
-      var regx = /^[ABCDEF\?]{63}X$/;
-      if (regx.test(dnastring)) {
+      if (dnaregx.test(dnastring)) {
         if (gWorms[darworms.selectedIdx].fromText(dnastring)) {
           gWorms[darworms.selectedIdx].wType = 2; // Same
           playerTypes[darworms.selectedIdx] = 2;
           setupEditPage();
-
-
           $(darworms.buttonSelectors[darworms.selectedIdx]).text(typeNames[playerTypes[darworms.selectedIdx]]);
           $(darworms.buttonLSelectors[darworms.selectedIdx]).text(typeNames[playerTypes[darworms.selectedIdx]]);
           gWorms[darworms.selectedIdx].toText();

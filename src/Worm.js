@@ -6,7 +6,8 @@ import {
   darworms
 } from "./loader.js";
 import {
-  log
+  log,
+  numOneBits
 } from "./utils.js"
 /**
  * Created with JetBrains WebStorm.
@@ -120,7 +121,7 @@ export const musicalkeys = {
     darworms.notes.F
   ]
 };
-
+ export const  dnaregx = /^[ABCDEF\?\*]{63}X$/;
 export class Worm {
   constructor(colorIndex, state) {
     this.colorIndex = colorIndex;
@@ -189,6 +190,19 @@ export class Worm {
     if (wType === 3) { // new
       for (var k = 0; k < 64; k = k + 1) {
         this.dna[k] = darworms.dwsettings.codons.unSet;
+      }
+      this.dna[63] = darworms.dwsettings.codons.isTrapped;
+      this.numChoices = 1;
+      // set all the forced moves
+      for (var n = 0; n < 6; n = n + 1) {
+        this.dna[0x3F ^ (1 << n)] = n;
+        this.numChoices += 1;
+      }
+      this.state = 2; // paused
+    }
+    if (wType === 4) { // smart
+      for (var k = 0; k < 64; k = k + 1) {
+        this.dna[k] = darworms.dwsettings.codons.smart;
       }
       this.dna[63] = darworms.dwsettings.codons.isTrapped;
       this.numChoices = 1;
@@ -301,6 +315,8 @@ export class Worm {
     }
 
   };
+
+
   toText() {
     this.name = "";
 
@@ -313,15 +329,18 @@ export class Worm {
       if (this.dna[i] === 5) this.name += 'F';
       if (this.dna[i] === 6) this.name += '?';
       if (this.dna[i] === 7) this.name += 'X';
-      if (this.dna[i] > 7) this.name += '#';
+      if (this.dna[i] === 8) this.name += '*';
+
+      if (this.dna[i] > 8) this.name += '#';
     };
     return this.name;
   };
 
   fromText(dnastring) {
-    var regx = /^[ABCDEF\?]{63}X$/;
-    if (!(regx.test(dnastring))) {
-      return false;
+
+    if (!(dnaregx.test(dnastring))) {
+      alert("illegal character in dna  " + dnastring );
+      gooddna = false;return false;
     }
     var gooddna = true;
     for (var i = 0; i < 63; i = i + 1) {
@@ -347,12 +366,16 @@ export class Worm {
         case '?':
           this.dna[i] = 6;
           break;
+        case '*':
+          this.dna[i] = 8;
+          break;
+
         default:
           alert(" illegal dna string at position " + (i + 1));
           return (false);
       }
-      if (!(((1 << this.dna[i]) & i) === 0) && (this.dna[i] !== 6)) {
-        alert("illegal direction " + dnastring.charAt(i) + "(" + darworms.compassPts[this.dna[i]] +
+      if (!(((1 << this.dna[i]) & i) === 0) && (this.dna[i] !== 6) && (this.dna[i] !== 8)) {
+        alert("illegal direction " + dnastring.charAt(i) + " (" + darworms.compassPts[this.dna[i]] +
           ")" + "given for cell " + i);
         gooddna = false;
       }
@@ -379,6 +402,104 @@ export class Worm {
     window.open(mailtourl);
 
   }
+  getNumGenes ( val ) {
+    const reducer = ((accumulator, currentValue) => accumulator + ((currentValue === val ) ? 1 : 0));
+    var codons = this.dna.reduce ( reducer, 0);  //  how many condons are set
+    return codons;
+  }
+  getSmartMove( possibleMoves, center, currentState ) {
+    const towardsCenterBonus = 30;
+    const dnaDistributionBonus = 30;
+    const nonlinearBonus = 30;
+    const dnaNoneBonus = 60;
+    //  score increased depending on the number of spokes in the dest cells
+    const singleSpokes  = [ 1, 2, 4, 8, 16, 32];
+    const oppositeDirs = [3, 4, 5, 0, 1, 2];
+    const destSpokes = [0, 10, 40, 10, 60, 0, 0 ];  // we like cells with 4 spokes!
+    var totalscore = 0;
+    const reducer = ((accumulator, currentValue) => accumulator + (currentValue == 8 ? 0 : 1));
+    var codons = this.dna.reduce ( reducer, 0);  //  how many condons are set
+    log (" codons set: " + codons);
+    possibleMoves.forEach( (pickTarget) => {
+      pickTarget.score = 0;
+      //  note excellent candidate for functional programming Here
+      var reducedir =  ((accumulator, currentValue) => accumulator + ((currentValue == pickTarget.dir )? 1  : 0));
+      // how many codons already point in this direction ?
+      var nThisDir =  this.dna.reduce ( reducedir, 0);
+      if ( nThisDir < (codons/6) ) {
+        pickTarget.score += dnaDistributionBonus; // deficit of moves in this directions
+      }
+      if ( nThisDir == 1 ) { // onnly the forced move so far
+        pickTarget.score += dnaNoneBonus; // no moves in this direction yet
+      }
 
+      log( " n in dir " + pickTarget.dir + " = " + nThisDir);
+      pickTarget.score += destSpokes[numOneBits(pickTarget.spokes)];
+      if (this.pos.x < center.x && ( pickTarget.dir == 0 || pickTarget.dir == 1  || pickTarget.dir == 5)) {
+        pickTarget.score += towardsCenterBonus;
+      }
+      if (this.pos.x > center.x && ( pickTarget.dir == 2 || pickTarget.dir == 3  || pickTarget.dir == 4)) {
+        pickTarget.score += towardsCenterBonus;
+      }
+      if (this.pos.y < center.y && (  pickTarget.dir == 1  || pickTarget.dir == 2)) {
+        pickTarget.score += towardsCenterBonus;
+      }
+      if (this.pos.y > center.y && ( pickTarget.dir == 4 || pickTarget.dir == 5)) {
+        pickTarget.score += towardsCenterBonus;
+      }
+      singleSpokes.forEach ( (val, i)  => {
+        if (val == currentState) {  // a cell with a single spoke in
+          if (pickTarget.dir != oppositeDirs [i]) {  // boost non-straight line directions
+            pickTarget.score += nonlinearBonus;
+          }
+        }
+      });
+    });
+
+    var  totalReducer = ((accumulator, currentPossible) => accumulator + (currentPossible.score));
+    var totalScore = possibleMoves.reduce(totalReducer, 0);
+    log( " total score " + totalScore);
+    //  pick a weighted random directions
+    var selectedDirection = -1;
+    var weighted = Math.floor(Math.random() * totalScore);
+    possibleMoves.forEach( (pickTarget) => {
+      if ((weighted > 0) && (weighted < pickTarget.score)) {
+        selectedDirection = pickTarget.dir;
+      } else {
+        weighted = weighted - pickTarget.score;
+      }
+    })
+    if (selectedDirection > 0 ) {
+      return selectedDirection;
+    };
+    //  emergency escape valve
+    var which = Math.floor(Math.random() * possibleMoves.length);
+    return ( possibleMoves[which].dir);
+  }
+
+  completeDarwormAI() {
+    log(" complete completeDarwormAI called");
+    this.dna.forEach( (value, index) => {
+      if (value === darworms.dwsettings.codons.unSet) {
+        this.dna[index] = darworms.dwsettings.codons.smart;
+      }
+    }
+  );
+  }
+  completeDarwormRand() {
+    log(" complete completeDarwormRand called");
+    this.dna.forEach( (value, index) => {
+      var possibleMoves = [];
+      if (value === darworms.dwsettings.codons.unSet) {
+        for (var dir = 0; dir < 6; dir ++) {
+          if( (index & darworms.outMask[dir]) == 0 ) {
+            possibleMoves.push(dir);
+          }
+        }
+        this.dna[index] = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+      }
+    }
+  );
+  }
 };
 /* end of Worm */

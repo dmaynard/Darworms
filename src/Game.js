@@ -53,6 +53,11 @@ import {
 } from "./gameio.js"
 
 import {
+  Worm
+} from "./Worm.js";
+g
+
+import {
   log
 } from "./utils.js"
 
@@ -244,6 +249,23 @@ export class Game {
 
       } else {
         var direction = active.getMoveDir(currentState);
+        if (direction === darworms.dwsettings.codons.smart) {
+          var outvec = this.grid.outVectorsAt(active.pos);
+          var inVec = this.grid.inVectorsAt(active.pos);
+          var possibleDirections = [];
+          var center = new Point(this.grid.width/2, this.grid.width/2)
+          for (var dir = 0; dir < 6; dir = dir + 1) {
+            if (((outvec & darworms.outMask[dir]) == 0) && ((inVec & darworms.outMask[dir]) == 0)) {
+              var pickTarget = {};
+              pickTarget.pos = this.grid.next(active.pos, dir);
+              pickTarget.dir = dir;
+              pickTarget.spokes = (this.grid.valueAt(pickTarget.pos) & 0x3F);
+              possibleDirections.push(pickTarget);
+            }
+          }
+          direction = active.getSmartMove(possibleDirections, center, currentState);
+          active.dna[currentState] = direction & 0x3F;
+        }
         if (direction === darworms.dwsettings.codons.unSet) {
           this.gameState = darworms.gameStates.waiting;
           // log(" setting gamestate to  " + this.gameState);

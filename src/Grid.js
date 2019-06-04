@@ -1,7 +1,8 @@
 import { Point } from "./Point.js";
 import { darworms } from "./loader.js";
 import {
-  log
+  log,
+  logging
 } from "./utils.js"
 /**
  * Created with JetBrains WebStorm.
@@ -145,8 +146,8 @@ import {
   move (from, to, dir, colorIndex) {
     if ((this.inVectorsAt(to) & darworms.inMask[dir]) !== 0) {
       alert(" Attempted to eat eaten spoke at " + to.format());
-      log("  (" + to.x + "," + to.y + ") dir: " + dir + " value: ");
-      log("Attempted to eat eaten spoke at " + to.format() + " dir " + dir + " value: 0x" + this.valueAt(to).toString(16));
+      if(logging()) console.log("  (" + to.x + "," + to.y + ") dir: " + dir + " value: ");
+      if(logging()) console.log("Attempted to eat eaten spoke at " + to.format() + " dir " + dir + " value: 0x" + this.valueAt(to).toString(16));
     }
     this.setValueAt(to, this.valueAt(to) | darworms.inMask[dir] | (darworms.inMask[dir] << 16));
     this.setValueAt(from, this.valueAt(from) | darworms.outMask[dir] | (darworms.outMask[dir] << 8));
@@ -206,14 +207,14 @@ import {
     }
   };
   logSpokesAt (point) {
-    log("[ " + point.x + "," + point.y + "] val = " + this.colorsAt(point).toString(16));
+    if(logging()) console.log("[ " + point.x + "," + point.y + "] val = " + this.colorsAt(point).toString(16));
     for (var dir = 0; dir < 8; dir = dir + 1) {
-      log("   spoke: " + dir + " colorindex" + this.spokeAt(point, dir));
+      if(logging()) console.log("   spoke: " + dir + " colorindex" + this.spokeAt(point, dir));
 
     }
   };
   logValueAt (point) {
-    log("[ " + point.x + "," + point.y + "] val = 0x" + this.hexValueAt(point) +
+    if(logging()) console.log("[ " + point.x + "," + point.y + "] val = 0x" + this.hexValueAt(point) +
       this.dirList(this.hexValueAt(point)) + " outVectors = 0x" +
       this.outVectorsAt(point).toString(16) + this.dirList(this.outVectorsAt(point)) +
       " inVectors = 0x" + this.inVectorsAt(point).toString(16));

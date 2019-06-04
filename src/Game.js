@@ -58,7 +58,8 @@ import {
 g
 
 import {
-  log
+  log,
+  logging
 } from "./utils.js"
 
 /**
@@ -96,7 +97,7 @@ export class Game {
     this.activeIndex = 0;
 
     setScale(gridWidth, gridHeight);
-    log(" new Game scale set to " + scale.format());
+    if(logging()) console.log(" new Game scale set to " + scale.format());
     this.origin = new Point(gridWidth >> 1, gridHeight >> 1);
     focusPoint = this.origin;
     this.worms = [];
@@ -119,7 +120,7 @@ export class Game {
       $('#pickDirectionUI').slider("refresh");
       darworms.dwsettings.pickDirectionUI = 1;
     }
-    log(" Scale: " + scale.format() + "darworms.dwsettings.pickDirectionUI: " + darworms.dwsettings.pickDirectionUI);
+    if(logging()) console.log(" Scale: " + scale.format() + "darworms.dwsettings.pickDirectionUI: " + darworms.dwsettings.pickDirectionUI);
     this.zoomFrame = 0;
     this.startx = 0;
     this.starty = 0;
@@ -138,17 +139,17 @@ export class Game {
   updateScale(width, height) {
     setScale(this.grid.width, this.grid.height);
 
-    log("updateScale " + scale.format());
+    if(logging()) console.log("updateScale " + scale.format());
   };
 
-  log() {
+  logGame() {
 
-    log(" Game grid size  " + new Point(this.grid.width, this.grid.height).format());
-    log(" Game Canvas size  " + new Point(wCanvas.width, wCanvas.height).format());
-    log(" Game scale " + scale.format());
+    if(logging()) console.log(" Game grid size  " + new Point(this.grid.width, this.grid.height).format());
+    if(logging()) console.log(" Game Canvas size  " + new Point(wCanvas.width, wCanvas.height).format());
+    if(logging()) console.log(" Game scale " + scale.format());
     for (var i = 0; i < this.worms.length; i = i + 1) {
-      log(" Game worm " + i + " :  " + this.worms[i].state + " at " + this.worms[i].pos.format() + " value:" + this.grid.hexValueAt(this.worms[i].pos));
-      // this.worms[i].log();
+      if(logging()) console.log(" Game worm " + i + " :  " + this.worms[i].state + " at " + this.worms[i].pos.format() + " value:" + this.grid.hexValueAt(this.worms[i].pos));
+      // this.worms[i].if(logging()) console.log();
       // log ( "   Grid value =  ");
       // this.grid.logValueAt(this.worms[i].pos);
     }
@@ -157,7 +158,7 @@ export class Game {
 
     this.grid.each(function(point, value) {
       if (value > 0) {
-        log("NonEmpty " + point.format() + " value: 0x" + value.toString(16));
+        if(logging()) console.log("NonEmpty " + point.format() + " value: 0x" + value.toString(16));
       }
     });
 
@@ -204,7 +205,7 @@ export class Game {
       this.avePos.x = Math.floor(this.avePos.x / nActiveAve);
       this.avePos.y = Math.floor(this.avePos.y / nActiveAve);
     }
-    // log(this.avePos.format());
+    // if(logging()) console.log(this.avePos.format());
   };
 
   makeMove(graphicsOn) {
@@ -222,7 +223,7 @@ export class Game {
       }
       // active.state = darworms.wormStates.moving;
       // log (" Game  Before Move for worm" + i + " :  " + active.state + " at "  + active.pos.format());
-      // active.log();
+      // active.if(logging()) console.log();
       // log ( "   Grid value =  ");
       // this.grid.logValueAt(active.pos);
       var currentState = this.grid.stateAt(active.pos);
@@ -237,13 +238,13 @@ export class Game {
           }
           active.state = (darworms.dwsettings.doAnimations) ? darworms.wormStates.dying : darworms.wormStates.dead;
           active.diedAtFrame = darworms.graphics.uiFrames;
-          log(" darworm " + active.colorIndex + " dying at frame: " + darworms.graphics.animFrame);
+          if(logging()) console.log(" darworm " + active.colorIndex + " dying at frame: " + darworms.graphics.animFrame);
         }
 
         if (active.state == darworms.wormStates.dying) {
           if ((darworms.graphics.uiFrames - active.diedAtFrame) > darworms.graphics.dyningAnimationFrames) {
             active.state = darworms.wormStates.dead;
-            log(" darworm " + active.colorIndex + " dead at frame: " + darworms.graphics.animFrame);
+            if(logging()) console.log(" darworm " + active.colorIndex + " dead at frame: " + darworms.graphics.animFrame);
           }
         }
 
@@ -268,7 +269,7 @@ export class Game {
         }
         if (direction === darworms.dwsettings.codons.unSet) {
           this.gameState = darworms.gameStates.waiting;
-          // log(" setting gamestate to  " + this.gameState);
+          // if(logging()) console.log(" setting gamestate to  " + this.gameState);
           focusPoint = active.pos;
           focusWorm = active;
           darworms.theGame.focusWorm = active;
@@ -282,7 +283,7 @@ export class Game {
             $('#tutorialpopup').popup("option", "theme", darworms.themes[darworms.theGame.activeIndex]);
             // this makes the popup background transparent, but it looks reall bad
             // $('#tutorialpopup').popup( "option","theme", 'none' );
-            log(" init popup here");
+            if(logging()) console.log(" init popup here");
             drawdna(document.getElementById('popupcanvas'), active, currentState);
             $('#tutorialpopup').popup("open", {
               positionTo: btns[darworms.theGame.activeIndex]
@@ -308,7 +309,7 @@ export class Game {
           active.score = active.score + didScore;
           this.numMoves = this.numMoves + 1;
           active.nMoves = active.nMoves + 1;
-          // log("    Worm " + active.colorIndex + "  just made move " + active.nMoves + " game turn " + this.numTurns + " From " + this.grid.formatStateAt(active.pos) + " direction  " + direction);
+          // if(logging()) console.log("    Worm " + active.colorIndex + "  just made move " + active.nMoves + " game turn " + this.numTurns + " From " + this.grid.formatStateAt(active.pos) + " direction  " + direction);
           active.pos = next;
 
           if (true || graphicsOn) {
@@ -327,12 +328,12 @@ export class Game {
 
           }
 
-          // log(" active.score [" +  i + "] ="  + active.score);
+          // if(logging()) console.log(" active.score [" +  i + "] ="  + active.score);
 
-          //log("     From Value is " +  this.grid.hexValueAt(active.pos)  );
+          //if(logging()) console.log("     From Value is " +  this.grid.hexValueAt(active.pos)  );
           //log (" Next Point = " + next.format());
-          //log(" Set To State to " +  this.grid.stateAt(active.pos)  );
-          //log("     To Value is " +  this.grid.hexValueAt(active.pos)  );
+          //if(logging()) console.log(" Set To State to " +  this.grid.stateAt(active.pos)  );
+          //if(logging()) console.log("     To Value is " +  this.grid.hexValueAt(active.pos)  );
         }
 
       }
@@ -371,7 +372,7 @@ export function binToRGB(bin) {
 //  Called from Timer Loop
 
 function makeMoves() {
-  // log(" makeMoves theGameOver " + theGameOver +  "  gameState " + gameStateNames[theGame.gameState] );
+  // if(logging()) console.log(" makeMoves theGameOver " + theGameOver +  "  gameState " + gameStateNames[theGame.gameState] );
   var startTime = new Date().getTime();
   startFrameTimes.push(startTime);
   if (darworms.theGame.needsRedraw) {
@@ -381,7 +382,7 @@ function makeMoves() {
   if (darworms.theGame.gameState != darworms.gameStates.over) {
     if (darworms.theGame.makeMove(darworms.dwsettings.doAnimations) === false) {
       stopGameTimer();
-      log(" Game Over");
+      if(logging()) console.log(" Game Over");
       clearInterval(darworms.graphics.timer);
       // document.getElementById("startpause").innerHTML = "Start Game";
       $("#startpause").text("Start Game");
@@ -407,7 +408,7 @@ function makeMoves() {
 
 function gameInit() {
   // used to initialize variables in this module's closure
-  log(" wCanvas,width: " + wCanvas.width);
+  if(logging()) console.log(" wCanvas,width: " + wCanvas.width);
   graphicsInit(this);
   scoreCanvasInit();
   nextToMove = 0;

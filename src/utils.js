@@ -5,6 +5,10 @@ export function log ( str )  {
     console.log( str );
   }
 }
+export function logging ( )   {
+  return ($('#logging').slider().val() == "true");
+}
+
 export function numOneBits( val) {
   var nbits = 0;
   while (val > 0 ) {

@@ -1,6 +1,7 @@
 import { Point } from "./Point.js";
 import {
-  log
+  log,
+  logging
 } from "./utils.js"
 
 export var darworms = {
@@ -165,7 +166,7 @@ export var darworms = {
 };
 
 window.addEventListener("load", function() {
-    // log(" stage 1 loading finished");
+    // if(logging()) console.log(" stage 1 loading finished");
     window.onerror = function(msg, url, line) {
       alert(msg + " " + url + " " + line);
     }
@@ -183,13 +184,13 @@ window.addEventListener("load", function() {
 
     $( "#tutorialpopup" ).popup({
         afterclose: function( event, ui ) {
-          log(" afterclose even fired" + $('#tutorialpopup input[type=checkbox]').prop("checked"));
+          if(logging()) console.log(" afterclose even fired" + $('#tutorialpopup input[type=checkbox]').prop("checked"));
           if ( $('#tutorialpopup input[type=checkbox]').prop("checked") ) {
             darworms.theGame.focusWorm.showTutorial = false;
           }
         }
     });
-    log("About to call darworms.main.init()");
+    if(logging()) console.log("About to call darworms.main.init()");
     window.darworms = darworms;  // So index.html onclick can find handlers
     darworms.main.init();
 

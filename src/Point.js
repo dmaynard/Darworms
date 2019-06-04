@@ -6,9 +6,10 @@
  */
 
  import {
-   log
+   log,
+   logging
  } from "./utils.js"
- 
+
 export class  Point {
   constructor(x,y) {
     const privateString = "(" + x + "," + y + ")";

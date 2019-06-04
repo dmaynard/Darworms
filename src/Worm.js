@@ -7,6 +7,7 @@ import {
 } from "./loader.js";
 import {
   log,
+  logging,
   numOneBits
 } from "./utils.js"
 /**
@@ -225,7 +226,7 @@ export class Worm {
 
   }
   setKey(keyName) {
-    log(" keyname: " + keyName)
+    if(logging()) console.log(" keyname: " + keyName)
     this.musickeyName = keyName;
     this.MusicScale = musicalkeys[keyName];
   }
@@ -269,29 +270,29 @@ export class Worm {
   randomize() {
     var dir;
     for (var i = 0; i < 63; i = i + 1) {
-      // log(" randomize loop start  i = " + i + " dna[i] = " + this.dna[i]);
+      // if(logging()) console.log(" randomize loop start  i = " + i + " dna[i] = " + this.dna[i]);
       if (this.dna[i] === darworms.dwsettings.codons.unSet) {
         for (var j = 0; j < 1000; j = j + 1) {
           dir = Math.floor(Math.random() * 6);
-          //log( " dir = " + dir +  " i=" + i + " outMask[dir] = " + outMask[dir] + "& = " + (i & outMask[dir]));
+          //if(logging()) console.log( " dir = " + dir +  " i=" + i + " outMask[dir] = " + outMask[dir] + "& = " + (i & outMask[dir]));
           if ((i & darworms.outMask[dir]) === 0) {
             this.dna[i] = dir;
             this.numChoices += 1;
-            // log(" Setting dir 0x" + i.toString(16) + " to " + compassPts[dir]);
+            // if(logging()) console.log(" Setting dir 0x" + i.toString(16) + " to " + compassPts[dir]);
             break;
           }
         }
         if (this.dna[i] === darworms.dwsettings.codons.unSet) {
-          log("Error we rolled craps 10,000 times in a row");
+          if(logging()) console.log("Error we rolled craps 10,000 times in a row");
         }
       }
-      // log(" randomize loop end  i = " + i + " dna[i] = " + this.dna[i]);
+      // if(logging()) console.log(" randomize loop end  i = " + i + " dna[i] = " + this.dna[i]);
     }
     this.toText();
   };
   log() {
     var dir;
-    log(" Worm State: " + darworms.wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
+    if(logging()) console.log(" Worm State: " + darworms.wormStateNames[this.state] + " at " + (this.pos !== undefined ? this.pos.format() : "position Undefined"));
   };
   place(aState, aGame, pos) {
     this.pos = pos;
@@ -299,19 +300,18 @@ export class Worm {
     this.nMoves = 0;
     this.score = 0;
     this.state = aState;
-    log(" placing worm   i = " + this.colorIndex + " state " + aState + " " + this.numChoices + " of 64 possible moves defined");
+    if(logging()) console.log(" placing worm   i = " + this.colorIndex + " state " + aState + " " + this.numChoices + " of 64 possible moves defined");
   };
   dump() {
-    this.log();
     for (var i = 0; i < 64; i = i + 1) {
-      log(" dna" + i + " = " + darworms.compassPts[this.dna[i]]);
+      if(logging()) console.log(" dna" + i + " = " + darworms.compassPts[this.dna[i]]);
       var spokes = [];
       for (var spoke = 0; spoke < 6; spoke = spoke + 1) {
         if ((i & darworms.outMask[spoke]) !== 0) {
           spokes.push(darworms.compassPts[spoke]);
         }
       }
-      log(" dna" + i + " " + spokes + " = " + darworms.compassPts[this.dna[i]]);
+      if(logging()) console.log(" dna" + i + " " + spokes + " = " + darworms.compassPts[this.dna[i]]);
     }
 
   };
@@ -387,7 +387,7 @@ export class Worm {
   };
 
   emailDarworm () {
-    log("Emailing: " + this.toText());
+    if(logging()) console.log("Emailing: " + this.toText());
     var mailtourl = "mailto:?subject=" +
       encodeURIComponent("Check out this cool Darworm") +
       "&body=" +
@@ -396,7 +396,7 @@ export class Worm {
       // encodeURIComponent('<a href ="https://dmaynard.github.io/Darworms/public> Darworms" </a>') +
       encodeURIComponent("You can copy the darworm string below and then go to the game and paste the text into one of the players\n") +
       encodeURIComponent(this.toText());
-    log("url: " + mailtourl);
+    if(logging()) console.log("url: " + mailtourl);
 
     // document.location.href = mailtourl;
     window.open(mailtourl);
@@ -433,7 +433,7 @@ export class Worm {
         pickTarget.score += dnaNoneBonus; // no moves in this direction yet
       }
 
-      log( " n in dir " + pickTarget.dir + " = " + nThisDir);
+      if(logging()) console.log( " n in dir " + pickTarget.dir + " = " + nThisDir);
       pickTarget.score += destSpokes[numOneBits(pickTarget.spokes)];
       if (this.pos.x < center.x && ( pickTarget.dir == 0 || pickTarget.dir == 1  || pickTarget.dir == 5)) {
         pickTarget.score += towardsCenterBonus;
@@ -458,7 +458,7 @@ export class Worm {
 
     var  totalReducer = ((accumulator, currentPossible) => accumulator + (currentPossible.score));
     var totalScore = possibleMoves.reduce(totalReducer, 0);
-    log( " total score " + totalScore);
+    if(logging()) console.log( " total score " + totalScore);
     //  pick a weighted random directions
     var selectedDirection = -1;
     var weighted = Math.floor(Math.random() * totalScore);
@@ -478,7 +478,7 @@ export class Worm {
   }
 
   completeDarwormAI() {
-    log(" complete completeDarwormAI called");
+    if(logging()) console.log(" complete completeDarwormAI called");
     this.dna.forEach( (value, index) => {
       if (value === darworms.dwsettings.codons.unSet) {
         this.dna[index] = darworms.dwsettings.codons.smart;
@@ -487,7 +487,7 @@ export class Worm {
   );
   }
   completeDarwormRand() {
-    log(" complete completeDarwormRand called");
+    if(logging()) console.log(" complete completeDarwormRand called");
     this.dna.forEach( (value, index) => {
       var possibleMoves = [];
       if (value === darworms.dwsettings.codons.unSet) {

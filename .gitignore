@@ -5,7 +5,8 @@ projectFilesBackup1/*
 # compiled output
 /dist
 /tmp
-
+# until we have lint rules improved and code cleaned up
+.eslintrc.js
 # dependencies
 /node_modules
 /bower_components
@@ -17,3 +18,5 @@ projectFilesBackup1/*
 /libpeerconnection.log
 npm-debug.log*
 darworms.txt
+# turns out netlify already gzips yout stati site
+public/bundle.js.gz

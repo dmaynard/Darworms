@@ -5,7 +5,8 @@ import {
   darworms
 } from "./loader.js";
 import {
-  log
+  log,
+  logging
 } from "./utils.js"
 
 export var wGraphics;
@@ -44,7 +45,7 @@ export function setScale(gridWidth, gridHeight) {
 }
 export function reScale(gridWidth, gridHeight) {
   setScale(gridWidth, gridHeight);
-  log(" reScaled to " + scale.format());
+  if(logging()) console.log(" reScaled to " + scale.format());
 };
 
 export function clearCanvas() {
@@ -84,7 +85,7 @@ export function getOffset(point) {
 export function gsetTranslate(point) {
   var cellOffset = getOffset(point);
   wGraphics.setTransform(scale.x, 0, 0, scale.y, cellOffset.x, cellOffset.y);
-  // log( "Drawing cell " +  point.format() + " x= " + cellOffset.x + "  y= " + cellOffset.y);
+  // if(logging()) console.log( "Drawing cell " +  point.format() + " x= " + cellOffset.x + "  y= " + cellOffset.y);
 };
 
 
@@ -102,7 +103,7 @@ export function drawCells() {
 
 export function drawcell(point) {
   // if (point.isEqualTo(new Point (this.grid.width-1, this.grid.height/2))) {
-  //     log(this.grid.formatStateAt(point));
+  //     if(logging()) console.log(this.grid.formatStateAt(point));
   // }
   timeInDraw -= Date.now();
   // wGraphics.save();
@@ -215,7 +216,7 @@ export function drawcell(point) {
 export function drawDirtyCells() {
   var pt;
   // wGraphics.save();
-  // log(" Grawing dirty cells" + this.dirtyCells.length);
+  // if(logging()) console.log(" Grawing dirty cells" + this.dirtyCells.length);
   while ((pt = dirtyCells.pop()) !== undefined) {
     drawcell(pt);
   }
@@ -246,7 +247,7 @@ export function highlightWorm(worm, index) {
 
 export function initPickUI(worm) {
 
-  log(" initPickUI")
+  if(logging()) console.log(" initPickUI")
   darworms.pickCells = new Array();
   var outvec = this.grid.outVectorsAt(worm.pos);
   var inVec = this.grid.inVectorsAt(worm.pos);
@@ -297,7 +298,7 @@ export function drawPickCell(point, activeColor) {
   // wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
   var owner = this.grid.spokeAt(point, 7);
   if (owner !== 0) {
-    log(" Why is an owned cell a target selection? " + point.format(point));
+    if(logging()) console.log(" Why is an owned cell a target selection? " + point.format(point));
   }
   drawcell(point); // set up original background for this cell
 
@@ -327,7 +328,7 @@ export function drawPickCellOrigin(point, activeColor) {
   // wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
   var owner = this.grid.spokeAt(point, 7);
   if (owner !== 0) {
-    log(" Why is an owned cell a target selection origin? " + point.format(point));
+    if(logging()) console.log(" Why is an owned cell a target selection origin? " + point.format(point));
   }
   drawcell(point); // set up original backgrounf for this cell
 
@@ -403,7 +404,7 @@ function selectSmallUIDirection(touchPoint) {
     var diff = new Point(touchPoint.x - screenCoordinates.x, touchPoint.y - screenCoordinates.y);
     if ((absdiff.x < (scale.x / 2)) && (absdiff.y < (scale.y / 2)) &&
       this.gameState === darworms.gameStates.waiting) {
-      log(" target hit delta: " + diff.format());
+      if(logging()) console.log(" target hit delta: " + diff.format());
       setDNAandResumeGame(pickTarget.dir);
     }
   }, darworms.theGame);
@@ -419,7 +420,7 @@ function setDNAandResumeGame(direction) {
 }
 
 function selectLargeUIDirection(point) {
-  // log( "selectDirection: " + point.format());
+  // if(logging()) console.log( "selectDirection: " + point.format());
   var outvec = darworms.theGame.grid.stateAt(theGame.focusWorm.pos);
   var minDist = 100000;
   var dist;
@@ -430,15 +431,15 @@ function selectLargeUIDirection(point) {
         (((darworms.theGame.xPts[i] * wCanvas.width * .75) / 2) + (wCanvas.width / 2)),
         (((darworms.theGame.yPts[i] * wCanvas.height * .75) / 2) + (wCanvas.height / 2)));
 
-      // log(" direction: " + i + " target point " + target.format());
-      // log("Touch Point: " + point.format());
+      // if(logging()) console.log(" direction: " + i + " target point " + target.format());
+      // if(logging()) console.log("Touch Point: " + point.format());
       dist = target.dist(point);
       //  Actual pixel coordinates
       if (dist < minDist) {
         minDist = dist;
         select = i;
       }
-      // log("selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
+      // if(logging()) console.log("selectDirection i: " + i + "  dist: " + dist + " Min Dist:" + minDist);
     }
   }
   if ((minDist < wCanvas.width / 8) && (select >= 0)) {
@@ -492,7 +493,7 @@ export function showTimes() {
   var nFrames = 0;
   var sumTime = 0;
   var fps = 0;
-  log("frameTimes.length " + frameTimes.length);
+  if(logging()) console.log("frameTimes.length " + frameTimes.length);
   for (var i = 0; i < frameTimes.length; i = i + 1) {
     nFrames = nFrames + 1;
     if (frameTimes[i] > max) {

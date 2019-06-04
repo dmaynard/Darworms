@@ -1,6 +1,9 @@
 import resolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify-es';
 import replace from 'rollup-plugin-replace';
+import gzipPlugin from 'rollup-plugin-gzip';
+import {eslint} from 'rollup-plugin-eslint';
+
 // import globals from 'rollup-plugin-node-globals';
 // `npm run build` -> `production` is true
 // `npm run dev` -> `production` is false
@@ -14,7 +17,9 @@ export default {
 	  sourcemap: true
 	},
 	plugins: [
-
+		// eslint({
+	  //    /* your options */
+	  //  }),
 		resolve(), // tells Rollup how to find date-fns in node_modules
 		replace({
 					exclude: ['node_modules/**', 'public/**'],
@@ -23,6 +28,8 @@ export default {
 				}),
 
 			production && uglify(),
+			// netlify gzips in post processing
+			// production && gzipPlugin(),
 
 	]
 };

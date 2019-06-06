@@ -419,7 +419,7 @@ export class Worm {
     var totalscore = 0;
     const reducer = ((accumulator, currentValue) => accumulator + (currentValue == 8 ? 0 : 1));
     var codons = this.dna.reduce ( reducer, 0);  //  how many condons are set
-    log (" codons set: " + codons);
+
     possibleMoves.forEach( (pickTarget) => {
       pickTarget.score = 0;
       //  note excellent candidate for functional programming Here
@@ -433,7 +433,7 @@ export class Worm {
         pickTarget.score += dnaNoneBonus; // no moves in this direction yet
       }
 
-      if(logging()) console.log( " n in dir " + pickTarget.dir + " = " + nThisDir);
+
       pickTarget.score += destSpokes[numOneBits(pickTarget.spokes)];
       if (this.pos.x < center.x && ( pickTarget.dir == 0 || pickTarget.dir == 1  || pickTarget.dir == 5)) {
         pickTarget.score += towardsCenterBonus;
@@ -458,7 +458,6 @@ export class Worm {
 
     var  totalReducer = ((accumulator, currentPossible) => accumulator + (currentPossible.score));
     var totalScore = possibleMoves.reduce(totalReducer, 0);
-    if(logging()) console.log( " total score " + totalScore);
     //  pick a weighted random directions
     var selectedDirection = -1;
     var weighted = Math.floor(Math.random() * totalScore);

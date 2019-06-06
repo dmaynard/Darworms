@@ -4,11 +4,17 @@ import {
   logging
 } from "./utils.js"
 import 'autotrack/lib/plugins/url-change-tracker';
+
+
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 ga('create', 'UA-141491749-1', 'auto');
-// Only require the plugins you've imported above.
+
+// Replace the following lines with the plugins you want to use.
 ga('require', 'urlChangeTracker');
+// ...
 
 ga('send', 'pageview');
+
 export var darworms = {
   version: "0.9.5",
   // host: "localhost:5000",

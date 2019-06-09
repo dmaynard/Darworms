@@ -192,6 +192,9 @@ window.addEventListener("load", function() {
     $("#edit-darworm-page").on('pagehide', darworms.main.leaveditPage);
     $("#loadsavepage").on('pageshow', darworms.main.loadSavedGames);
     $("#loadsavepage").on('pagehide', darworms.main.freeSavedGames);
+    $("#aboutpage").on('pageshow', darworms.main.sendAnalytics);
+    $("#debugpage").on('pageshow', darworms.main.sendAnalytics);
+    $("#emailpage").on('pageshow', darworms.main.sendAnalytics);
 
     $( "#tutorialpopup" ).popup({
         afterclose: function( event, ui ) {

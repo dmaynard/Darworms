@@ -32,7 +32,8 @@
     background: #8c8c8c; width: 200px; height: 200px; } @media all and (max-height: 400px) { #canvascontainer { width: 70%; height: 75%; float: left; } #navcontainer { display: none; } #landnavcontainer { height: 70%; float: left; display: block;
     padding-top: 10px; padding-left: 10px; padding-bottom: 4px; } #scorecanvas { height: 20px; width: 70%; padding-top: 2px; padding-bottom: 2px; } } @media all and (min-height: 399px) #wcanvascontainer { width: 100%; text-align: center; } #wcanvas {
     width: 100%; text-align: center; } #landnavcontainer { display: none; } #scorecanvas { height: 30px; } .selectionuicontainer .ui-slider-switch { width: 15em } .pickcellsuicontainer .ui-slider-switch { width: 15em } } #navcontainer { padding: 0px
-    0px; margin: 0px; } #wcanvasparagrap { background: "#F5F5F5" ; padding: 0px 0px; margin: 0px; } </style> </head> <body id="myPages">
+    0px; margin: 0px; } #wcanvasparagrap { background: "#F5F5F5" ; padding: 0px 0px; margin: 0px; } </style> </head>
+    <body id="myPages">
     <div data-role="page" data-theme="b" id=menupage>
     <div data-role="header">
       <h1>DARWORMS</h1>
@@ -256,7 +257,7 @@
     </div>
   </div>
 
-  <div data-role="page" data-theme="a" data-darworm="selector" id="edit-darworm-page" data-selecteddarworm=0>
+  <div data-role="page" data-theme="a" data-darworm="selector" id="edit-darworm-page" data-selecteddarworm=0 overflow:scroll>
     <div data-role="header">
       <a href="#playpage">Back</a>
 
@@ -320,7 +321,7 @@
 
 
 
-  <div data-role="page" data-theme="a" id=aboutpage overflow:scroll">
+  <div data-role="page" data-theme="a" id=aboutpage>
     <div data-role="header">
       <a href="#menupage">Back</a>
       <h1>About Darworms</h1>
@@ -402,7 +403,7 @@
             <a id="invokemail" data-role=button data-inline="true"  class="ui-btn ui-shadow ui-corner-all" onclick=darworms.sendemail()>Launch email client</a>        </div>
     </div>
   </div>
-  
+
 </body>
 
 </html>

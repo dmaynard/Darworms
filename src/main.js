@@ -280,6 +280,9 @@ darworms.main = (function() {
     $('#pickDirectionUI').val(darworms.dwsettings.pickDirectionUI).slider("refresh");
 
     sendAnalytics();
+    $('#myPages').css({
+      overflow: 'scroll',
+    });
 
   }
 
@@ -821,7 +824,7 @@ darworms.main = (function() {
     var mainbody = $('#myPages');
     mainbody.css({
       overflow: 'hidden',
-      height: '100%'
+      //  height: '100%'
     });
     $('#wcanvasparagrap').css({
 
@@ -859,7 +862,7 @@ darworms.main = (function() {
       darworms.playpageInitialized = true;
     }
     $("body").css("scroll", "on");
-    $("body").css("overflow", "hidden");
+    $("body").css("overflow", "scroll");
   }
   var swapTheme = function(selector, newTheme) {
     //  needed because JQuery Mobile only adds additional themes
@@ -895,6 +898,11 @@ darworms.main = (function() {
         $('#completeButton').hide();
       }
     }
+
+    var mainbody = $('#myPages');
+    mainbody.css({
+      overflow: 'scroll',
+    });
     sendAnalytics();
     // $('#edit-darworm-page').page.refresh();
   }

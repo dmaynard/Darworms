@@ -1,8 +1,8 @@
 import resolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify-es';
 import replace from 'rollup-plugin-replace';
-import gzipPlugin from 'rollup-plugin-gzip';
-import {eslint} from 'rollup-plugin-eslint';
+// import gzipPlugin from 'rollup-plugin-gzip';
+// import {eslint} from 'rollup-plugin-eslint';
 
 // import globals from 'rollup-plugin-node-globals';
 // `npm run build` -> `production` is true
@@ -25,6 +25,7 @@ export default {
 					exclude: ['node_modules/**', 'public/**'],
 					include: 'src/loader.js',
 					ENV: (production ? false : true),
+					DATE: Date.now(),
 				}),
 
 			production && uglify(),

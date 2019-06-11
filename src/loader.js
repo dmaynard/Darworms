@@ -17,6 +17,8 @@ ga('send', 'pageview');
 
 export var darworms = {
   version: "0.9.5",
+  // rollup.config  plugin replaces this by current date/time milliseconds
+  builddate: DATE,
   // host: "localhost:5000",
   host: "https://darworms.com",
   compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped", "ai"],

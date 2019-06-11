@@ -1111,8 +1111,14 @@ darworms.main = (function() {
     if (logging()) console.log("development mode: " + darworms.dwsettings.dologging);
     if (logging()) console.log("width: " + $(window).width());
     $("#logging").slider().val(darworms.dwsettings.dologging ? "true" : "false");
-
     $('#versionstring')[0].innerHTML = "Version " + darworms.version;
+    var when;
+    try {
+      when  = new Date(darworms.builddate);
+    } catch (err) {
+      when = Date.now();
+    }
+    $('#builddate')[0].innerHTML = when.toString();
     // See if the url constains an encoded game
     try {
       const urlParams = new URLSearchParams(window.location.search);

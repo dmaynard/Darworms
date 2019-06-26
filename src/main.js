@@ -303,7 +303,7 @@ darworms.main = (function() {
         ga('send', 'event', 'fps', newFps)
       } catch (err) {}
     }
-    darworms.graphics.frameInterval = 1000 / darworms.graphics.fps;
+    darworms.graphics.frameInterval =  1000 / darworms.graphics.fps;
     darworms.dwsettings.gridGeometry = $('input[name=geometry-radio-choice]:checked').val();
     if (darworms.dwsettings.backGroundTheme !== $('#backg').slider().val()) {
       darworms.dwsettings.backGroundTheme = $('#backg').slider().val();

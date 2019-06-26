@@ -33,12 +33,12 @@ import {
   drawPickCells,
   drawCells,
   graphicsInit,
-  drawDirtyCells,
-  pushDirtyCell,
   animateDyingWorms,
   clearCanvas,
   initPickUI,
-  selectDirection
+  selectDirection,
+  addSprite,
+  clearSprites
 } from "./graphics.js";
 
 import {
@@ -292,13 +292,14 @@ export class Game {
           nextToMove = i;
           this.numMoves = this.numMoves + 1;
           active.nMoves = active.nMoves + 1;
-          drawDirtyCells();
+          clearSprites();
           initPickUI(active);
           return (true);
         }
         if (true || graphicsOn) {
-          pushDirtyCell(active.pos);
-        }
+          addSprite ( active.pos, direction, 0, active.colorIndex, darworms.graphics.now , darworms.graphics.now + (darworms.graphics.frameInterval/4))
+          addSprite ( active.pos, direction, 1, active.colorIndex, darworms.graphics.now + (darworms.graphics.frameInterval/4), darworms.graphics.now + (darworms.graphics.frameInterval/2))
+      }
         // log (" Move Direction = " + direction);
         var next = this.grid.next(active.pos, direction);
         if (next.isEqualTo(darworms.dwsettings.noWhere)) { // fell of edge of world
@@ -313,7 +314,9 @@ export class Game {
           active.pos = next;
 
           if (true || graphicsOn) {
-            pushDirtyCell(next);
+            addSprite ( next, darworms.inDir[direction], 2, active.colorIndex, darworms.graphics.now + (darworms.graphics.frameInterval/2) , darworms.graphics.now + (darworms.graphics.frameInterval*3/4));
+            addSprite ( next, darworms.inDir[direction], 3, active.colorIndex, darworms.graphics.now + (darworms.graphics.frameInterval*3/4), darworms.graphics.now + (darworms.graphics.frameInterval))
+
             // last sound slot is labeld muted but actually contains the end game clip
             if (darworms.dwsettings.doAudio == 1 && graphicsOn  &&
                 (active.instrument < (darworms.audiosamplefiles.length-1))) {
@@ -395,7 +398,7 @@ function makeMoves() {
     }
   }
   if (darworms.dwsettings.doAnimations) {
-    drawDirtyCells();
+    // clearSprites();
     animateDyingWorms();
     darworms.theGame.getAvePos();
   }

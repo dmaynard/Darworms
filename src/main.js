@@ -27,11 +27,13 @@ import {
   wGraphics,
   drawPickCells,
   drawCells,
-  drawDirtyCells,
   clearCanvas,
   setGrid,
   setScale,
-  resizeCanvas
+  resizeCanvas,
+  addSprite,
+  clearSprites,
+  animateSprites
 } from "./graphics.js";
 import {
   scoreCanvasInit
@@ -704,9 +706,13 @@ darworms.main = (function() {
         darworms.graphics.elapsed = darworms.graphics.now - darworms.graphics.then;
         if (darworms.graphics.elapsed > darworms.graphics.frameInterval) {
           darworms.graphics.uiFrames = darworms.graphics.uiFrames + 1;
+          clearSprites();
           makeMoves();
           darworms.graphics.then = darworms.graphics.now -
             (darworms.graphics.elapsed % darworms.graphics.frameInterval)
+        }  else {
+          //   animations only no game state changedTouches
+          animateSprites(darworms.graphics.now);
         }
       } else {
         var startTime = Date.now();
@@ -718,10 +724,8 @@ darworms.main = (function() {
           makeMoves();
         }
         if (logging()) console.log("Compute time: " + (Date.now() - startTime));
-
-        var startTime = Date.now();
         updateScores(darworms.theGame.worms);
-        drawDirtyCells();
+        clearSprites();
         if (logging()) console.log("Draw time: " + (Date.now() - startTime));
 
         if (logging()) console.log(".");
@@ -1118,7 +1122,7 @@ darworms.main = (function() {
     } catch (err) {
       when = Date.now();
     }
-    $('#builddate')[0].innerHTML = when.toString();
+      $('#builddate')[0].innerHTML = when.toString();
     // See if the url constains an encoded game
     try {
       const urlParams = new URLSearchParams(window.location.search);

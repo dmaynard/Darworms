@@ -22,7 +22,6 @@ let timeInDraw = 0;
 let gameElapsedTime = 0;
 export let frameTimes = [];
 export let startFrameTimes = [];
-let dirtyCells = [];
 let theGame = null;
 export function graphicsInit(game) {
   wCanvas = document.getElementById("wcanvas");
@@ -100,7 +99,79 @@ export function drawCells() {
     wGraphics.restore();
   }
 };
+let sprites = [];
+// sprite sedcription
+// {ts: ,
+// }
+// [ {point}, [sprite descriptions]]
+// anim phases
+//   0 grow out from center to edge mid-point
+//   1 shrink in from center to edge midpoint
+//   2 grow out from edge midpoint to to dest center
+//   3 shrink in from edge midpoint to dest centers
+export function addSprite ( point, dir, phase, colorIndex, ts, te) {
+  const sprited = { dir: dir, phase: phase, colorIndex: colorIndex, ts: ts, te: te}
+  var added = false;
+  sprites.forEach ( function( item, idx ) {
+    if ( item.point.isEqualTo(point)) {
+      item.spriteds.push(sprited);
+      added = true;
+    }
+  });
+  if ( !added) {
+    sprites.push( {point: point, spriteds: [sprited]});
+  }
+}
+let previousTime = 0;
+export function animateSprites (now) {
+  if (previousTime !== 0) {
+    // console.log (now - previousTime , " ms frame");
+  }
+  previousTime = now;
+  sprites.forEach( (sprite) => {
+    var cell = sprite.point;
+    drawcell(sprite.point);
+    sprite.spriteds.forEach( (sprited) => {
+      if ( now > sprited.ts && now < sprited.te) {
+        var progress = (now - sprited.ts) / (sprited.te - sprited.ts);
+        drawSprite( cell, progress, sprited.dir, sprited.phase, sprited.colorIndex)
+      }
+    })
+  })
+}
+ function drawSprite( cell, progress, dir, phase, colorIndex)   {
+   console.log ( cell.format() + " progress " + progress + " dir " + dir + " phase " + phase + " colorIndex:  " + colorIndex);
+  if (phase === 0) {
+    var outSpokeColor = darworms.dwsettings.colorTable[colorIndex];
+    // log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
+    wGraphics.strokeStyle = outSpokeColor;
+    wGraphics.lineWidth = 8.0 / scale.x;
+    wGraphics.lineCap = 'round';
+    wGraphics.beginPath();
+    wGraphics.moveTo(0, 0);
+    wGraphics.lineTo(xPts[dir]*progress, yPts[dir]*progress);
+    wGraphics.stroke();
+    wGraphics.closePath();
+  }
+  if (phase === 1) {
+    var outSpokeColor = darworms.dwsettings.colorTable[colorIndex];
+    // log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
+    wGraphics.strokeStyle = outSpokeColor;
+    wGraphics.lineWidth = 8.0 / scale.x;
+    wGraphics.lineCap = 'round';
+    wGraphics.beginPath();
+    wGraphics.moveTo(xPts[dir]*progress, yPts[dir]*progress);
+    wGraphics.lineTo(xPts[dir], yPts[dir]);
+    wGraphics.stroke();
+    wGraphics.closePath();
+  }
+}
 
+export function clearSprites ( ) {
+  while ((sprite = sprites.pop()) !== undefined) {
+    drawcell(sprite.point);
+  }
+}
 export function drawcell(point) {
   // if (point.isEqualTo(new Point (this.grid.width-1, this.grid.height/2))) {
   //     if(logging()) console.log(this.grid.formatStateAt(point));
@@ -130,7 +201,7 @@ export function drawcell(point) {
   wGraphics.closePath();
   wGraphics.fill();
   // wGraphics.stroke();
-
+  // If cell is captured fill the hex with capturing colors
   if (owner) {
     wGraphics.strokeStyle = darworms.dwsettings.colorTable[owner & 0xF];
     wGraphics.fillStyle =
@@ -147,8 +218,6 @@ export function drawcell(point) {
   }
 
   // wGraphics.stroke();
-
-
 
   wGraphics.fillStyle = darworms.dwsettings.alphaColorTable[grid.spokeAt(point, 6) & 0xF];
 
@@ -213,19 +282,7 @@ export function drawcell(point) {
   };
   timeInDraw += Date.now();
 }
-export function drawDirtyCells() {
-  var pt;
-  // wGraphics.save();
-  // if(logging()) console.log(" Grawing dirty cells" + this.dirtyCells.length);
-  while ((pt = dirtyCells.pop()) !== undefined) {
-    drawcell(pt);
-  }
-  // wGraphics.restore();
-};
 
-export function pushDirtyCell(pos) {
-  dirtyCells.push(pos);
-}
 export function highlightWorm(worm, index) {
   if (worm.state === darworms.gameStates.waiting) {
     gsetTranslate(worm.pos);

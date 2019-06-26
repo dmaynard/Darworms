@@ -712,7 +712,7 @@ ga('send', 'pageview');
 var darworms$1 = {
   version: "0.9.5",
   // rollup.config  plugin replaces this by current date/time milliseconds
-  builddate: 1561501316272,
+  builddate: 1561584856943,
   // host: "localhost:5000",
   host: "https://darworms.com",
   compassPts: ["e", "se", "sw", "w", "nw", "ne", "unSet", "isTrapped", "ai"],
@@ -1849,7 +1849,7 @@ function animateSprites (now) {
     var outSpokeColor = darworms$1.dwsettings.colorTable[colorIndex];
     // log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
     wGraphics.strokeStyle = outSpokeColor;
-    wGraphics.lineWidth = 5.0 / scale.x;
+    wGraphics.lineWidth = 8.0 / scale.x;
     wGraphics.lineCap = 'round';
     wGraphics.beginPath();
     wGraphics.moveTo(0, 0);

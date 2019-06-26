@@ -153,18 +153,6 @@ export function animateSprites (now) {
     wGraphics.stroke();
     wGraphics.closePath();
   }
-  if (phase === 1) {
-    var outSpokeColor = darworms.dwsettings.colorTable[colorIndex];
-    // log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
-    wGraphics.strokeStyle = outSpokeColor;
-    wGraphics.lineWidth = 8.0 / scale.x;
-    wGraphics.lineCap = 'round';
-    wGraphics.beginPath();
-    wGraphics.moveTo(xPts[dir]*progress, yPts[dir]*progress);
-    wGraphics.lineTo(xPts[dir], yPts[dir]);
-    wGraphics.stroke();
-    wGraphics.closePath();
-  }
 }
 
 export function clearSprites ( ) {

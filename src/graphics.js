@@ -22,7 +22,6 @@ let timeInDraw = 0;
 let gameElapsedTime = 0;
 export let frameTimes = [];
 export let startFrameTimes = [];
-let dirtyCells = [];
 let theGame = null;
 export function graphicsInit(game) {
   wCanvas = document.getElementById("wcanvas");
@@ -45,7 +44,7 @@ export function setScale(gridWidth, gridHeight) {
 }
 export function reScale(gridWidth, gridHeight) {
   setScale(gridWidth, gridHeight);
-  if(logging()) console.log(" reScaled to " + scale.format());
+  if (logging()) console.log(" reScaled to " + scale.format());
 };
 
 export function clearCanvas() {
@@ -100,7 +99,102 @@ export function drawCells() {
     wGraphics.restore();
   }
 };
+let sprites = [];
+// sprite sedcription
+// {ts: ,
+// }
+// [ {point}, [sprite descriptions]]
+// anim phases
+//   0 grow out from center to edge mid-point
+//   1 shrink in from center to edge midpoint
+//   2 grow out from edge midpoint to to dest center
+//   3 shrink in from edge midpoint to dest centers
+export function addSprite(point, dir, phase, colorIndex, ts, te) {
+  const sprited = {
+    dir: dir,
+    phase: phase,
+    colorIndex: colorIndex,
+    ts: ts,
+    te: te
+  }
+  var added = false;
+  sprites.forEach(function(item, idx) {
+    if (item.point.isEqualTo(point)) {
+      item.spriteds.push(sprited);
+      added = true;
+    }
+  });
+  if (!added) {
+    sprites.push({
+      point: point,
+      spriteds: [sprited]
+    });
+  }
+}
+let previousTime = 0;
+export function animateSprites(now) {
+  if (previousTime !== 0) {
+    // console.log (now - previousTime , " ms frame");
+  }
+  previousTime = now;
+  sprites.forEach((sprite) => {
+    var cell = sprite.point;
+    drawcell(sprite.point);
+    sprite.spriteds.forEach((sprited) => {
+      if (now > sprited.ts && now < sprited.te) {
+        var progress = (now - sprited.ts) / (sprited.te - sprited.ts);
+        drawSprite(cell, progress, sprited.dir, sprited.phase, sprited.colorIndex)
+      }
+    })
+  })
+}
 
+function drawSprite(cell, progress, dir, phase, colorIndex) {
+  // console.log ( cell.format() + " progress " + progress + " dir " + dir + " phase " + phase + " colorIndex:  " + colorIndex);
+  var outSpokeColor = darworms.dwsettings.colorTable[colorIndex];
+  // log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
+  wGraphics.strokeStyle = outSpokeColor;
+  wGraphics.lineWidth = 8.0 / scale.x;
+  wGraphics.lineCap = 'round';
+  if (phase === 0) {
+
+    wGraphics.beginPath();
+    wGraphics.moveTo(0, 0);
+    wGraphics.lineTo(xPts[dir] * progress / 2.0, yPts[dir] * progress / 2.0);
+    wGraphics.stroke();
+    wGraphics.closePath();
+  }
+  if (phase === 1) {
+
+    wGraphics.beginPath();
+    wGraphics.moveTo(xPts[dir] * (progress) / 2.0, yPts[dir] * (progress) / 2.0);
+    wGraphics.lineTo(xPts[dir] / 2.0, yPts[dir] / 2.0);
+    wGraphics.stroke();
+    wGraphics.closePath();
+  }
+  if (phase === 2) {
+
+    wGraphics.beginPath();
+    wGraphics.moveTo(xPts[dir] / 2.0, yPts[dir] / 2.0);
+    wGraphics.lineTo(xPts[dir] * (1.0 - progress) / 2.0, yPts[dir] * (1.0 - progress) / 2.0);
+    wGraphics.stroke();
+    wGraphics.closePath();
+  }
+  if (phase === 3) {
+
+    wGraphics.beginPath();
+    wGraphics.moveTo(xPts[dir] * (1.0 - progress) / 2.0, yPts[dir] * (1.0 - progress) / 2.0);
+    wGraphics.lineTo(0, 0);
+    wGraphics.stroke();
+    wGraphics.closePath();
+  }
+}
+
+export function clearSprites() {
+  while ((sprite = sprites.pop()) !== undefined) {
+    drawcell(sprite.point);
+  }
+}
 export function drawcell(point) {
   // if (point.isEqualTo(new Point (this.grid.width-1, this.grid.height/2))) {
   //     if(logging()) console.log(this.grid.formatStateAt(point));
@@ -130,7 +224,7 @@ export function drawcell(point) {
   wGraphics.closePath();
   wGraphics.fill();
   // wGraphics.stroke();
-
+  // If cell is captured fill the hex with capturing colors
   if (owner) {
     wGraphics.strokeStyle = darworms.dwsettings.colorTable[owner & 0xF];
     wGraphics.fillStyle =
@@ -147,8 +241,6 @@ export function drawcell(point) {
   }
 
   // wGraphics.stroke();
-
-
 
   wGraphics.fillStyle = darworms.dwsettings.alphaColorTable[grid.spokeAt(point, 6) & 0xF];
 
@@ -213,19 +305,7 @@ export function drawcell(point) {
   };
   timeInDraw += Date.now();
 }
-export function drawDirtyCells() {
-  var pt;
-  // wGraphics.save();
-  // if(logging()) console.log(" Grawing dirty cells" + this.dirtyCells.length);
-  while ((pt = dirtyCells.pop()) !== undefined) {
-    drawcell(pt);
-  }
-  // wGraphics.restore();
-};
 
-export function pushDirtyCell(pos) {
-  dirtyCells.push(pos);
-}
 export function highlightWorm(worm, index) {
   if (worm.state === darworms.gameStates.waiting) {
     gsetTranslate(worm.pos);
@@ -247,7 +327,7 @@ export function highlightWorm(worm, index) {
 
 export function initPickUI(worm) {
 
-  if(logging()) console.log(" initPickUI")
+  if (logging()) console.log(" initPickUI")
   darworms.pickCells = new Array();
   var outvec = this.grid.outVectorsAt(worm.pos);
   var inVec = this.grid.inVectorsAt(worm.pos);
@@ -298,7 +378,7 @@ export function drawPickCell(point, activeColor) {
   // wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
   var owner = this.grid.spokeAt(point, 7);
   if (owner !== 0) {
-    if(logging()) console.log(" Why is an owned cell a target selection? " + point.format(point));
+    if (logging()) console.log(" Why is an owned cell a target selection? " + point.format(point));
   }
   drawcell(point); // set up original background for this cell
 
@@ -328,7 +408,7 @@ export function drawPickCellOrigin(point, activeColor) {
   // wGraphics.fillRect(-0.5, -0.5, 1.0, 1.0);
   var owner = this.grid.spokeAt(point, 7);
   if (owner !== 0) {
-    if(logging()) console.log(" Why is an owned cell a target selection origin? " + point.format(point));
+    if (logging()) console.log(" Why is an owned cell a target selection origin? " + point.format(point));
   }
   drawcell(point); // set up original backgrounf for this cell
 
@@ -404,7 +484,7 @@ function selectSmallUIDirection(touchPoint) {
     var diff = new Point(touchPoint.x - screenCoordinates.x, touchPoint.y - screenCoordinates.y);
     if ((absdiff.x < (scale.x / 2)) && (absdiff.y < (scale.y / 2)) &&
       this.gameState === darworms.gameStates.waiting) {
-      if(logging()) console.log(" target hit delta: " + diff.format());
+      if (logging()) console.log(" target hit delta: " + diff.format());
       setDNAandResumeGame(pickTarget.dir);
     }
   }, darworms.theGame);
@@ -493,7 +573,7 @@ export function showTimes() {
   var nFrames = 0;
   var sumTime = 0;
   var fps = 0;
-  if(logging()) console.log("frameTimes.length " + frameTimes.length);
+  if (logging()) console.log("frameTimes.length " + frameTimes.length);
   for (var i = 0; i < frameTimes.length; i = i + 1) {
     nFrames = nFrames + 1;
     if (frameTimes[i] > max) {

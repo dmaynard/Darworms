@@ -204,7 +204,7 @@ html .ui-alt-icon .ui-radio-off:after {
 	width: 8px;
 	height: 8px;
 	border-width: 5px;
-	border-style: solid;
+	border-style: solid; 
 }
 .ui-alt-icon.ui-btn.ui-radio-on:after,
 .ui-alt-icon .ui-btn.ui-radio-on:after {
@@ -904,7 +904,7 @@ html .ui-bar-e .ui-body-inherit,
 html .ui-body-e .ui-body-inherit,
 html body .ui-group-theme-e .ui-body-inherit,
 html .ui-panel-page-container-e {
-	background-color: #5cc4f1 /*{e-body-background-color}*/;
+	background-color: #80e2f1 /*{e-body-background-color}*/;
 	border-color: #326b84 /*{e-body-border}*/;
 	color: #000000 /*{e-body-color}*/;
 	text-shadow: 0 /*{e-body-shadow-x}*/ 1px /*{e-body-shadow-y}*/ 0 /*{e-body-shadow-radius}*/ #eeeeee /*{e-body-shadow-color}*/;
@@ -1002,7 +1002,7 @@ html .ui-bar-e .ui-slider-track .ui-btn-active,
 html .ui-body-e .ui-slider-track .ui-btn-active,
 html body .ui-group-theme-e .ui-slider-track .ui-btn-active,
 html body div.ui-slider-track.ui-body-e .ui-btn-active {
-	background-color: #3388cc /*{e-active-background-color}*/;
+	background-color: #0088cc /*{e-active-background-color}*/;
 	border-color: #1c4a70 /*{e-active-border}*/;
 	color: #ffffff /*{e-active-color}*/;
 	text-shadow: 0 /*{e-active-shadow-x}*/ 1px /*{e-active-shadow-y}*/ 0 /*{e-active-shadow-radius}*/ #005599 /*{e-active-shadow-color}*/;
@@ -1013,7 +1013,7 @@ html .ui-bar-e .ui-radio-on:after,
 html .ui-body-e .ui-radio-on:after,
 html body .ui-group-theme-e .ui-radio-on:after,
 .ui-btn.ui-radio-on.ui-btn-e:after {
-	border-color: #3388cc /*{e-active-background-color}*/;
+	border-color: #0088cc /*{e-active-background-color}*/;
 }
 /* Focus */
 .ui-page-theme-e .ui-btn:focus,
@@ -1028,9 +1028,9 @@ html .ui-body-e .ui-focus,
 html body .ui-group-theme-e .ui-focus,
 html head + body .ui-btn-e.ui-focus,
 html head + body .ui-body-e.ui-focus {
-	-webkit-box-shadow: 0 0 12px #3388cc /*{e-active-background-color}*/;
-	-moz-box-shadow: 0 0 12px #3388cc /*{e-active-background-color}*/;
-	box-shadow: 0 0 12px #3388cc /*{e-active-background-color}*/;
+	-webkit-box-shadow: 0 0 12px #0088cc /*{e-active-background-color}*/;
+	-moz-box-shadow: 0 0 12px #0088cc /*{e-active-background-color}*/;
+	box-shadow: 0 0 12px #0088cc /*{e-active-background-color}*/;
 }
 
 

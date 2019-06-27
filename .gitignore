@@ -20,3 +20,5 @@ npm-debug.log*
 darworms.txt
 # turns out netlify already gzips yout stati site
 public/bundle.js.gz
+public/bundle.js
+public/bundle.js.map

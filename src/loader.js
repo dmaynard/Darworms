@@ -16,7 +16,7 @@ ga('require', 'urlChangeTracker');
 ga('send', 'pageview');
 
 export var darworms = {
-  version: "0.9.5",
+  version: "0.9.6",
   // rollup.config  plugin replaces this by current date/time milliseconds
   builddate: DATE,
   // host: "localhost:5000",
@@ -79,7 +79,8 @@ export var darworms = {
     vertex_y: [0.3125, -0.3125, -0.6875, -0.3125, 0.3125, 0.6875],
     hexSize: 1.0,
     sqrt3: Math.sqrt(3),
-    dyningAnimationFrames: 8
+    dyningAnimationFrames: 8,
+    spriteWidth: 16
 
   },
   selectedDarworm: 0,

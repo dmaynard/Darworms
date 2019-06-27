@@ -154,10 +154,9 @@ function drawSprite(cell, progress, dir, phase, colorIndex) {
   var outSpokeColor = darworms.dwsettings.colorTable[colorIndex];
   // log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
   wGraphics.strokeStyle = outSpokeColor;
-  wGraphics.lineWidth = 8.0 / scale.x;
-  wGraphics.lineCap = 'round';
+  wGraphics.lineWidth = darworms.graphics.spriteWidth / scale.x;
+  wGraphics.lineCap = 'butt';
   if (phase === 0) {
-
     wGraphics.beginPath();
     wGraphics.moveTo(0, 0);
     wGraphics.lineTo(xPts[dir] * progress / 2.0, yPts[dir] * progress / 2.0);
@@ -165,7 +164,6 @@ function drawSprite(cell, progress, dir, phase, colorIndex) {
     wGraphics.closePath();
   }
   if (phase === 1) {
-
     wGraphics.beginPath();
     wGraphics.moveTo(xPts[dir] * (progress) / 2.0, yPts[dir] * (progress) / 2.0);
     wGraphics.lineTo(xPts[dir] / 2.0, yPts[dir] / 2.0);
@@ -173,7 +171,6 @@ function drawSprite(cell, progress, dir, phase, colorIndex) {
     wGraphics.closePath();
   }
   if (phase === 2) {
-
     wGraphics.beginPath();
     wGraphics.moveTo(xPts[dir] / 2.0, yPts[dir] / 2.0);
     wGraphics.lineTo(xPts[dir] * (1.0 - progress) / 2.0, yPts[dir] * (1.0 - progress) / 2.0);
@@ -181,7 +178,6 @@ function drawSprite(cell, progress, dir, phase, colorIndex) {
     wGraphics.closePath();
   }
   if (phase === 3) {
-
     wGraphics.beginPath();
     wGraphics.moveTo(xPts[dir] * (1.0 - progress) / 2.0, yPts[dir] * (1.0 - progress) / 2.0);
     wGraphics.lineTo(0, 0);

@@ -80,7 +80,7 @@ export var darworms = {
     hexSize: 1.0,
     sqrt3: Math.sqrt(3),
     dyningAnimationFrames: 8,
-    spriteWidth: 16
+    spriteWidth: 12
 
   },
   selectedDarworm: 0,
@@ -198,7 +198,6 @@ window.addEventListener("load", function() {
     $("#aboutpage").on('pageshow', darworms.main.sendAnalytics);
     $("#debugpage").on('pageshow', darworms.main.sendAnalytics);
     $("#emailpage").on('pageshow', darworms.main.sendAnalytics);
-
     $( "#tutorialpopup" ).popup({
         afterclose: function( event, ui ) {
           if(logging()) console.log(" afterclose even fired" + $('#tutorialpopup input[type=checkbox]').prop("checked"));

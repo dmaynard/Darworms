@@ -15,15 +15,15 @@ Darworms 2019 David S. Maynard<br>
 
 ## Build Dependencies
 
-Node
-npm
-rollup
+- Node
+- npm
+- rollup
 
 ## Runtime Dependencies
 
-JQuery
-JQuery mobile
-Google Analytics
+- JQuery
+- JQuery mobile
+- Google Analytics
 
 ## How to Run Locally
 
@@ -31,7 +31,7 @@ Google Analytics
 
 Then, run one of these:
 
-- `npm run serve` (for play mode), or:
+- `npm run serve` (for play mode on localhost:5000)
 - `npm run dev` (for dev mode with dynamic reloading)
 - `npm run build` (for production mode with minimizing)
 

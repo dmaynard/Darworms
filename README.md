@@ -23,8 +23,9 @@ rollup
 
 JQuery
 JQuery mobile
+Google Analytics
 
-=== How to Run Locally ===
+## How to Run Locally
 
 - `npm install`
 
@@ -34,6 +35,6 @@ Then, run one of these:
 - `npm run dev` (for dev mode with dynamic reloading)
 - `npm run build` (for production mode with minimizing)
 
-# The darworms site is hosted on netlify
+## The darworms site is hosted on netlify
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)  [![Netlify Status](https://api.netlify.com/api/v1/badges/f44affeb-0f27-4565-80ae-00431a5fc797/deploy-status)](https://app.netlify.com/sites/darworms/deploys)

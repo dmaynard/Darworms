@@ -465,7 +465,7 @@ darworms.main = (function() {
     // alert( event.toString() + " tap event x:" + touchX + "  y:" + touchY)
     */
 
-    if (logging()) console.log(" Tap Event at x: " + touchX + " y: " + touchY);
+    // if (logging()) console.log(" Tap Event at x: " + touchX + " y: " + touchY);
     // if(logging()) console.log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
     // log (" wcanvas coord width " + wCanvas.width + " coord height "  + wCanvas.height  );
     if (darworms.theGame.gameState === darworms.gameStates.waiting) {

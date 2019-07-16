@@ -109,10 +109,10 @@ export var darworms = {
   dwsettings: {   //  User adjustable settings
     forceInitialGridSize: true,
     hugeGridSize: 18, // The original Atari 800 Character mode
-    largeGridSize: 10, 
+    largeGridSize: 10,
     smallGridSize: 10, // so cells can be selected with touch
     tinyGridSize: 8,
-
+    initInstrument: [1,0,0,1],
     minLargeScreenWidth: 800, //
     maxSmallSreenWidth: 500,
     isLargeScreen: true,

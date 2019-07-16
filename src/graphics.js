@@ -322,8 +322,6 @@ export function highlightWorm(worm, index) {
 }
 
 export function initPickUI(worm) {
-
-  if (logging()) console.log(" initPickUI")
   darworms.pickCells = new Array();
   var outvec = this.grid.outVectorsAt(worm.pos);
   var inVec = this.grid.inVectorsAt(worm.pos);
@@ -480,7 +478,7 @@ function selectSmallUIDirection(touchPoint) {
     var diff = new Point(touchPoint.x - screenCoordinates.x, touchPoint.y - screenCoordinates.y);
     if ((absdiff.x < (scale.x / 2)) && (absdiff.y < (scale.y / 2)) &&
       this.gameState === darworms.gameStates.waiting) {
-      if (logging()) console.log(" target hit delta: " + diff.format());
+      // if (logging()) console.log(" target hit delta: " + diff.format());
       setDNAandResumeGame(pickTarget.dir);
     }
   }, darworms.theGame);

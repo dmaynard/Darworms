@@ -16,7 +16,7 @@ ga('require', 'urlChangeTracker');
 ga('send', 'pageview');
 
 export var darworms = {
-  version: "0.9.6",
+  version: "1.0.0",
   // rollup.config  plugin replaces this by current date/time milliseconds
   builddate: DATE,
   // host: "localhost:5000",
@@ -108,10 +108,11 @@ export var darworms = {
 
   dwsettings: {   //  User adjustable settings
     forceInitialGridSize: true,
-    largeGridSize: 18, // The original Atari 800 Character mode
+    hugeGridSize: 18, // The original Atari 800 Character mode
+    largeGridSize: 10,
     smallGridSize: 10, // so cells can be selected with touch
     tinyGridSize: 8,
-
+    initInstrument: [1,0,0,1],
     minLargeScreenWidth: 800, //
     maxSmallSreenWidth: 500,
     isLargeScreen: true,
@@ -200,10 +201,8 @@ window.addEventListener("load", function() {
     $("#emailpage").on('pageshow', darworms.main.sendAnalytics);
     $( "#tutorialpopup" ).popup({
         afterclose: function( event, ui ) {
-          if(logging()) console.log(" afterclose even fired" + $('#tutorialpopup input[type=checkbox]').prop("checked"));
-          if ( $('#tutorialpopup input[type=checkbox]').prop("checked") ) {
-            darworms.theGame.focusWorm.showTutorial = false;
-          }
+          if(logging()) console.log(" popup's afterclose event fired" );
+          darworms.theGame.focusWorm.tutorialCount++;
         }
     });
     if(logging()) console.log("About to call darworms.main.init()");

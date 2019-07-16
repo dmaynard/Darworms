@@ -465,7 +465,7 @@ darworms.main = (function() {
     // alert( event.toString() + " tap event x:" + touchX + "  y:" + touchY)
     */
 
-    if (logging()) console.log(" Tap Event at x: " + touchX + " y: " + touchY);
+    // if (logging()) console.log(" Tap Event at x: " + touchX + " y: " + touchY);
     // if(logging()) console.log(" wcanvas css   width " + $('#wcanvas').width() + " css   height " + $('#wcanvas').height());
     // log (" wcanvas coord width " + wCanvas.width + " coord height "  + wCanvas.height  );
     if (darworms.theGame.gameState === darworms.gameStates.waiting) {
@@ -746,6 +746,15 @@ darworms.main = (function() {
     // if ( darworms.graphics.rawFrameCount %  60 == 0) {
     //     if(logging()) console.log("Date.now() " + Date.now());
     // }
+  }
+
+  darworms.disableTutorialPopup = function () {
+    darworms.theGame.focusWorm.showTutorial = false;
+    // Analytics for how many times tutorial popup was shown
+    try {
+      ga('send', 'event', 'disableTutorial', darworms.theGame.focusWorm.tutorialCount);
+    } catch (err) {}
+    $("#tutorialpopup").popup("close");
   }
 
   darworms.abortgame = function() {

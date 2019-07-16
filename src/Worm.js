@@ -125,6 +125,7 @@ export const musicalkeys = {
  export const  dnaregx = /^[ABCDEF\?\*]{63}X$/;
 export class Worm {
   constructor(colorIndex, state) {
+    // colorIndex is 1-4 (not 0-3)
     this.colorIndex = colorIndex;
     this.dna = new Array(64);
     this.state = state;
@@ -139,13 +140,14 @@ export class Worm {
     this.directionIndex = 0;
     this.diedAtFrame = 0;
     this.showTutorial = true;
+    this.tutorialCount = 0;
 
 
     this.musickeyName = "C Major";
 
     this.MusicScale = [],
-
-      this.audioSamplesPtrs = [];
+    this.instrument = darworms.dwsettings.initInstrument[colorIndex-1];
+    this.audioSamplesPtrs = [];
     this.pos = new Point(-1, -1);
     this.startingPos = new Point(-1, -1);
 

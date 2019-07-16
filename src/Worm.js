@@ -139,6 +139,7 @@ export class Worm {
     this.directionIndex = 0;
     this.diedAtFrame = 0;
     this.showTutorial = true;
+    this.tutorialCount = 0;
 
 
     this.musickeyName = "C Major";

@@ -35,7 +35,8 @@
     0px; margin: 0px; } #wcanvasparagrap { background: "#F5F5F5" ; padding: 0px 0px; margin: 0px; }  div.aboutx {
       padding-left: 20px;
       padding-right: 20px;
-    }</style>
+    }
+  </style>
   </head> <body id="myPages">
     <div data-role="page" data-theme="b" id=menupage>
     <div data-role="header">
@@ -93,7 +94,7 @@
           <canvas id="popupcanvas" class="popupcanvasclass"></canvas>
         </div>
         <label>
-          <input class="mycheckbox" type="checkbox" id="tutorialCheckbox"> Don't show this again
+        <a id="popupbutton" data-role=button data-inline="true" class="ui-btn ui-shadow ui-corner-all" onclick=darworms.disableTutorialPopup(true)>Got It! Don't show this again</a>
         </label>
       </div>
 

@@ -748,6 +748,15 @@ darworms.main = (function() {
     // }
   }
 
+  darworms.disableTutorialPopup = function () {
+    darworms.theGame.focusWorm.showTutorial = false;
+    // Analytics for how many times tutorial popup was shown
+    try {
+      ga('send', 'event', 'disableTutorial', darworms.theGame.focusWorm.tutorialCount);
+    } catch (err) {}
+    $("#tutorialpopup").popup("close");
+  }
+
   darworms.abortgame = function() {
     if (logging()) console.log("Abort Game called");
     $.mobile.changePage('#abortdialog', 'pop', true, true);

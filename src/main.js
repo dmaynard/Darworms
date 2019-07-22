@@ -182,25 +182,7 @@ darworms.main = (function() {
     } else {
       $('.darwormTypeRadioButtons').show();
       $('.playKeyNotes').show();
-      var darwormType = playerTypes[darworms.selectedIdx];
-      var color = darworms.colorNames[darworms.selectedIdx];
-      switch (darwormType) {
-        case 0:
-          $('#' + 'edit' + '-radio-choice-1').prop("checked", true).checkboxradio("refresh");
-          break
-        case 1:
-          $('#' + 'edit' + '-radio-choice-2').prop("checked", true).checkboxradio("refresh");
-          break;
-        case 2:
-          $('#' + 'edit' + '-radio-choice-3').prop("checked", true).checkboxradio("refresh");
-          break;
-        case 3:
-          $('#' + 'edit' + '-radio-choice-4').prop("checked", true).checkboxradio("refresh");
-          break;
-        case 4:
-          $('#' + 'edit' + '-radio-choice-5').prop("checked", true).checkboxradio("refresh");
-          break;
-      }
+      setTypeRadioButton();
       var selectinput = 'input[name=' + 'edit' + '-radio-choice]';
 
       // $('input[name=green-radio-choice]').checkboxradio("refresh");
@@ -886,9 +868,34 @@ darworms.main = (function() {
     selector.removeClass('ui-page-theme-f');
     selector.page("option", "theme", newTheme);
   }
+  var setTypeRadioButton = function ( ) {
+    var darwormType = playerTypes[darworms.selectedIdx];
+    switch (darwormType) {
+      case 0:
+        $('#' + 'edit' + '-radio-choice-1').prop("checked", true).checkboxradio("refresh");
+        break
+      case 1:
+        $('#' + 'edit' + '-radio-choice-2').prop("checked", true).checkboxradio("refresh");
+        break;
+      case 2:
+        $('#' + 'edit' + '-radio-choice-3').prop("checked", true).checkboxradio("refresh");
+        break;
+      case 3:
+        $('#' + 'edit' + '-radio-choice-4').prop("checked", true).checkboxradio("refresh");
+        break;
+      case 4:
+        $('#' + 'edit' + '-radio-choice-5').prop("checked", true).checkboxradio("refresh");
+        break;
+    }
+  }
   var initEditPage = function(foo) {
+    // $('#edit-darworm-page').hide();
     if (logging()) console.log(" initEditPage " + darworms.selectedIdx)
     swapTheme($('#edit-darworm-page'), darworms.themes[darworms.selectedIdx]);
+    $("input[name='edit-textname']").textinput({
+      theme: darworms.themes[darworms.selectedIdx]
+    });
+    setTypeRadioButton();
     $('#edittextfield').val(gWorms[darworms.selectedIdx].wType == 0 ? "" : gWorms[darworms.selectedIdx].name);
     // $('#edit-darworm-page').page.refresh();
 
@@ -911,17 +918,26 @@ darworms.main = (function() {
         $('#completeButton').hide();
       }
     }
+    // $('#edit-darworm-page').show();
 
-    var mainbody = $('#myPages');
-    mainbody.css({
-      overflow: 'scroll',
-    });
     sendAnalytics();
     // $('#edit-darworm-page').page.refresh();
+    // $("#edit-darworm-page").show();
   }
+  var mainbody = $('#myPages');
+  mainbody.css({
+    overflow: 'scroll',
+  });
 
   var leaveEditPage = function(foo) {
     if (logging()) console.log(" leaveEditPage " + foo)
+    // $("#edit-darworm-page").hide();
+  }
+
+  var revealEditPage = function(foo) {
+    //$('#edit-darworm-page').hide();
+    if (logging()) console.log(" leaveEditPage " + foo)
+    // $("#edit-darworm-page").show();
   }
 
 
@@ -1241,9 +1257,9 @@ darworms.main = (function() {
     });
     $("#nextbutton").click(function() {
       if (logging()) console.log(" nextbutton clicked");
-      $.mobile.changePage("#edit-darworm-page", {
-        allowSamePageTransition: true
-      });
+      //$.mobile.changePage("#edit-darworm-page", {
+      //  allowSamePageTransition: true
+      //  });
       darworms.selectedIdx = ((darworms.selectedIdx + 1) % gWorms.length);
       initEditPage(darworms.selectedIdx);
       // $.mobile.changePage( "#edit-darworm-page", { allowSamePageTransition: true } );
@@ -1310,6 +1326,7 @@ darworms.main = (function() {
     wormEventHandler: wormEventHandler,
     initEditPage: initEditPage,
     leaveEditPage: leaveEditPage,
+    revealEditPage: revealEditPage,
     loadSavedGames: loadSavedGames,
     freeSavedGames: freeSavedGames,
     sendAnalytics: sendAnalytics

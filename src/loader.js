@@ -192,8 +192,9 @@ window.addEventListener("load", function() {
     $("#settingspage").on('pagehide', darworms.main.applySettings);
     $("#playpage").on('pageshow', darworms.main.initPlayPage);
     $("#playpage").on('pagehide', darworms.main.leavePlayPage);
-    $("#edit-darworm-page").on('pageshow', darworms.main.initEditPage);
-    $("#edit-darworm-page").on('pagehide', darworms.main.leaveditPage);
+    $("#edit-darworm-page").on( "pagebeforeshow", darworms.main.initEditPage);
+    $("#edit-darworm-page").on('pageshow', darworms.main.revealEditPage);
+    $("#edit-darworm-page").on('pagehide', darworms.main.leavEditPage);
     $("#loadsavepage").on('pageshow', darworms.main.loadSavedGames);
     $("#loadsavepage").on('pagehide', darworms.main.freeSavedGames);
     $("#aboutpage").on('pageshow', darworms.main.sendAnalytics);

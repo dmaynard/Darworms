@@ -293,6 +293,9 @@ darworms.main = (function() {
         clearCanvas();
         drawCells();
       }
+      try {
+        ga('send', 'event', 'background', darworms.dwsettings.backGroundTheme);
+      } catch (err){};
     }
 
     darworms.dwsettings.doAnimations = $('#doanim').slider().val() == "true" ? true : false;

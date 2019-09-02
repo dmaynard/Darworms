@@ -388,13 +388,16 @@ function makeMoves() {
       if(logging()) console.log(" Game Over");
       clearInterval(darworms.graphics.timer);
       // document.getElementById("startpause").innerHTML = "Start Game";
-      $("#startpause").text("Start Game");
+      $("#startpause").text((darworms.dwsettings.screenSaver === 0) ? "Start Game" : "Start Screen Saver");
       showTimes();
       updateScores(darworms.theGame.worms);
       darworms.theGame.gameState = darworms.gameStates.over;
       darworms.gameTxt = encodeGame( darworms.theGame, darworms.dwsettings, darworms.graphics, darworms.version);
       // decodeGame(gameTxt);
       // darworms.main.injectSettings(gameTxt);
+      if(darworms.dwsettings.screenSaver) {
+        setTimeout(  darworms.startgame, 5000 )
+      }
     }
   }
   if (darworms.dwsettings.doAnimations) {

@@ -256,7 +256,8 @@ darworms.main = (function() {
     $('#fps').val(darworms.graphics.fps).slider("refresh");
 
     $('#gridsize').val(darworms.dwsettings.gridSize).slider("refresh");
-    $('#backg').val(darworms.dwsettings.backGroundTheme).slider("refresh");
+    $('#').val(darworms.dwsettings.backGroundTheme).slider("refresh");
+    $('#scrnsvr').val(darworms.dwsettings.screenSaver ? "1" : "0").slider("refresh");
     $('#doanim').val(darworms.dwsettings.doAnimations).slider("refresh");
     $('#audioon').val(darworms.dwsettings.doAudio).slider("refresh");
     $('#fixedinitpos').val(darworms.dwsettings.fixedInitPos).slider("refresh");
@@ -285,7 +286,7 @@ darworms.main = (function() {
         ga('send', 'event', 'fps', newFps)
       } catch (err) {}
     }
-    darworms.graphics.frameInterval =  1000 / darworms.graphics.fps;
+    darworms.graphics.frameInterval = 1000 / darworms.graphics.fps;
     darworms.dwsettings.gridGeometry = $('input[name=geometry-radio-choice]:checked').val();
     if (darworms.dwsettings.backGroundTheme !== $('#backg').slider().val()) {
       darworms.dwsettings.backGroundTheme = $('#backg').slider().val();
@@ -295,7 +296,18 @@ darworms.main = (function() {
       }
       try {
         ga('send', 'event', 'background', darworms.dwsettings.backGroundTheme);
-      } catch (err){};
+      } catch (err) {};
+    }
+    if (darworms.dwsettings.screenSaver !== parseInt($('#scrnsvr').slider().val())) {
+      darworms.dwsettings.screenSaver = parseInt($('#scrnsvr').slider().val());
+
+      if (darworms.dwsettings.screenSaver) {
+        $("#startpause").text("Start Screen Saver");
+      }
+
+      try {
+        ga('send', 'event', 'screensaver', darworms.dwsettings.screenSaver);
+      } catch (err) {};
     }
 
     darworms.dwsettings.doAnimations = $('#doanim').slider().val() == "true" ? true : false;
@@ -358,7 +370,7 @@ darworms.main = (function() {
 
       });
       try {
-        ga('send', 'event', 'loadGame', ((nPlayers*100) + gameObj.width));
+        ga('send', 'event', 'loadGame', ((nPlayers * 100) + gameObj.width));
       } catch (err) {}
       return gameObj;
     } catch (err) {
@@ -465,7 +477,7 @@ darworms.main = (function() {
       $.mobile.changePage("#settingspage");
       darworms.theGame.needsRedraw = true;
       drawCells();
-      $("#startpause").text("Resume Game");
+      $("#startpause").text((darworms.dwsettings.screenSaver == 1) ? "Resume Screen Saver" : "Resume Game");
     } else {
       if (darworms.theGame.gameState == darworms.gameStates.waiting) {
         $.mobile.changePage("#settingspage");
@@ -509,6 +521,9 @@ darworms.main = (function() {
   }
 
   darworms.startgame = function(startNow) {
+    if (startNow === undefined) {
+      startNow = ( darworms.dwsettings.screenSaver == 1);
+    }
     if (logging()) console.log(" Startgame start now = " + startNow);
     if (darworms.theGame) {
       if (logging()) console.log("GameState is " +
@@ -538,13 +553,19 @@ darworms.main = (function() {
     }
     if (darworms.theGame.gameState === darworms.gameStates.over) {
       darworms.theGame.initGame();
-      $("#startpause").text("Start Game");
+      $("#startpause").text((darworms.dwsettings.screenSaver === 0) ? "Start Game" : "Start Screen Saver");
+
       darworms.theGame.needsRedraw = true;
       drawCells();
       darworms.theGame.worms = gWorms;
       if (logging()) console.log(" init gridsize: " + $("#gridsize").val() + " gHeight" + darworms.dwsettings.gridSize);
 
       gWorms.forEach(function(worm, i) {
+        if (darworms.dwsettings.screenSaver) {
+          if (playerTypes[i] == 2 || playerTypes[i] == 3) { // New or Same
+            playerTypes[i] = 4; // make worms smart for screensave mode
+          }
+        }
         worm.init(playerTypes[i]);
         if (playerTypes[i] !== 0) { //  not None
 
@@ -572,9 +593,7 @@ darworms.main = (function() {
     if (logging()) console.log(" NEW in startgame darworms.dwsettings.doAnimations " + darworms.dwsettings.doAnimations);
     if (darworms.theGame.gameState === darworms.gameStates.running) {
       // This is now a pause game button
-      // clearInterval(darworms.graphics.timer);
-      // document.getElementById("startpause").innerHTML = "Resume Game";
-      $("#startpause").text("Resume Game");
+      $("#startpause").text((darworms.dwsettings.screenSaver == 1) ? "Resume Screen Saver" : "Resume Game");
       darworms.theGame.gameState = darworms.gameStates.paused;
       darworms.theGame.needsRedraw = true;
       drawCells();
@@ -582,8 +601,7 @@ darworms.main = (function() {
     }
     if (darworms.theGame.gameState === darworms.gameStates.paused) {
       // This is now a start game button
-      // document.getElementById("startpause").innerHTML = "Pause Game";
-      $("#startpause").text("Pause");
+      $("#startpause").text((darworms.dwsettings.screenSaver == 1) ? "Pause Screen Saver" : "Pause Game");
       darworms.theGame.gameState = darworms.gameStates.running;
       // darworms.graphics.timer = setInterval(updateGameState, 1000 / $("#fps").val());
       // startGameLoop( $("#fps").val());
@@ -598,7 +616,7 @@ darworms.main = (function() {
       startGameLoop(animFramesPerSec);
       if (logging()) console.log(" setInterval: " + 1000 / $("#fps").val());
       // document.getElementById("startpause").innerHTML = "Pause Game";
-      $("#startpause").text("Pause Game");
+      $("#startpause").text((darworms.dwsettings.screenSaver == 1) ? "Pause Screen Saver" : "Pause Game");      
       initTheGame(true);
       darworms.theGame.logGame();
     }
@@ -614,25 +632,6 @@ darworms.main = (function() {
 
       if (logging()) console.log(" Game Running");
       $("#startpause").text("Running");
-      /*  busy loop making moves.  Freezes the javascript engine!
-        while (darworms.theGame.gameState != darworms.gameStates.over) {
-         if (darworms.theGame.gameState === darworms.gameStates.waiting) {
-           break;
-         }
-         if (darworms.theGame.makeMove(false) === false) {
-           darworms.theGame.elapsedTime = darworms.theGame.elapsedTime + new Date().getTime();
-           if(logging()) console.log(" Game Over");
-           darworms.theGame.showTimes();
-           darworms.theGame.gameState = darworms.gameStates.over;
-           $("#startpause").text("Start Game");
-           // wGraphics.restore();
-         }
-       }
-       drawCells();
-       darworms.gameModule.updateScores();
-
-       $("#startpause").text("Start Game");
-       */
     }
 
   };
@@ -695,7 +694,7 @@ darworms.main = (function() {
           makeMoves();
           darworms.graphics.then = darworms.graphics.now -
             (darworms.graphics.elapsed % darworms.graphics.frameInterval)
-        }  else {
+        } else {
           //   animations only no game state changedTouches
           animateSprites(darworms.graphics.now);
         }
@@ -733,7 +732,7 @@ darworms.main = (function() {
     // }
   }
 
-  darworms.disableTutorialPopup = function () {
+  darworms.disableTutorialPopup = function() {
     darworms.theGame.focusWorm.showTutorial = false;
     // Analytics for how many times tutorial popup was shown
     try {
@@ -839,7 +838,7 @@ darworms.main = (function() {
     updateScores(darworms.main.gWorms);
     if (!darworms.playpageInitialized) {
       resizeCanvas();
-      darworms.startgame(false);
+      darworms.startgame(darworms.dwsettings.screenSaver == 1);
       darworms.audioContext.resume();
       darworms.playpageInitialized = true;
     }
@@ -871,7 +870,7 @@ darworms.main = (function() {
     selector.removeClass('ui-page-theme-f');
     selector.page("option", "theme", newTheme);
   }
-  var setTypeRadioButton = function ( ) {
+  var setTypeRadioButton = function() {
     var darwormType = playerTypes[darworms.selectedIdx];
     switch (darwormType) {
       case 0:
@@ -1146,11 +1145,11 @@ darworms.main = (function() {
     $('#versionstring')[0].innerHTML = "Version " + darworms.version;
     var when;
     try {
-      when  = new Date(darworms.builddate);
+      when = new Date(darworms.builddate);
     } catch (err) {
       when = Date.now();
     }
-      $('#builddate')[0].innerHTML = when.toString();
+    $('#builddate')[0].innerHTML = when.toString();
     // See if the url constains an encoded game
     try {
       const urlParams = new URLSearchParams(window.location.search);

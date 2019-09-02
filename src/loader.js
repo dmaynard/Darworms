@@ -116,6 +116,7 @@ export var darworms = {
     minLargeScreenWidth: 800, //
     maxSmallSreenWidth: 500,
     isLargeScreen: true,
+    screenSaver: 0,
     doAudio: 1,
     fixedInitPos: true,
     pickDirectionUI: 0,

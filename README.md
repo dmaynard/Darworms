@@ -1,7 +1,7 @@
 # Darworms
 ## Darworms is a territory capture strategy game for one to four players.
 An implementation of the 1983 Electronic Arts Game Worms? as a single page javascript application.
-Version 1.0.0
+Version 1.0.1
 This version has four player mode.
 No server component, therefore no user id, no login, no authentication and no
 remote storage.

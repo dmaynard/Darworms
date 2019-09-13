@@ -49,7 +49,7 @@
       <a href=#settingspage data-role=button data-transition="fade"> Settings </a>
       <a href=#loadsavepage data-role=button data-transition="flip"> Load/Save Game </a>
       <a href=#emailpage data-role=button data-transition="flip"> EMail Game </a>
-      <a href=#debugpage data-role=button data-transition="fade"> Peformance </a>
+      <!-- a href=#debugpage data-role=button data-transition="fade"> Peformance </a -->
       <a href=#contactpage data-role=button data-transition="fade"> Contact </a>
       <a href=#aboutpage data-role=button data-transition="flip"> About </a>
     </div>
@@ -138,9 +138,9 @@
       <fieldset data-role="controlgroup" data-type="horizontal">
         <form id="background" name="background">
           <label for="backg">Background:</label>
-          <select name="backg" id="backg" data-role="slider" data-mini='true'>
-                    <option value=0>Light</option>
+          <select name="backg" id="backg" value="1" data-role="slider" data-mini='true'>
                     <option value=1>Dark</option>
+                    <option value=0>Light</option>
                 </select>
         </form>
       </fieldset>
@@ -348,8 +348,8 @@
       <div class="aboutx">
         <h2> Darworms is a territory capture strategy game for one to four players.</h2>
 
-      <p> Darworms are creatures that crawl about on a hex grid eating the grid lines. Darworms exit a grid point by eating one of the six grid lines exiting the point. If all six grid lines are eaten the Darworm starves to death. Darworms each contain a
-        program instructing it which direction to go for each of the 64 possible grid line patterns (eaten or not) it can encounter. You train, or program, your Darworm by playing games. Each time your Darworm sees a new pattern of grid lines it stops
+      <p> Darworms are creatures that crawl about on a hex grid eating the grid lines. Darworms leave a grid point by eating one of the six grid lines exiting the point. If all six grid lines are eaten there is no way out and the Darworm starves to death. Darworms each contain a
+        program instructing it which direction to go for each of the 64 possible grid hexes it can encounter. There 64 possible patterns of which lines are eaten and which are not in a grid hex it can encounter. You train, or program, your Darworm by playing games. Each time your Darworm sees a new pattern of grid lines, a previously unseenn hex cell, it stops
         and asks you which direction to go. It remembers this and adds it to its program. The next time it sees the same pattern of grid lines it will go in that same direction again without stopping to ask you which way to go. Soon your Darworm will
         take off on its own. It may take several games to completely train (program) your Darworm.</p>
 
@@ -361,7 +361,7 @@
         pattern. So it asks you which direction to go every time it sees a grid pattern it hasn't seen before. Eventually your Darworm will be able to move on its own using the training you have given it. When a game ends the default it to use the "SAME"
         Darworm for the next game, that is to use the existing training and add new training as new configurations are seen in each new game.
 
-        <p> Or you can just set all four Darworms on "RANDOM" and watch and hear a game play that in all probability no one else has ever seen nor heard. </p>
+        <p> Or you can just set all four Darworms on "RANDOM" and watch and hear a game play that in all probability no one else has ever seen nor heard.  There is also a screensaver mode which continuously plays random games. Screen saver mode lets you choose the number of players, the game speed, and the musical instrument for each player</p>
 
         <p> On the <a href=#settingspage data-transition="fade"> Settings Page </a> you can control many parameters of the game such as grid size, and the default Darworm speed. </p>
         <p> Pushing one of the four large color buttons brings up page to select the type of Darworm (None, Random, Same, or New) as well as additional attributes for the Darworm including the instrument sample to use and the musical scale associated with the six different notes a darworm can produce based on the six different directions a darworm can move.</p>

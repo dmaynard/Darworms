@@ -151,7 +151,7 @@ export function animateSprites(now) {
 
 function drawSprite(cell, progress, dir, phase, colorIndex) {
   // console.log ( cell.format() + " progress " + progress + " dir " + dir + " phase " + phase + " colorIndex:  " + colorIndex);
-  var outSpokeColor = darworms.dwsettings.colorTable[colorIndex];
+  var outSpokeColor = darworms.dwsettings.spriteColorTable[colorIndex];
   // log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
   wGraphics.strokeStyle = outSpokeColor;
   wGraphics.lineWidth = darworms.graphics.spriteWidth / scale.x;

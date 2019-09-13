@@ -20,7 +20,7 @@ export function scoreCanvasInit(game) {
 
 export function clearScore(segmentIndex, totalSegments) {
   var segWidth = scoreCanvas.width / totalSegments;
-  scorectx.fillStyle = darworms.dwsettings.cellBackground[0];
+  scorectx.fillStyle = darworms.dwsettings.scoreBackground[darworms.dwsettings.backGroundTheme];
   scorectx.shadowOffsetX = 0;
   scorectx.shadowOffsetY = 0;
 
@@ -42,7 +42,7 @@ export function updateScores(wormArray) {
   wormArray.forEach(function(aworm, i) {
     if (aworm !== undefined && aworm.shouldDrawScore()) {
       clearScore(i, 4);
-      scorectx.fillStyle = darworms.dwsettings.colorTable[i + 1];
+      scorectx.fillStyle = darworms.dwsettings.spriteColorTable[i + 1];
       // scorectx.shadowOffsetX = 3;
       // scorectx.shadowOffsetY = 3;
       scorectx.fillText(aworm.score, scoreStartx(i, 4, aworm.score.toString()), 15);

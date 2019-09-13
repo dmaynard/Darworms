@@ -288,8 +288,8 @@ darworms.main = (function() {
     }
     darworms.graphics.frameInterval = 1000 / darworms.graphics.fps;
     darworms.dwsettings.gridGeometry = $('input[name=geometry-radio-choice]:checked').val();
-    if (darworms.dwsettings.backGroundTheme !== $('#backg').slider().val()) {
-      darworms.dwsettings.backGroundTheme = $('#backg').slider().val();
+    if (darworms.dwsettings.backGroundTheme !== parseInt($('#backg').slider().val())) {
+      darworms.dwsettings.backGroundTheme = parseInt($('#backg').slider().val());
       if (darworms.theGame) {
         clearCanvas();
         drawCells();
@@ -616,7 +616,7 @@ darworms.main = (function() {
       startGameLoop(animFramesPerSec);
       if (logging()) console.log(" setInterval: " + 1000 / $("#fps").val());
       // document.getElementById("startpause").innerHTML = "Pause Game";
-      $("#startpause").text((darworms.dwsettings.screenSaver == 1) ? "Pause Screen Saver" : "Pause Game");      
+      $("#startpause").text((darworms.dwsettings.screenSaver == 1) ? "Pause Screen Saver" : "Pause Game");
       initTheGame(true);
       darworms.theGame.logGame();
     }

@@ -16,7 +16,7 @@ ga('require', 'urlChangeTracker');
 ga('send', 'pageview');
 
 export var darworms = {
-  version: "1.0.0",
+  version: "1.0.1",
   // rollup.config  plugin replaces this by current date/time milliseconds
   builddate: DATE,
   // host: "localhost:5000",
@@ -144,10 +144,17 @@ export var darworms = {
       "#FF1C0A80", "#1CFF0A80", "#1C0AFF80", "#0AFF1C80",
       "#88443380", "#44883380", "#44338880", "#33884480"
     ],
-    backGroundTheme: 0,
+    spriteColorTable: ["#000000", "#CC0000", "#00CC00", "#4040FF",
+      "#D0B000", "#448833", "#443388", "#338844",
+      "#FF1C0A", "#1CFF0A", "#1C0AFF", "#0AFF1C",
+      "#884433", "#448833", "#443388", "#338844"
+    ],
+    backGroundTheme: 1,
     doAnimations: true,
     gridBackground: ["#F5F5F5", "#404040"],
     cellBackground: ["#F5F5F5", "#404040"],
+    scoreBackground: ["#F5F5F5", "#404040"],
+
     masterAudioVolume: 0.3,
     // Note  env is set by the rollup-plugin-replace at build time
     dologging: ENV,

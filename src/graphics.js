@@ -642,7 +642,7 @@ export function resizeCanvas() {
   if (h > 400) {
     xc.css({
       width: w - 20 + 'px',
-      height: h - 140 + 'px'
+      height: h - 135 + 'px'
     });
     sc.css({
       width: w - 20 + 'px',

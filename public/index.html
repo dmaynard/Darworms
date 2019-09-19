@@ -26,15 +26,14 @@
 
   <script src="./bundle.js"></script>
 
-  <style type=text/css> .ui-page .ui-content { padding-top: 4px; padding-bottom: 4px; padding-left: 4px; padding-right: 4px; } .ui-page .ui-content .ui-block-a.playerbutton1 .ui-block-a { color: red; background: #8c8c8c; font-size: 0.8em;
-    padding-bottom: 4px; padding-top: 4px; } .ui-page .ui-content .ui-btn.playerbutton2 .ui-btn-inner { color: green; background: #8c8c8c; font-size: 0.8em; padding-bottom: 4px; padding-top: 4px; } .ui-page .ui-content .ui-btn.playerbutton3
-    .ui-btn-inner { color: blue; background: #8c8c8c; font-size: 0.8em; padding-bottom: 4px; padding-top: 4px; } .ui-page .ui-content .ui-btn.playerbutton4 .ui-btn-inner { color: yellow; background: #8c8c8c; font-size: 0.8em; padding-bottom: 4px;
-    padding-top: 12px; } .ui-navbar { padding-bottom: 8px; } .right { float: right; width: 100px; } .ui-grayed-out { opacity: 0.4; } .ui-opaque { opacity: 1.0; } .ui-dialog-contain { max-width: 1200px; } p.about { padding-left: 20px; padding-right:
+  <style type=text/css> .ui-page .ui-content { padding-top: 4px; padding-bottom: 0px; padding-left: 4px; padding-right: 4px; } .ui-page .ui-content .ui-block-a.playerbutton1 .ui-block-a { color: red; background: #8c8c8c; font-size: 0.8em;
+    padding-bottom: 0px; padding-top: 4px; } .ui-page .ui-content .ui-btn.playerbutton2 .ui-btn-inner { color: green; background: #8c8c8c; font-size: 0.8em; padding-bottom: 0px; padding-top: 4px; } .ui-page .ui-content .ui-btn.playerbutton3
+    .ui-btn-inner { color: blue; background: #8c8c8c; font-size: 0.8em; padding-bottom: 0px; padding-top: 4px; } .ui-page .ui-content .ui-btn.playerbutton4 .ui-btn-inner { color: yellow; background: #8c8c8c; font-size: 0.8em; padding-bottom: 4px;
+    padding-top: 12px; } .ui-navbar { padding-bottom: 0px; } .right { float: right; width: 100px; } .ui-grayed-out { opacity: 0.4; } .ui-opaque { opacity: 1.0; } .ui-dialog-contain { max-width: 1200px; } p.about { padding-left: 20px; padding-right:
     20px; } #scorecanvas { display: inline-block; padding-top: 0px; padding-bottom: 0px; } #background { display: inline-block; } #animate { display: inline-block; align: right; } #wcanvas { cursor: pointer; } #popupcanvas { cursor: pointer;
-    background: #8c8c8c; width: 200px; height: 200px; } @media all and (max-height: 400px) { #canvascontainer { width: 70%; height: 75%; float: left; } #navcontainer { display: none; } #landnavcontainer { height: 70%; float: left; display: block;
+    background: #8c8c8c; width: 150px; height: 150px; } @media all and (max-height: 400px) { #canvascontainer { width: 70%; height: 75%; float: left; } #navcontainer { display: none; } #landnavcontainer { height: 70%; float: left; display: block;
     padding-top: 10px; padding-left: 10px; padding-bottom: 4px; } #scorecanvas { height: 20px; width: 70%; padding-top: 2px; padding-bottom: 2px; } } @media all and (min-height: 399px) #wcanvascontainer { width: 100%; text-align: center; } #wcanvas {
-    width: 100%; text-align: center; } #landnavcontainer { display: none; } #scorecanvas { height: 30px; } .selectionuicontainer .ui-slider-switch { width: 15em } .pickcellsuicontainer .ui-slider-switch { width: 15em } } #navcontainer { padding: 0px
-    0px; margin: 0px; } #wcanvasparagrap { background: "#F5F5F5" ; padding: 0px 0px; margin: 0px; }  div.aboutx {
+    width: 100%; text-align: center; } #landnavcontainer { display: none; } #scorecanvas { height: 30px; } .selectionuicontainer .ui-slider-switch { width: 15em } .pickcellsuicontainer .ui-slider-switch { width: 15em } } #navcontainer { background: "#000000" ; padding: 0px; padding-bottom: 0px; margin: 0px; } #wcanvasparagrap { background: "#F5F5F5" ; padding: 0px 0px; margin: 0px; }  div.aboutx {
       padding-left: 20px;
       padding-right: 20px;
     }
@@ -54,7 +53,7 @@
       <a href=#aboutpage data-role=button data-transition="flip"> About </a>
     </div>
   </div>
-  <div data-role="page" data-theme="b" id=playpage data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true scroll="no" style="overflow: hidden">
+  <div data-role="page" data-theme="b" id="playpage" data-add-back-btn=true data-back-btn-text=Menu data-fullscreen=true scroll="no" style="overflow: hidden">
     <div data-role="content" >
       <!-- div id="canvascontainer" class="canvas-container" -->
         <p id="wcanvasparagrap" class ="wcanvasp" align="center" padding-top: "0px"  padding-top: "0px" >
@@ -67,10 +66,10 @@
 
 
       <!-- div data-role="controlgroup" data-type="horizontal" -->
-      <div id="navcontainer" class="ui-grid-c" data-role=navbar>
+      <div id="navcontainer"  data-role="navbar" >
         <ul>
           <li> <a href="#edit-darworm-page" id="p1button" data-theme="c" data-transition="fade"> Red  </a> </li>
-          <li> <a href="#edit-darworm-page" id="p2button" data-theme="d" data-transition="fade"> Green   </a> </li>
+          <li> <a href="#edit-darworm-page" id="p2button" data-theme="d" data-transition="fade" > Green   </a> </li>
           <li> <a href="#edit-darworm-page" id="p3button" data-theme="e" data-transition="fade"> Blue  </a> </li>
           <li> <a href="#edit-darworm-page" id="p4button" data-theme="f" data-transition="fade"> Yellow  </a> </li>
 
@@ -95,9 +94,9 @@
         <div id="popupcanvascontainer" align="center">
           <canvas id="popupcanvas" class="popupcanvasclass"></canvas>
         </div>
-        <label>
-        <a id="popupbutton" data-role=button data-inline="true" class="ui-btn ui-shadow ui-corner-all" onclick=darworms.disableTutorialPopup(true)>Got It! Don't show this again</a>
-        </label>
+
+        <a id="popupbutton" data-role="button"  data-mini="true" align="center" data-inline="true"  class="ui-btn ui-corner-all ui-shadow ui-btn-a   ui-btn-inline ui-btn-center" onclick=darworms.disableTutorialPopup(true)>Got It!  Don't show this again</a>
+
       </div>
 
       <div data-role=footer id="footerbar" class="ui-bar" data-theme="b">

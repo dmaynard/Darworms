@@ -154,11 +154,13 @@ export var darworms = {
     gridBackground: ["#F5F5F5", "#404040"],
     cellBackground: ["#F5F5F5", "#404040"],
     scoreBackground: ["#F5F5F5", "#404040"],
+    popupBackground: ["#F5F5F5", "#808080"],
 
     masterAudioVolume: 0.3,
     // Note  env is set by the rollup-plugin-replace at build time
     dologging: ENV,
-    gridSize: 18
+    gridSize: 18,
+    screenSaverDelay: 5000
   },
   images: {},
   audioContext: undefined,

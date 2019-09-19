@@ -396,7 +396,7 @@ function makeMoves() {
       // decodeGame(gameTxt);
       // darworms.main.injectSettings(gameTxt);
       if(darworms.dwsettings.screenSaver) {
-        setTimeout(  darworms.startgame, 5000 )
+        setTimeout(  darworms.startgame, darworms.dwsettings.screenSaverDelay )
       }
     }
   }

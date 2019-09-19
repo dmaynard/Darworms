@@ -27,11 +27,10 @@ import { darworms } from "./loader.js";
     pGraphics = canvas.getContext("2d");
     // I have NO IDEA why this scale factor is needed
     // but experiment proves it IS needed to make circles round
-    // and to fill the canvasIsDirty
     // this may be a JQuery mobile bug?
-    pGraphics.setTransform( 1.5*width/2.0, 0, 0, .75*height/2, 1.5*width/2.0, .75*height/2);
+    pGraphics.setTransform( 2.0*width/2.0, 0, 0, 1.0*height/2.0, 2.0*width/2.0, 1.0*height/2.0);
 
-    pGraphics.fillStyle = darworms.dwsettings.cellBackground[darworms.dwsettings.backGroundTheme];
+    pGraphics.fillStyle = darworms.dwsettings.popupBackground[darworms.dwsettings.backGroundTheme];
     pGraphics.strokeStyle = 'black'; // black
     pGraphics.lineWidth = 0.02;
     pGraphics.rect(-1,-1,2,2);

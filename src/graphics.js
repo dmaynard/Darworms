@@ -249,7 +249,7 @@ export function drawcell(point) {
   wGraphics.fill();
   //  draw hex outline
   wGraphics.strokeStyle = darworms.dwsettings.cellBackground[1 - darworms.dwsettings.backGroundTheme];
-  wGraphics.lineWidth = 1.0 / scale.x;
+  wGraphics.lineWidth = 2.0 / scale.x;
   wGraphics.beginPath();
   wGraphics.moveTo(darworms.graphics.vertex_x[0], darworms.graphics.vertex_y[0]);
   for (var j = 1; j < 6; j = j + 1) {
@@ -268,7 +268,7 @@ export function drawcell(point) {
       var outSpokeColor = darworms.dwsettings.colorTable[grid.spokeAt(point, i)];
       // log (" outSpokeColor " + i + " :  " + outSpokeColor + " at "  + point.format());
       wGraphics.strokeStyle = outSpokeColor;
-      wGraphics.lineWidth = 2.0 / scale.x;
+      wGraphics.lineWidth = 4.0 / scale.x;
       wGraphics.lineCap = 'round';
       wGraphics.beginPath();
       wGraphics.moveTo(0, 0);
@@ -278,7 +278,7 @@ export function drawcell(point) {
     }
     if ((invec & darworms.outMask[i]) !== 0) {
       wGraphics.strokeStyle = darworms.dwsettings.colorTable[grid.spokeAt(point, i)];
-      wGraphics.lineWidth = 2.0 / scale.x;
+      wGraphics.lineWidth = 4.0 / scale.x;
       wGraphics.lineCap = 'round';
       wGraphics.beginPath();
       wGraphics.moveTo(xPts[i], yPts[i]);

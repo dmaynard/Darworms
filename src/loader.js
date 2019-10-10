@@ -161,7 +161,8 @@ export var darworms = {
     // Note  env is set by the rollup-plugin-replace at build time
     dologging: ENV,
     gridSize: 18,
-    screenSaverDelay: 5000
+    screenSaverDelay: 5000,
+    maxTutotialPopups: 3
   },
   images: {},
   audioContext: undefined,
@@ -215,6 +216,9 @@ window.addEventListener("load", function() {
         afterclose: function( event, ui ) {
           if(logging()) console.log(" popup's afterclose event fired" );
           darworms.theGame.focusWorm.tutorialCount++;
+          if (darworms.theGame.focusWorm.tutorialCount > darworms.dwsettings.maxTutotialPopups) {
+              darworms.theGame.focusWorm.showTutorial = false;
+          }
         }
     });
     if(logging()) console.log("About to call darworms.main.init()");

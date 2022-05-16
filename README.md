@@ -59,16 +59,53 @@ based on the **[1983 Electronic Arts Game Worms?][Wikipedia]** .*
 - **[JQuery]**
 
 <br>
+<br>
 
-## How to Run Locally
+## Installation
 
-- `npm install`
+1. **[Download]** or **Clone** this repository.
 
-Then, run one of these:
+2. Navigate to the project folder.
 
-- `npm run serve` (for play mode on localhost:5000)
-- `npm run dev` (for dev mode with dynamic reloading)
-- `npm run build` (for production mode with minimizing)
+3. Install the server with:
+
+    ```sh
+    npm install
+    ```
+
+<br>
+<br>
+
+## Usage
+
+### Localhost
+
+*This will start the server at [`http://localhost:5000`]*
+
+```sh
+npm run serve
+```
+
+<br>
+
+### Dev
+
+*Starts the server in development* <br>
+*mode with dynamic reloading.*
+
+```sh
+npm run dev
+```
+
+<br>
+
+### Build
+
+*Build the production bundle with minimized code.*
+
+```sh
+npm run build
+```
 
 <br>
 
@@ -76,12 +113,19 @@ Then, run one of these:
 <!----------------------------------------------------------------------------->
 
 [Wikipedia]: https://en.wikipedia.org/wiki/Worms%3F
-[Releases]: https://github.com/dmaynard/Darworms/releases
 [LinkedIn]: https://www.linkedin.com/in/david-maynard-86ab3/
 [Netlify]: https://app.netlify.com/sites/darworms/deploys
 [Website]: https://www.darworms.com
-[License]: LICENSE
 [Worms?]: https://github.com/savetz/worms
+
+[`http://localhost:5000`]: http://localhost:5000
+
+
+<!------------------------------{ Repository }--------------------------------->
+
+[Download]: https://github.com/dmaynard/Darworms/archive/refs/heads/master.zip
+[Releases]: https://github.com/dmaynard/Darworms/releases
+[License]: LICENSE
 
 
 <!-----------------------------{ Dependencies }-------------------------------->

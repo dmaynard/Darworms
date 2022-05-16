@@ -44,19 +44,11 @@ based on the **[1983 Electronic Arts Game Worms?][Wikipedia]** .*
 
 ## Dependencies
 
-### Build
-
-- **[NodeJS]**
-- **[Rollup]**
-- **[NPM]**
-
-<br>
-
-### Runtime
-
-- **[Google Analytics]**
-- **[JQuery Mobile]**
-- **[JQuery]**
+| Build  | Runtime
+|:-----:|:---:
+| **[NodeJS]** | **[Google Analytics]**
+| **[Rollup]** | **[JQuery Mobile]**
+| **[        NPM        ][NPM]** | **[             JQuery             ][JQuery]**
 
 <br>
 <br>

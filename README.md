@@ -1,40 +1,145 @@
+
+[![Badge License]][License]    [![Badge Version]][Releases]
+
+<br>
+
+<div align = center>
+
 # Darworms
-## Darworms is a territory capture strategy game for one to four players.
-An implementation of the 1983 Electronic Arts Game Worms? as a single page javascript application.
-Version 1.0.1
-This version has four player mode.
-No server component, therefore no user id, no login, no authentication and no
-remote storage.
 
-[Darworms](https://www.darworms.com)
+*A territory capture strategy game for 1 - 4 players <br>
+based on the **[1983 Electronic Arts Game Worms?][Wikipedia]** .*
 
-[Worms?](https://en.wikipedia.org/wiki/Worms%3F) Copyright 1983 Electronic Arts
-Darworms 2019 David S. Maynard<br>
-[LinkedIn](https://www.linkedin.com/in/david-maynard-86ab3/)<br>
-[MIT License](https://github.com/dmaynard/Darworms/blob/master/LICENSE)
+<br>
 
-## Build Dependencies
+[![Badge Netlify]][Netlify]
 
-- Node
-- npm
-- rollup
+<br>
 
-## Runtime Dependencies
+---
 
-- JQuery
-- JQuery mobile
-- Google Analytics
+[![Button Website]][Website]   
+[![Button Worms?]][Worms?]   
+[![Button LinkedIn]][LinkedIn]
 
-## How to Run Locally
+---
 
-- `npm install`
+</div>
 
-Then, run one of these:
+<br>
 
-- `npm run serve` (for play mode on localhost:5000)
-- `npm run dev` (for dev mode with dynamic reloading)
-- `npm run build` (for production mode with minimizing)
+## Details
 
-## The darworms site is hosted on netlify
+- Has a four player mode.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)  [![Netlify Status](https://api.netlify.com/api/v1/badges/f44affeb-0f27-4565-80ae-00431a5fc797/deploy-status)](https://app.netlify.com/sites/darworms/deploys)
+- Doesn't have a server component
+
+    ⤷ No user id <br>
+    ⤷ No login <br>
+    ⤷ No authentication <br>
+    ⤷ No remote storage
+
+<br>
+<br>
+
+## Dependencies
+
+| Build  | Runtime
+|:-----:|:---:
+| **[NodeJS]** | **[Google Analytics]**
+| **[Rollup]** | **[JQuery Mobile]**
+| **[        NPM        ][NPM]** | **[             JQuery             ][JQuery]**
+
+<br>
+<br>
+
+## Installation
+
+1. **[Download]** or **Clone** this repository.
+
+2. Navigate to the project folder.
+
+3. Install the server with:
+
+    ```sh
+    npm install
+    ```
+
+<br>
+<br>
+
+## Usage
+
+### Localhost
+
+*This will start the server at [`http://localhost:5000`]*
+
+```sh
+npm run serve
+```
+
+<br>
+
+### Dev
+
+*Starts the server in development* <br>
+*mode with dynamic reloading.*
+
+```sh
+npm run dev
+```
+
+<br>
+
+### Build
+
+*Build the production bundle with minimized code.*
+
+```sh
+npm run build
+```
+
+<br>
+
+
+<!----------------------------------------------------------------------------->
+
+[Wikipedia]: https://en.wikipedia.org/wiki/Worms%3F
+[LinkedIn]: https://www.linkedin.com/in/david-maynard-86ab3/
+[Netlify]: https://app.netlify.com/sites/darworms/deploys
+[Website]: https://www.darworms.com
+[Worms?]: https://github.com/savetz/worms
+
+[`http://localhost:5000`]: http://localhost:5000
+
+
+<!------------------------------{ Repository }--------------------------------->
+
+[Download]: https://github.com/dmaynard/Darworms/archive/refs/heads/master.zip
+[Releases]: https://github.com/dmaynard/Darworms/releases
+[License]: LICENSE
+
+
+<!-----------------------------{ Dependencies }-------------------------------->
+
+[Google Analytics]: https://analytics.withgoogle.com/
+[JQuery Mobile]: https://jquerymobile.com/
+[Rollup]: https://www.rollupjs.org/
+[NodeJS]: https://nodejs.org/en/
+[JQuery]: https://jquery.com/
+[NPM]: https://www.npmjs.com/
+
+
+<!--------------------------------{ Badges }----------------------------------->
+
+[Badge License]: https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge
+[Badge Version]: https://img.shields.io/badge/Version-1.0.1-blue.svg?style=for-the-badge
+[Badge Netlify]: https://api.netlify.com/api/v1/badges/f44affeb-0f27-4565-80ae-00431a5fc797/deploy-status
+
+
+<!-------------------------------{ Buttons }----------------------------------->
+
+[Button LinkedIn]: https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=LinkedIn&logoColor=white
+[Button Website]: https://img.shields.io/badge/Website-4fbaa1?style=for-the-badge
+[Button Worms?]: https://img.shields.io/badge/Worms%3F-E6526F?style=for-the-badge
+

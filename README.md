@@ -40,20 +40,23 @@ based on the **[1983 Electronic Arts Game Worms?][Wikipedia]** .*
     ⤷ No remote storage
 
 <br>
+<br>
 
-## Build Dependencies
+## Dependencies
 
-- Node
-- npm
-- rollup
+### Build
+
+- **[NodeJS]**
+- **[Rollup]**
+- **[NPM]**
 
 <br>
 
-## Runtime Dependencies
+### Runtime
 
-- JQuery
-- JQuery mobile
-- Google Analytics
+- **[Google Analytics]**
+- **[JQuery Mobile]**
+- **[JQuery]**
 
 <br>
 
@@ -79,6 +82,16 @@ Then, run one of these:
 [Website]: https://www.darworms.com
 [License]: LICENSE
 [Worms?]: https://github.com/savetz/worms
+
+
+<!-----------------------------{ Dependencies }-------------------------------->
+
+[Google Analytics]: https://analytics.withgoogle.com/
+[JQuery Mobile]: https://jquerymobile.com/
+[Rollup]: https://www.rollupjs.org/
+[NodeJS]: https://nodejs.org/en/
+[JQuery]: https://jquery.com/
+[NPM]: https://www.npmjs.com/
 
 
 <!--------------------------------{ Badges }----------------------------------->

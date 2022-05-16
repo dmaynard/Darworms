@@ -72,10 +72,6 @@ Then, run one of these:
 
 <!----------------------------------------------------------------------------->
 
-[Badge License]: https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge
-[Badge Version]: https://img.shields.io/badge/Version_1.0.1-blue.svg?style=for-the-badge
-[Badge Netlify]: https://api.netlify.com/api/v1/badges/f44affeb-0f27-4565-80ae-00431a5fc797/deploy-status
-
 [Wikipedia]: https://en.wikipedia.org/wiki/Worms%3F
 [Releases]: https://github.com/dmaynard/Darworms/releases
 [LinkedIn]: https://www.linkedin.com/in/david-maynard-86ab3/
@@ -85,8 +81,16 @@ Then, run one of these:
 [Worms?]: https://github.com/savetz/worms
 
 
+<!--------------------------------{ Badges }----------------------------------->
 
-[Button Website]: https://img.shields.io/badge/Website-yellow?style=for-the-badge
-[Button Worms?]: https://img.shields.io/badge/Worms%3F-E6526F?style=for-the-badge
+[Badge License]: https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge
+[Badge Version]: https://img.shields.io/badge/Version-1.0.1-blue.svg?style=for-the-badge
+[Badge Netlify]: https://api.netlify.com/api/v1/badges/f44affeb-0f27-4565-80ae-00431a5fc797/deploy-status
+
+
+<!-------------------------------{ Buttons }----------------------------------->
+
 [Button LinkedIn]: https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=LinkedIn&logoColor=white
+[Button Website]: https://img.shields.io/badge/Website-4fbaa1?style=for-the-badge
+[Button Worms?]: https://img.shields.io/badge/Worms%3F-E6526F?style=for-the-badge
 

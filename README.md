@@ -1,5 +1,5 @@
 
-# Darworms
+# Darworms    [![Badge License]][License]  [![Badge Netlify]][Netlify]
 
 *A territory capture strategy game for 1 - 4 players.*
 
@@ -15,12 +15,9 @@ remote storage.
 
 ---
 
-[Darworms](https://www.darworms.com)
-
-[Worms?](https://en.wikipedia.org/wiki/Worms%3F) Copyright 1983 Electronic Arts
-Darworms 2019 David S. Maynard<br>
-[LinkedIn](https://www.linkedin.com/in/david-maynard-86ab3/)<br>
-[MIT License](https://github.com/dmaynard/Darworms/blob/master/LICENSE)
+[![Button Website]][Website]   
+[![Button Original]][Original]   
+[![Button LinkedIn]][LinkedIn]
 
 ---
 
@@ -54,6 +51,21 @@ Then, run one of these:
 
 <br>
 
-## The darworms site is hosted on netlify
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)  [![Netlify Status](https://api.netlify.com/api/v1/badges/f44affeb-0f27-4565-80ae-00431a5fc797/deploy-status)](https://app.netlify.com/sites/darworms/deploys)
+<!----------------------------------------------------------------------------->
+
+[Badge License]: https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge
+[Badge Netlify]: https://api.netlify.com/api/v1/badges/f44affeb-0f27-4565-80ae-00431a5fc797/deploy-status
+
+[Original]: https://en.wikipedia.org/wiki/Worms%3F
+[LinkedIn]: https://www.linkedin.com/in/david-maynard-86ab3/
+[Netlify]: https://app.netlify.com/sites/darworms/deploys
+[License]: LICENSE
+
+[Website]: https://www.darworms.com
+
+
+[Button Website]: https://img.shields.io/badge/Website-yellow?style=for-the-badge
+[Button Original]: https://img.shields.io/badge/Original-E6526F?style=for-the-badge
+[Button LinkedIn]: https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=LinkedIn&logoColor=white
+

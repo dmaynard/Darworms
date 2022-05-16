@@ -1,10 +1,19 @@
+
 # Darworms
-## Darworms is a territory capture strategy game for one to four players.
+
+*A territory capture strategy game for 1 - 4 players.*
+
+<br>
+
 An implementation of the 1983 Electronic Arts Game Worms? as a single page javascript application.
 Version 1.0.1
 This version has four player mode.
 No server component, therefore no user id, no login, no authentication and no
 remote storage.
+
+<br>
+
+---
 
 [Darworms](https://www.darworms.com)
 
@@ -13,17 +22,25 @@ Darworms 2019 David S. Maynard<br>
 [LinkedIn](https://www.linkedin.com/in/david-maynard-86ab3/)<br>
 [MIT License](https://github.com/dmaynard/Darworms/blob/master/LICENSE)
 
+---
+
+<br>
+
 ## Build Dependencies
 
 - Node
 - npm
 - rollup
 
+<br>
+
 ## Runtime Dependencies
 
 - JQuery
 - JQuery mobile
 - Google Analytics
+
+<br>
 
 ## How to Run Locally
 
@@ -34,6 +51,8 @@ Then, run one of these:
 - `npm run serve` (for play mode on localhost:5000)
 - `npm run dev` (for dev mode with dynamic reloading)
 - `npm run build` (for production mode with minimizing)
+
+<br>
 
 ## The darworms site is hosted on netlify
 
